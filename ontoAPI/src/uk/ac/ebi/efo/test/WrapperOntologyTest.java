@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Stack;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,7 +43,8 @@ public class WrapperOntologyTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		loader = new OntologyLoader(new File("temp/efo.owl").toURI());
+		loader = new OntologyLoader(new URI(
+				"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
 	}
 
 	/**
@@ -74,6 +76,20 @@ public class WrapperOntologyTest {
 			e.printStackTrace();
 			fail();
 		}
+	}
+
+	@Test
+	public void testGetPathFromClass() throws AnnotationFragmentNotFoundException {
+		String clsID = "EFO_0001163";
+		Stack<Stack<OWLClass>> stack = new WrapperOntology(loader.getOntology()).getClassPathToRoot(clsID);
+		do {
+			Stack<OWLClass> path = stack.pop();
+			System.out.print("PATH: ");
+			do {
+				System.out.print(path.pop().getURI().toString() + " > ");
+			} while (!path.empty());
+			System.out.println();
+		} while (!stack.empty());
 	}
 
 	@Test

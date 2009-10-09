@@ -99,8 +99,10 @@ public class BioportalImporter {
 	 * @throws InterruptedException
 	 * @throws OntologyServiceException
 	 * @throws OWLOntologyChangeException
+	 * @throws AnnotationFragmentNotFoundException
 	 */
-	public int processImport() throws OntologyServiceException, OWLOntologyChangeException {
+	public int processImport() throws OntologyServiceException, OWLOntologyChangeException,
+			AnnotationFragmentNotFoundException {
 		_log.info("SPECIAL CASES");
 		addBrendaMappings();
 		removeMPmappings();
@@ -259,9 +261,10 @@ public class BioportalImporter {
 	 * ontology.
 	 * 
 	 * @throws OWLOntologyChangeException
+	 * @throws AnnotationFragmentNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	private void walkTargetOntology() throws OWLOntologyChangeException {
+	private void walkTargetOntology() throws OWLOntologyChangeException, AnnotationFragmentNotFoundException {
 		// Walk the classes of target ontology
 		Integer cProgress = 0;
 		for (OWLClass cls : _ontTarget.getReferencedClasses()) {
@@ -300,9 +303,10 @@ public class BioportalImporter {
 	 * 
 	 * @throws OWLOntologyChangeException
 	 * @throws OntologyServiceException
+	 * @throws AnnotationFragmentNotFoundException
 	 */
 	private void pullExtInfo(OWLClass clsTarget, OWLAnnotation linkAnnot) throws OWLOntologyChangeException,
-			OntologyServiceException {
+			OntologyServiceException, AnnotationFragmentNotFoundException {
 
 		String externalID = new WrapperAnnotation(linkAnnot).getValue();
 
@@ -352,7 +356,7 @@ public class BioportalImporter {
 		ontTool.removeAllAnnotationsBySource(cls, uriDefinition, source2, counters[1]);
 	}
 
-	private void postProcessing(OWLClass cls) throws OWLOntologyChangeException {
+	private void postProcessing(OWLClass cls) throws OWLOntologyChangeException, AnnotationFragmentNotFoundException {
 		ontTool.removeEditor(cls, "BioportalImporter");
 		ontTool.addEditor(cls);
 	}

@@ -7,6 +7,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +19,7 @@ import org.semanticweb.owl.model.OWLAnnotation;
 import org.semanticweb.owl.model.OWLAxiom;
 import org.semanticweb.owl.model.OWLClass;
 import org.semanticweb.owl.model.OWLDataFactory;
+import org.semanticweb.owl.model.OWLDescription;
 import org.semanticweb.owl.model.OWLEntityAnnotationAxiom;
 import org.semanticweb.owl.model.OWLOntology;
 import org.semanticweb.owl.model.OWLOntologyAnnotationAxiom;
@@ -36,11 +39,9 @@ public class WrapperOntology {
 	private static final OWLOntologyManager _manager = OntologyManagerSingleton.INSTANCE;
 	private static final OWLDataFactory _factory = _manager.getOWLDataFactory();
 	private final OWLOntology _ontology;
-	private final URI uriEditor;
 
 	public WrapperOntology(OWLOntology value) throws AnnotationFragmentNotFoundException {
 		_ontology = value;
-		uriEditor = getUriFromFrag("definition_editor");
 	}
 
 	/**
@@ -178,8 +179,9 @@ public class WrapperOntology {
 		_manager.applyChange(addAxiom);
 	}
 
-	public boolean removeEditor(OWLClass cls, String strAnnot) throws OWLOntologyChangeException {
-		for (OWLAnnotation annot : cls.getAnnotations(_ontology, uriEditor)) {
+	public boolean removeEditor(OWLClass cls, String strAnnot) throws OWLOntologyChangeException,
+			AnnotationFragmentNotFoundException {
+		for (OWLAnnotation annot : cls.getAnnotations(_ontology, getUriFromFrag("definition_editor"))) {
 			if (new WrapperAnnotation(annot).getValue().startsWith(strAnnot)) {
 				removeAnnotation(cls, annot);
 				return true;
@@ -238,15 +240,61 @@ public class WrapperOntology {
 	public URI getUriFromClassID(String clsId) throws AnnotationFragmentNotFoundException {
 		// pattern to match the fragment at the end of the uri behind a slash or
 		// hash
-		Pattern pattern = Pattern.compile("[//#]{1}" + clsId + "$");
+		return getClassForID(clsId).getURI();
+	}
+
+	/**
+	 * Returns paths to root.
+	 * 
+	 * @throws AnnotationFragmentNotFoundException
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public Stack<Stack<OWLClass>> getClassPathToRoot(String clsID) throws AnnotationFragmentNotFoundException {
+		Stack<Stack<OWLClass>> tempStack = new Stack<Stack<OWLClass>>();
+		Stack<Stack<OWLClass>> resultsStack = new Stack<Stack<OWLClass>>();
+
+		// Seed the que with first element
+		Stack<OWLClass> seed = new Stack<OWLClass>();
+		seed.add(getClassForID(clsID));
+		tempStack.push(seed);
+
+		do {
+			// Pop some path from stack
+			Stack<OWLClass> path = tempStack.pop();
+			// Go through all the parents on top of the stack
+			Set<OWLDescription> parents = path.peek().getSuperClasses(_ontology);
+			if (parents.size() != 0) {
+				for (OWLDescription cls : parents) {
+					if (cls.isAnonymous() == true)
+						continue;
+					// Create new path for every parent and add to tempStack
+					Stack<OWLClass> newPath = (Stack<OWLClass>) path.clone();
+					newPath.push(cls.asOWLClass());
+					tempStack.push(newPath);
+				}
+			}
+			// Push the path back if reached root
+			else {
+				resultsStack.push(path);
+			}
+		} while (!tempStack.empty());
+
+		return resultsStack;
+	}
+
+	public OWLClass getClassForID(String clsID) throws AnnotationFragmentNotFoundException {
+		// pattern to match the fragment at the end of the uri behind a slash or
+		// hash
+		Pattern pattern = Pattern.compile("[//#]{1}" + clsID + "$");
 
 		for (OWLClass cls : _ontology.getReferencedClasses()) {
 			Matcher matcher = pattern.matcher(cls.getURI().toString());
 			if (matcher.find()) {
-				return cls.getURI();
+				return cls;
 			}
 		}
+
 		throw new AnnotationFragmentNotFoundException();
 	}
-
 }
