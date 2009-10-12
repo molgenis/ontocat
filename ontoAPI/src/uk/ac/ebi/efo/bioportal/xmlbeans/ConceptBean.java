@@ -68,7 +68,7 @@ public class ConceptBean implements OntologyTermExt {
 		@SuppressWarnings("unchecked")
 		public String[] getList() {
 			try {
-				if (list.get(0) instanceof String) {
+				if (list != null && list.get(0) instanceof String) {
 					return (String[]) list.toArray(new String[0]);
 				} else
 					return null;

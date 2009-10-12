@@ -42,7 +42,9 @@ public class OntologyBean implements OntologyEntity {
 	private String codingScheme;
 	private String publication;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getSynonymSlot()
 	 */
 	public String getSynonymSlot() {
@@ -53,8 +55,11 @@ public class OntologyBean implements OntologyEntity {
 		return targetTerminologies;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getPreferredNameSlot()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getPreferredNameSlot()
 	 */
 	public String getPreferredNameSlot() {
 		return preferredNameSlot;
@@ -68,38 +73,58 @@ public class OntologyBean implements OntologyEntity {
 	private ArrayList<Integer> groupIds;
 	private String filePath;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getVersionNumber()
 	 */
 	public String getVersionNumber() {
 		return versionNumber;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getDateReleased()
 	 */
 	public String getDateReleased() {
 		return dateReleased.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getDisplayLabel()
 	 */
 	public String getDisplayLabel() {
 		return displayLabel;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getAbbreviation()
 	 */
 	public String getAbbreviation() {
 		return abbreviation;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getMetaAnnotation()
 	 */
 	public String getMetaAnnotation() {
 		return "Bioportal mappings to " + displayLabel + " (" + abbreviation + ") ver" + versionNumber;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see plugin.OntologyBrowser.OntologyEntity#getOntologyID()
+	 */
+	@Override
+	public String getOntologyAccession() {
+		return ontologyId;
 	}
 }

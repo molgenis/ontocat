@@ -23,4 +23,6 @@ public interface OntologyEntity {
 
 	public String getAbbreviation();
 
+	public String getOntologyAccession();
+
 }
