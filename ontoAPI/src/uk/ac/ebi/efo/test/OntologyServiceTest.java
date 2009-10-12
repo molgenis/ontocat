@@ -22,7 +22,7 @@ public class OntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		os = new BioportalService("tomasz@ebi.ac.uk");
+		os = new BioportalService("ontoapi-svn@lists.sourceforge.net");
 	}
 
 	@Test
