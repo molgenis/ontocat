@@ -14,8 +14,8 @@ import plugin.OntologyBrowser.OntologyService;
 import plugin.OntologyBrowser.OntologyServiceException;
 import plugin.OntologyBrowser.OntologyTerm;
 import plugin.OntologyBrowser.OntologyTermExt;
+import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.BioportalService;
-import uk.ac.ebi.efo.bioportal.BioportalService.BioportalMapping;
 
 public class OntologyServiceTest {
 	private static OntologyService os;
@@ -33,8 +33,8 @@ public class OntologyServiceTest {
 
 		for (BioportalMapping BPmap : mappings) {
 			try {
-				String label = os.getLabelForAccession(BPmap.getOntID(), BPmap.getTestCode());
-				System.out.println(BPmap.getOntID() + " " + BPmap.getTestCode() + " " + label);
+				String label = os.getLabelForAccession(BPmap.getOntologyID(), BPmap.getTestCode());
+				System.out.println(BPmap.getOntologyID() + " " + BPmap.getTestCode() + " " + label);
 			} catch (OntologyServiceException e) {
 				System.out.println(BPmap.getTestCode() + " NOT FOUND");
 			}

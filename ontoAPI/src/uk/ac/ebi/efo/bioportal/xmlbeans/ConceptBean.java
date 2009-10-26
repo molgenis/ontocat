@@ -158,7 +158,8 @@ public class ConceptBean implements OntologyTermExt {
 	 */
 	public String[] getDefinitions() {
 		for (Entry e : relations) {
-			if (e.getLabel().toLowerCase().startsWith("def"))
+			if (e.getLabel().toLowerCase().startsWith("def") && !e.getLabel().equalsIgnoreCase("definition source")
+					&& !e.getLabel().equalsIgnoreCase("definition editor"))
 				return e.getList();
 		}
 		return null;

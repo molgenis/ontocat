@@ -1,5 +1,7 @@
 package uk.ac.ebi.efo.test;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
@@ -7,8 +9,8 @@ import org.junit.Test;
 
 import plugin.OntologyBrowser.OntologyServiceException;
 import plugin.OntologyBrowser.OntologyTermExt;
+import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.BioportalService;
-import uk.ac.ebi.efo.bioportal.BioportalService.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.xmlbeans.OntologyBean;
 
 /**
@@ -32,6 +34,7 @@ public class BioportalServiceTest {
 				printResults(bw.getTerm(BPmap.getTestCode()));
 			} catch (OntologyServiceException e) {
 				System.out.println(BPmap.getTestCode() + " NOT FOUND");
+				fail();
 			}
 		}
 	}
@@ -41,7 +44,7 @@ public class BioportalServiceTest {
 		ArrayList<BioportalMapping> mappings = BioportalService.getMappings();
 
 		for (BioportalMapping BPmap : mappings) {
-			OntologyBean ob = (OntologyBean) bw.getOntologyDescription(BPmap.getOntID());
+			OntologyBean ob = (OntologyBean) bw.getOntologyDescription(BPmap.getOntologyID());
 			printMany(new String[] {
 					ob.getMetaAnnotation(), "Preferred name: " + ob.getPreferredNameSlot(),
 					"Synonym: " + ob.getSynonymSlot(), "Terminologies: " + ob.getTargetTerminologies()
