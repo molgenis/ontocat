@@ -2,7 +2,6 @@ package uk.ac.ebi.efo.test;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,22 +15,21 @@ import plugin.OntologyBrowser.OntologyTerm;
 import plugin.OntologyBrowser.OntologyTermExt;
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.BioportalService;
+import uk.ac.ebi.efo.bioportal.EFOIdResolverImpl;
 
 public class OntologyServiceTest {
 	private static OntologyService os;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		os = new BioportalService("ontoapi-svn@lists.sourceforge.net");
+		os = new BioportalService("ontoapi-svn@lists.sourceforge.net", new EFOIdResolverImpl());
 	}
 
 	@Test
 	public final void testGetLabelForAccession() {
 		printCurrentTest();
-
-		ArrayList<BioportalMapping> mappings = BioportalService.getMappings();
-
-		for (BioportalMapping BPmap : mappings) {
+		new EFOIdResolverImpl();
+		for (BioportalMapping BPmap : new EFOIdResolverImpl().getMappings()) {
 			try {
 				String label = os.getLabelForAccession(BPmap.getOntologyID(), BPmap.getTestCode());
 				System.out.println(BPmap.getOntologyID() + " " + BPmap.getTestCode() + " " + label);

@@ -2,8 +2,6 @@ package uk.ac.ebi.efo.test;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,15 +9,16 @@ import plugin.OntologyBrowser.OntologyServiceException;
 import plugin.OntologyBrowser.OntologyTermExt;
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.BioportalService;
+import uk.ac.ebi.efo.bioportal.EFOIdResolverImpl;
 import uk.ac.ebi.efo.bioportal.xmlbeans.OntologyBean;
 
 /**
- * @author $Id: BioportalServiceTest.java 9019 2009-09-22 12:39:01Z tomasz $
+ * @author $Id: EFOIdResolverImplTest.java 9019 2009-09-22 12:39:01Z tomasz $
  * 
  */
 
-public class BioportalServiceTest {
-	private static final BioportalService bw = new BioportalService("tomasz@ebi.ac.uk");
+public class EFOIdResolverImplTest {
+	private static final BioportalService bw = new BioportalService("tomasz@ebi.ac.uk", new EFOIdResolverImpl());
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,9 +26,7 @@ public class BioportalServiceTest {
 
 	@Test
 	public void testMappings() {
-		ArrayList<BioportalMapping> mappings = BioportalService.getMappings();
-
-		for (BioportalMapping BPmap : mappings) {
+		for (BioportalMapping BPmap : new EFOIdResolverImpl().getMappings()) {
 			try {
 				printResults(bw.getTerm(BPmap.getTestCode()));
 			} catch (OntologyServiceException e) {
@@ -40,10 +37,8 @@ public class BioportalServiceTest {
 	}
 
 	@Test
-	public void testMappedOntologies() throws OntologyServiceException {
-		ArrayList<BioportalMapping> mappings = BioportalService.getMappings();
-
-		for (BioportalMapping BPmap : mappings) {
+	public void listResolvableOntologies() throws OntologyServiceException {
+		for (BioportalMapping BPmap : new EFOIdResolverImpl().getMappings()) {
 			OntologyBean ob = (OntologyBean) bw.getOntologyDescription(BPmap.getOntologyID());
 			printMany(new String[] {
 					ob.getMetaAnnotation(), "Preferred name: " + ob.getPreferredNameSlot(),

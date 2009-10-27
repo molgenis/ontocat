@@ -15,11 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -88,8 +85,7 @@ public class BioportalService implements OntologyService {
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	/** The Constant mappings. */
-	private static final ArrayList<BioportalMapping> mappings = new ArrayList<BioportalMapping>();
+	private final BioportalIdResolver termResolver;
 
 	/**
 	 * Instantiates a new bioportal service.
@@ -97,10 +93,14 @@ public class BioportalService implements OntologyService {
 	 * @param email
 	 *            the email
 	 */
-	public BioportalService(String email) {
+	public BioportalService(String email, BioportalIdResolver resolver) {
 		// Now map the xml to the java beans
 		urlAddOn = "?includeproperties=1&email=" + email;
+		termResolver = resolver;
+		configureXstream();
+	}
 
+	private void configureXstream() {
 		xstream.alias("classBean", ConceptBean.class);
 		xstream.alias("entry", ConceptBean.Entry.class);
 		xstream.aliasField("int", ConceptBean.Entry.class, "counter");
@@ -112,30 +112,6 @@ public class BioportalService implements OntologyService {
 		// xstream.addImplicitCollection(SearchResultListBean.class, "terms");
 		xstream.alias("searchResultList", List.class);
 		xstream.alias("list", List.class);
-
-		// mappings.add(new BioportalMapping("^MO_", "(MO_.*)", "1131",
-		// "MO_565"));
-
-		mappings.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
-		mappings.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
-		mappings.add(new BioportalMapping("^IDOMAL:", "1311", "IDOMAL:0000322"));
-		mappings.add(new BioportalMapping("^ICD9", "ICD9.*:(.*)", "1101", "ICD9CM_1986:427.31"));
-		mappings.add(new BioportalMapping("^NIFSTD:|^sao|^nlx|^birnlex|^nifext", "((sao|nlx|birnlex|nifext).*)",
-				"1084", "NIFSTD:birnlex_266"));
-		mappings.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
-		mappings.add(new BioportalMapping("^NCI|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
-		mappings.add(new BioportalMapping("^BTO:", "1005", "BTO:0001658"));
-		mappings.add(new BioportalMapping("^DOID:", "1009", "DOID:9778"));
-		mappings.add(new BioportalMapping("^FMAID:", "1053", "FMAID:9607"));
-		mappings.add(new BioportalMapping("^MAT:", "1152", "MAT:0000038"));
-		mappings.add(new BioportalMapping("^MP:", "1025", "MP:0001672"));
-		mappings.add(new BioportalMapping("^FBbt:", "1015", "FBbt:00000020"));
-		mappings.add(new BioportalMapping("^ZFS:", "1051", "ZFS:0000008"));
-		mappings.add(new BioportalMapping("^TGMA:", "1030", "TGMA:0000720"));
-		mappings.add(new BioportalMapping("^UO:", "1112", "UO:0000044"));
-		mappings.add(new BioportalMapping("^SNOMEDCT", "1353", "SNOMEDCT_2005_01_31:196743006"));
-		mappings.add(new BioportalMapping("^CL:", "1006", "CL:0000127"));
-		mappings.add(new BioportalMapping("^CHEBI:", "1007", "CHEBI:2365"));
 	}
 
 	/**
@@ -218,44 +194,6 @@ public class BioportalService implements OntologyService {
 	}
 
 	/**
-	 * Gets the mappings.
-	 * 
-	 * @return the mappings
-	 */
-	public static ArrayList<BioportalMapping> getMappings() {
-		return mappings;
-	}
-
-	/**
-	 * Gets the ontology id from concept.
-	 * 
-	 * @param extID
-	 *            the ext id
-	 * 
-	 * @return the ontology id from concept
-	 * 
-	 * @throws OntologyServiceException
-	 *             the ontology service exception
-	 */
-	private String getOntologyIDFromConcept(String extID) throws OntologyServiceException {
-		for (BioportalMapping BPmap : mappings) {
-			if (BPmap.getConfirmMatchPattern().matcher(extID).find()) {
-				return BPmap.getOntologyID();
-			}
-		}
-		throw new OntologyServiceException(new Exception("TERM NOT MAPPABLE"));
-	}
-
-	private Pattern getExtractPatternFromConcept(String extID) throws OntologyServiceException {
-		for (BioportalMapping BPmap : mappings) {
-			if (BPmap.getConfirmMatchPattern().matcher(extID).find()) {
-				return BPmap.getExtractIDPattern();
-			}
-		}
-		throw new OntologyServiceException(new Exception("TERM NOT MAPPABLE"));
-	}
-
-	/**
 	 * Search concept id through label.
 	 * 
 	 * @param ontologyID
@@ -268,17 +206,9 @@ public class BioportalService implements OntologyService {
 	 */
 	private void searchConceptIDThroughLabel(String ontologyID, String extID) throws OntologyServiceException {
 		// If concept id was not found in source ontology bioportal might be
-		// mapping label as id instead so strip the concept id to number and
-		// search for it.
-		Matcher matcher = getExtractPatternFromConcept(extID).matcher(extID);
-		String ID;
-		if (matcher.find()) {
-			ID = matcher.group(1);
-		} else {
-			ID = extID; // ok no number found just get the whole id
-		}
+		// mapping label as id instead so try resolving it
 		// and search for this id in attributes of the ontology
-		processSearchUrl(ontologyID, ID);
+		processSearchUrl(ontologyID, termResolver.getTermAccessionFromConcept(extID));
 		// bioportal id for the concept found
 		processConceptUrl(ontologyID, this.getSearchResults().get(0).getAccession());
 	}
@@ -545,7 +475,7 @@ public class BioportalService implements OntologyService {
 	 * @see plugin.OntologyBrowser.OntologyService#getTerm(java.lang.String)
 	 */
 	public OntologyTermExt getTerm(String termAccession) throws OntologyServiceException {
-		return getTerm(getOntologyIDFromConcept(termAccession), termAccession);
+		return getTerm(termResolver.getOntologyAccessionFromConcept(termAccession), termAccession);
 	}
 
 	/*
