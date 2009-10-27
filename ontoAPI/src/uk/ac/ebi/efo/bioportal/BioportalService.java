@@ -46,7 +46,6 @@ import com.thoughtworks.xstream.io.StreamException;
  * The Class BioportalService.
  * 
  * @author Tomasz Adamusiak
- * @version $Id: BioportalService.java 9027 2009-09-22 15:36:32Z tomasz $
  */
 public class BioportalService implements OntologyService {
 
@@ -85,7 +84,7 @@ public class BioportalService implements OntologyService {
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	private final BioportalIdResolver termResolver;
+	private final BioportalIDTranslation termResolver;
 
 	/**
 	 * Instantiates a new bioportal service.
@@ -93,7 +92,7 @@ public class BioportalService implements OntologyService {
 	 * @param email
 	 *            the email
 	 */
-	public BioportalService(String email, BioportalIdResolver resolver) {
+	public BioportalService(String email, BioportalIDTranslation resolver) {
 		// Now map the xml to the java beans
 		urlAddOn = "?includeproperties=1&email=" + email;
 		termResolver = resolver;

@@ -6,7 +6,7 @@ package uk.ac.ebi.efo.bioportal;
 import java.util.regex.Pattern;
 
 /**
- * @author Tomasz
+ * @author Tomasz Adamusiak
  *
  */
 /**

@@ -9,12 +9,12 @@ import plugin.OntologyBrowser.OntologyServiceException;
 
 /**
  * Stores mappings and regular expressions required to convert a given string to
- * an ID serchable in Bioportal.
+ * an ID searchable in Bioportal.
  * 
- * @author Tomasz
+ * @author Tomasz Adamusiak
  * 
  */
-public interface BioportalIdResolver {
+public interface BioportalIDTranslation {
 	public ArrayList<BioportalMapping> getMappings();
 
 	public String getOntologyAccessionFromConcept(String sConcept) throws OntologyServiceException;

@@ -9,19 +9,19 @@ import java.util.regex.Matcher;
 import plugin.OntologyBrowser.OntologyServiceException;
 
 /**
- * Implementation of the BioportalIdResolver customised for how the term IDs are
+ * Implementation of the BioportalIDTranslation customised for how the term IDs are
  * stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
  * 
  * @author Tomasz Adamusiak
  */
-public class EFOIdResolverImpl implements BioportalIdResolver {
+public class EFOIDTranslator implements BioportalIDTranslation {
 	/** The Constant mappings. */
 	private static final ArrayList<BioportalMapping> mappings = initialiseMappings();
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see uk.ac.ebi.efo.bioportal.BioportalIdResolver#getMappings()
+	 * @see uk.ac.ebi.efo.bioportal.BioportalIDTranslation#getMappings()
 	 */
 	@Override
 	public ArrayList<BioportalMapping> getMappings() {

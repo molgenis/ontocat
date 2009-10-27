@@ -15,21 +15,21 @@ import plugin.OntologyBrowser.OntologyTerm;
 import plugin.OntologyBrowser.OntologyTermExt;
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.BioportalService;
-import uk.ac.ebi.efo.bioportal.EFOIdResolverImpl;
+import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
 
 public class OntologyServiceTest {
 	private static OntologyService os;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		os = new BioportalService("ontoapi-svn@lists.sourceforge.net", new EFOIdResolverImpl());
+		os = new BioportalService("ontoapi-svn@lists.sourceforge.net", new EFOIDTranslator());
 	}
 
 	@Test
 	public final void testGetLabelForAccession() {
 		printCurrentTest();
-		new EFOIdResolverImpl();
-		for (BioportalMapping BPmap : new EFOIdResolverImpl().getMappings()) {
+		new EFOIDTranslator();
+		for (BioportalMapping BPmap : new EFOIDTranslator().getMappings()) {
 			try {
 				String label = os.getLabelForAccession(BPmap.getOntologyID(), BPmap.getTestCode());
 				System.out.println(BPmap.getOntologyID() + " " + BPmap.getTestCode() + " " + label);
