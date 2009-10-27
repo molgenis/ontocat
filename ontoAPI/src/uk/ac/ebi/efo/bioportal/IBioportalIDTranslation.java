@@ -14,7 +14,7 @@ import plugin.OntologyBrowser.OntologyServiceException;
  * @author Tomasz Adamusiak
  * 
  */
-public interface BioportalIDTranslation {
+public interface IBioportalIDTranslation {
 	public ArrayList<BioportalMapping> getMappings();
 
 	public String getOntologyAccessionFromConcept(String sConcept) throws OntologyServiceException;

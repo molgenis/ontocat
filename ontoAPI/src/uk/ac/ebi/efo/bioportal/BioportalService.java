@@ -84,7 +84,7 @@ public class BioportalService implements OntologyService {
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	private final BioportalIDTranslation termResolver;
+	private final IBioportalIDTranslation termResolver;
 
 	/**
 	 * Instantiates a new bioportal service.
@@ -92,7 +92,7 @@ public class BioportalService implements OntologyService {
 	 * @param email
 	 *            the email
 	 */
-	public BioportalService(String email, BioportalIDTranslation resolver) {
+	public BioportalService(String email, IBioportalIDTranslation resolver) {
 		// Now map the xml to the java beans
 		urlAddOn = "?includeproperties=1&email=" + email;
 		termResolver = resolver;
