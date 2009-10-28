@@ -9,8 +9,8 @@ import java.util.regex.Matcher;
 import plugin.OntologyBrowser.OntologyServiceException;
 
 /**
- * Implementation of the IBioportalIDTranslation customised for how the term IDs are
- * stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
+ * Implementation of the IBioportalIDTranslation customised for how the term IDs
+ * are stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
  * 
  * @author Tomasz Adamusiak
  */
@@ -38,7 +38,7 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 		temp.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
 		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
 		temp.add(new BioportalMapping("^IDOMAL:", "1311", "IDOMAL:0000322"));
-		temp.add(new BioportalMapping("^ICD9", "ICD9.*:(.*)", "1101", "ICD9CM_1986:427.31"));
+		temp.add(new BioportalMapping("^ICD9", "ICD9.*:0*(.*)", "1101", "ICD9CM_1986:427.31"));
 		temp.add(new BioportalMapping("^NIFSTD:|^sao|^nlx|^birnlex|^nifext", "((sao|nlx|birnlex|nifext).*)", "1084",
 				"NIFSTD:birnlex_266"));
 		temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
