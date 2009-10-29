@@ -34,6 +34,8 @@ public class ConceptBean implements OntologyTermExt {
 	/** The relations. */
 	private Entry[] relations;
 
+	private String isBrowsable;
+
 	/**
 	 * The Class Entry.
 	 */

@@ -73,7 +73,6 @@ public class OntologyServiceTest {
 		printCurrentTest();
 		for (OntologyTerm ot : os.searchOntology("1053", "thymus"))
 			System.out.println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
-		;
 	}
 
 	@Test
