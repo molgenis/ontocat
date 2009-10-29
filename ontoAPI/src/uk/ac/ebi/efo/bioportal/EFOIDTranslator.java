@@ -35,6 +35,7 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 		// mappings.add(new BioportalMapping("^MO_", "(MO_.*)", "1131",
 		// "MO_565"));
 		ArrayList<BioportalMapping> temp = new ArrayList<BioportalMapping>();
+		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
 		temp.add(new BioportalMapping("^ICD9", "ICD9.*:0*(.*)", "1101", "ICD9CM_1988:043.2"));
 		temp.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
 		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
@@ -42,7 +43,6 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 		temp.add(new BioportalMapping("^NIFSTD:|^sao|^nlx|^birnlex|^nifext", "((sao|nlx|birnlex|nifext).*)", "1084",
 				"NIFSTD:birnlex_266"));
 		temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
-		temp.add(new BioportalMapping("^NCI|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
 		temp.add(new BioportalMapping("^BTO:", "1005", "BTO:0001658"));
 		temp.add(new BioportalMapping("^DOID:", "1009", "DOID:9778"));
 		temp.add(new BioportalMapping("^FMAID:", "1053", "FMAID:9607"));
