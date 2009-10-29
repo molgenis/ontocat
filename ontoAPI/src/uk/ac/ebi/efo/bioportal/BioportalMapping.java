@@ -77,7 +77,7 @@ public class BioportalMapping {
 	 */
 	public BioportalMapping(String sMatchingPattern, String sOntologyID, String sTestingCode) {
 		pConfirmMatch = Pattern.compile(sMatchingPattern);
-		pExtractID = Pattern.compile(":(\\d+)");
+		pExtractID = Pattern.compile(": *(\\d+)");
 		ontologyID = sOntologyID;
 		testingCode = sTestingCode;
 	}

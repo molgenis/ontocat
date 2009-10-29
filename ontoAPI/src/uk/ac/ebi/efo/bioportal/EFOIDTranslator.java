@@ -36,7 +36,7 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 		// "MO_565"));
 		ArrayList<BioportalMapping> temp = new ArrayList<BioportalMapping>();
 		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
-		temp.add(new BioportalMapping("^ICD9", "ICD9.*:0*(.*)", "1101", "ICD9CM_1988:043.2"));
+		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)", "1101", "ICD9CM_1988:043.2"));
 		temp.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
 		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
 		temp.add(new BioportalMapping("^IDOMAL:", "1311", "IDOMAL:0000322"));

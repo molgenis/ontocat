@@ -52,7 +52,7 @@ public class EFOIDTranslatorTest {
 	public void testSpecial() {
 		// bw.searchConceptID("NCI C3235");
 		try {
-			printResults(bw.getTerm("NCI Metathesaurus: C0085485"));
+			printResults(bw.getTerm("ICD9:042-042.99"));
 		} catch (OntologyServiceException e) {
 			System.out.println(e.getMessage());
 		}
