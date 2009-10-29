@@ -45,7 +45,7 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 		temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
 		temp.add(new BioportalMapping("^BTO:", "1005", "BTO:0001658"));
 		temp.add(new BioportalMapping("^DOID:", "1009", "DOID:9778"));
-		temp.add(new BioportalMapping("^FMAID:", "1053", "FMAID:9607"));
+		temp.add(new BioportalMapping("^FMA(ID)?:", "1053", "FMAID:9607"));
 		temp.add(new BioportalMapping("^MAT:", "1152", "MAT:0000038"));
 		temp.add(new BioportalMapping("^MP:", "1025", "MP:0001672"));
 		temp.add(new BioportalMapping("^FBbt:", "1015", "FBbt:00000020"));
