@@ -50,9 +50,9 @@ public class EFOIDTranslatorTest {
 
 	@Test
 	public void testSpecial() {
-		// bw.searchConceptID("NCI C3235");
+		// bw.searchConceptID("C27291");
 		try {
-			printResults(bw.getTerm("ICD9:042-042.99"));
+			printResults(bw.getTerm("CHEBI:2365"));
 		} catch (OntologyServiceException e) {
 			System.out.println(e.getMessage());
 		}
