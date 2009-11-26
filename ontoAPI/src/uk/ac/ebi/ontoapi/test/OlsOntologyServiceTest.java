@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 
 import uk.ac.ebi.ontoapi.ols.OlsOntologyService;
 
-public class OlsOntologyServiceTest extends BioportalOntologyServiceTest {
+public class OlsOntologyServiceTest extends OntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
