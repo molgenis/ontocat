@@ -9,8 +9,7 @@ import java.util.Map;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyService
-{
+public interface OntologyService {
 	/**
 	 * Retrieve a term using its accession.
 	 * 
@@ -122,9 +121,10 @@ public interface OntologyService
 	 */
 	public Map<String, String[]> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException;
-	
+
 	/**
 	 * Generate a hyperlink to drill down to ontology source
+	 * 
 	 * @param termAccession
 	 * @return
 	 */
@@ -136,14 +136,15 @@ public interface OntologyService
 	 * @param ontologyAccession
 	 * @return
 	 */
-	public Ontology getOntology(String ontologyAccession);
+	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException;
 
 	/**
-	 * Load synonous accessions for a term
+	 * Load synonyms for a term
+	 * 
 	 * @param ontologyAccession
 	 * @param accession
 	 * @return
-	 * @throws OntologyServiceException 
+	 * @throws OntologyServiceException
 	 */
 	public String[] getSynonyms(String ontologyAccession, String accession) throws OntologyServiceException;
 }
