@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
+import uk.ac.ebi.efo.bioportal.IOntologyMapping;
 import uk.ac.ebi.ontoapi.OntologyServiceException;
 import uk.ac.ebi.ontoapi.OntologyTerm;
 import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
@@ -18,7 +18,8 @@ import uk.ac.ebi.ontoapi.bioportal.xmlbeans.OntologyBean;
  */
 
 public class EFOIDTranslatorTest {
-	private static final BioportalOntologyService bw = new BioportalOntologyService("tomasz@ebi.ac.uk", new EFOIDTranslator());
+	private static final BioportalOntologyService bw = new BioportalOntologyService("tomasz@ebi.ac.uk",
+			new EFOIDTranslator());
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -26,7 +27,7 @@ public class EFOIDTranslatorTest {
 
 	@Test
 	public void testMappings() {
-		for (BioportalMapping BPmap : new EFOIDTranslator().getMappings()) {
+		for (IOntologyMapping BPmap : new EFOIDTranslator().getMappings()) {
 			try {
 				printResults(bw.getTerm(BPmap.getTestCode()));
 			} catch (OntologyServiceException e) {
@@ -38,8 +39,8 @@ public class EFOIDTranslatorTest {
 
 	@Test
 	public void listResolvableOntologies() throws OntologyServiceException {
-		for (BioportalMapping BPmap : new EFOIDTranslator().getMappings()) {
-			OntologyBean ob = (OntologyBean) bw.getOntologyDescription(BPmap.getOntologyID());
+		for (IOntologyMapping BPmap : new EFOIDTranslator().getMappings()) {
+			OntologyBean ob = (OntologyBean) bw.getOntology(BPmap.getOntologyAccession());
 			printMany(new String[] {
 					ob.getMetaAnnotation(), "Preferred name: " + ob.getPreferredNameSlot(),
 					"Synonym: " + ob.getSynonymSlot(), "Terminologies: " + ob.getTargetTerminologies()
