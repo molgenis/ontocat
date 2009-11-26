@@ -7,15 +7,14 @@ import java.util.ArrayList;
 
 import uk.ac.ebi.ontoapi.OntologyServiceException;
 
-
 /**
- * Stores mappings and regular expressions required to convert a given string to
- * an ID searchable in Bioportal.
+ * Ontology ID translation interface. Defines mappings and regular expressions
+ * required to convert a given string to an ID searchable in OntologyService.
  * 
- * @author Tomasz Adamusiak
- * 
+ * @author Tomasz Adamusiak, Morris Swertz
+ * @version $Id$
  */
-public interface IBioportalIDTranslation {
+public interface IOntologyIDTranslation {
 	public ArrayList<BioportalMapping> getMappings();
 
 	public String getOntologyAccessionFromConcept(String sConcept) throws OntologyServiceException;

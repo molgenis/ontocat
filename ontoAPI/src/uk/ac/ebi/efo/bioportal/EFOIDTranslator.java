@@ -10,19 +10,19 @@ import uk.ac.ebi.ontoapi.OntologyServiceException;
 
 
 /**
- * Implementation of the IBioportalIDTranslation customised for how the term IDs
+ * Implementation of the IOntologyIDTranslation customised for how the term IDs
  * are stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
  * 
  * @author Tomasz Adamusiak
  */
-public class EFOIDTranslator implements IBioportalIDTranslation {
+public class EFOIDTranslator implements IOntologyIDTranslation {
 	/** The Constant mappings. */
 	private static final ArrayList<BioportalMapping> mappings = initialiseMappings();
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see uk.ac.ebi.efo.bioportal.IBioportalIDTranslation#getMappings()
+	 * @see uk.ac.ebi.efo.bioportal.IOntologyIDTranslation#getMappings()
 	 */
 	@Override
 	public ArrayList<BioportalMapping> getMappings() {
@@ -63,9 +63,9 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 	public String getOntologyAccessionFromConcept(String termID) throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (BioportalMapping BPmap : mappings) {
+		for (IOntologyMapping BPmap : mappings) {
 			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
-				return BPmap.getOntologyID();
+				return BPmap.getOntologyAccession();
 			}
 		}
 		throw new OntologyServiceException(new Exception("TERM NOT MAPPABLE"));
@@ -75,7 +75,7 @@ public class EFOIDTranslator implements IBioportalIDTranslation {
 	public String getTermAccessionFromConcept(String termID) throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (BioportalMapping BPmap : mappings) {
+		for (IOntologyMapping BPmap : mappings) {
 			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
 				// Extract proper ID according to extratct pattern
 				Matcher matcher = BPmap.getExtractIDPattern().matcher(termID);

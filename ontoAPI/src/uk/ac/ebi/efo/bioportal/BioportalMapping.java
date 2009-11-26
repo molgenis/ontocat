@@ -6,54 +6,47 @@ package uk.ac.ebi.efo.bioportal;
 import java.util.regex.Pattern;
 
 /**
- * @author Tomasz Adamusiak
+ * @author Tomasz Adamusiak, Morris Swertz
+ * @version $Id$
  *
  */
 /**
  * The Class BioportalMapping.
  */
-public class BioportalMapping {
+public class BioportalMapping implements IOntologyMapping {
 
 	/** Confirms match to this particular ontology. */
 	private final Pattern pConfirmMatch;
 	/** Extracts bioportal compatible id from matched string. */
 	private final Pattern pExtractID;
-	/** Ontology id corresponding to confirm pattern. */
+	/** Ontology id corresponding to confirmed pattern. */
 	private final String ontologyID;
 	/** Testing id for this particular ontology/pattern. */
 	private final String testingCode;
 
-	/**
-	 * Gets confirming pattern.
-	 * 
-	 * @return pattern
+	/* (non-Javadoc)
+	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getConfirmMatchPattern()
 	 */
 	public Pattern getConfirmMatchPattern() {
 		return pConfirmMatch;
 	}
 
-	/**
-	 * Gets the extraction pattern.
-	 * 
-	 * @return pattern
+	/* (non-Javadoc)
+	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getExtractIDPattern()
 	 */
 	public Pattern getExtractIDPattern() {
 		return pExtractID;
 	}
 
-	/**
-	 * Gets the ont id.
-	 * 
-	 * @return the ont id
+	/* (non-Javadoc)
+	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getOntologyID()
 	 */
-	public String getOntologyID() {
+	public String getOntologyAccession() {
 		return ontologyID;
 	}
 
-	/**
-	 * Gets the test code.
-	 * 
-	 * @return the test code
+	/* (non-Javadoc)
+	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getTestCode()
 	 */
 	public String getTestCode() {
 		return testingCode;
