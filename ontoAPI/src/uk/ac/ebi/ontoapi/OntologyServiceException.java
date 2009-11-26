@@ -1,4 +1,4 @@
-package plugin.OntologyBrowser;
+package uk.ac.ebi.ontoapi;
 
 /**
  * @author Tomasz Adamusiak, Morris Swertz
@@ -6,6 +6,11 @@ package plugin.OntologyBrowser;
  */
 public class OntologyServiceException extends Exception {
 
+	public OntologyServiceException(String str)
+	{
+		super(str);
+	}
+	
 	public OntologyServiceException(Exception e) {
 		super(e);
 	}

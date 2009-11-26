@@ -6,7 +6,8 @@ package uk.ac.ebi.efo.bioportal;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import plugin.OntologyBrowser.OntologyServiceException;
+import uk.ac.ebi.ontoapi.OntologyServiceException;
+
 
 /**
  * Implementation of the IBioportalIDTranslation customised for how the term IDs

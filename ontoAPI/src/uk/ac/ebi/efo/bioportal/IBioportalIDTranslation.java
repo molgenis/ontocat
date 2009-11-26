@@ -5,7 +5,8 @@ package uk.ac.ebi.efo.bioportal;
 
 import java.util.ArrayList;
 
-import plugin.OntologyBrowser.OntologyServiceException;
+import uk.ac.ebi.ontoapi.OntologyServiceException;
+
 
 /**
  * Stores mappings and regular expressions required to convert a given string to

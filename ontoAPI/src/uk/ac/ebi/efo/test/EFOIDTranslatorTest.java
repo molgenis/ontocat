@@ -5,12 +5,12 @@ import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import plugin.OntologyBrowser.OntologyServiceException;
-import plugin.OntologyBrowser.OntologyTermExt;
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
-import uk.ac.ebi.efo.bioportal.BioportalService;
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
-import uk.ac.ebi.efo.bioportal.xmlbeans.OntologyBean;
+import uk.ac.ebi.ontoapi.OntologyServiceException;
+import uk.ac.ebi.ontoapi.OntologyTerm;
+import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontoapi.bioportal.xmlbeans.OntologyBean;
 
 /**
  * @author $Id: EFOIDTranslatorTest.java 9019 2009-09-22 12:39:01Z tomasz $
@@ -18,7 +18,7 @@ import uk.ac.ebi.efo.bioportal.xmlbeans.OntologyBean;
  */
 
 public class EFOIDTranslatorTest {
-	private static final BioportalService bw = new BioportalService("tomasz@ebi.ac.uk", new EFOIDTranslator());
+	private static final BioportalOntologyService bw = new BioportalOntologyService("tomasz@ebi.ac.uk", new EFOIDTranslator());
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -58,7 +58,7 @@ public class EFOIDTranslatorTest {
 		}
 	}
 
-	private void printResults(OntologyTermExt ontologyTerm) throws OntologyServiceException {
+	private void printResults(OntologyTerm ontologyTerm) throws OntologyServiceException {
 		System.out.println("ID " + ontologyTerm.getAccession());
 		System.out.println("LABEL " + ontologyTerm.getLabel());
 		System.out.print("SYNONYMS ");

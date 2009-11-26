@@ -1,17 +1,24 @@
 /**
  * 
  */
-package uk.ac.ebi.efo.bioportal.xmlbeans;
+package uk.ac.ebi.ontoapi.bioportal.xmlbeans;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import plugin.OntologyBrowser.OntologyEntity;
+import uk.ac.ebi.ontoapi.Ontology;
+import uk.ac.ebi.ontoapi.OntologyServiceException;
+import uk.ac.ebi.ontoapi.OntologyTerm;
+
 
 /**
+ * Wraps for the Ontology representation of BioPortal and maps
+ * it to the OntologyEntity interface.
+ * 
  * @author $Id: ConceptBean.java 8301 2009-07-31 13:41:14Z tomasz $
  * 
  */
-public class OntologyBean implements OntologyEntity {
+public class OntologyBean implements Ontology {
 	private String id;
 	private String ontologyId;
 	private String virtualViewIds;
@@ -96,7 +103,7 @@ public class OntologyBean implements OntologyEntity {
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getDisplayLabel()
 	 */
-	public String getDisplayLabel() {
+	public String getLabel() {
 		return displayLabel;
 	}
 
@@ -126,5 +133,17 @@ public class OntologyBean implements OntologyEntity {
 	@Override
 	public String getOntologyAccession() {
 		return ontologyId;
+	}
+
+	@Override
+	public String getDescription() throws OntologyServiceException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<OntologyTerm> getRootTerms() throws OntologyServiceException
+	{
+		throw new UnsupportedOperationException();
 	}
 }

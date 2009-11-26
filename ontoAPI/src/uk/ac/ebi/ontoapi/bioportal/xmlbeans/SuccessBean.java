@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ebi.efo.bioportal.xmlbeans;
+package uk.ac.ebi.ontoapi.bioportal.xmlbeans;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
