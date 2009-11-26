@@ -112,7 +112,7 @@ public class BioportalOntologyService implements OntologyService {
 		xstream.alias("ontologyBean", OntologyBean.class);
 		// xstream.alias("searchResultList", SearchResultListBean.class);
 		xstream.addImplicitCollection(EntryBean.class, "UnmodifiableCollection");
-		xstream.addImplicitCollection(EntryBean.class, "strings", String.class);
+		xstream.addImplicitCollection(EntryBean.class, "strings", "string", String.class);
 		// xstream.addImplicitCollection(SearchResultListBean.class, "terms");
 		xstream.alias("searchResultList", List.class);
 		xstream.alias("list", List.class);
