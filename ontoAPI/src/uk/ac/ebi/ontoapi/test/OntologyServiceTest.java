@@ -1,7 +1,6 @@
 package uk.ac.ebi.ontoapi.test;
 
-import static org.junit.Assert.fail;
-
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.junit.Test;
@@ -31,11 +30,6 @@ public abstract class OntologyServiceTest {
 			}
 		}
 		println();
-	}
-
-	@Test
-	public final void testGetTermPath() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -78,8 +72,16 @@ public abstract class OntologyServiceTest {
 	@Test
 	public final void testGetRootTerms() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getRootTerms(ONTOLOGY_ACCESSION2))
+		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION2);
+		for (OntologyTerm ot : results)
 			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+	}
+
+	@Test
+	public final void testGetTermPath() throws OntologyServiceException {
+		printCurrentTest();
+		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION2, "GO:0009318"))
+			println(ot.getAccession() + " " + ot.getLabel());
 	}
 
 	@Test

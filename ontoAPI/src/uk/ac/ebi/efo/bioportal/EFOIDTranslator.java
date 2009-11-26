@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 
 import uk.ac.ebi.ontoapi.OntologyServiceException;
 
-
 /**
  * Implementation of the IOntologyIDTranslation customised for how the term IDs
  * are stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
@@ -34,7 +33,7 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 	 */
 	private static ArrayList<BioportalMapping> initialiseMappings() {
 		ArrayList<BioportalMapping> temp = new ArrayList<BioportalMapping>();
-		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d*)", "1351", "MSH:D012512"));
+		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d+)", "1351", "MSH:D012512"));
 		temp.add(new BioportalMapping("^MO_", "(MO_.*)", "1131", "MO_565"));
 		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)", "1101", "ICD9CM_1988:04.03"));
 		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
@@ -55,6 +54,7 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 		temp.add(new BioportalMapping("^SNOMEDCT", "1353", "SNOMEDCT_2005_01_31:196743006"));
 		temp.add(new BioportalMapping("^CL:", "1006", "CL:0000127"));
 		temp.add(new BioportalMapping("^CHEBI:", "1007", "CHEBI:2365"));
+		temp.add(new BioportalMapping("^GO:", "(GO:\\d+)", "1070", "GO:0009318"));
 		temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
 		return temp;
 	}

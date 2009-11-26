@@ -15,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ import uk.ac.ebi.ontoapi.OntologyService;
 import uk.ac.ebi.ontoapi.OntologyServiceException;
 import uk.ac.ebi.ontoapi.OntologyTerm;
 import uk.ac.ebi.ontoapi.bioportal.xmlbeans.ConceptBean;
+import uk.ac.ebi.ontoapi.bioportal.xmlbeans.EntryBean;
 import uk.ac.ebi.ontoapi.bioportal.xmlbeans.OntologyBean;
 import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SearchBean;
 import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SuccessBean;
@@ -102,13 +105,14 @@ public class BioportalOntologyService implements OntologyService {
 
 	private void configureXstream() {
 		xstream.alias("classBean", ConceptBean.class);
-		xstream.alias("entry", ConceptBean.Entry.class);
-		xstream.aliasField("int", ConceptBean.Entry.class, "counter");
+		xstream.alias("entry", EntryBean.class);
+		xstream.aliasField("int", EntryBean.class, "counter");
 		xstream.alias("searchBean", SearchBean.class);
 		xstream.alias("success", SuccessBean.class);
 		xstream.alias("ontologyBean", OntologyBean.class);
 		// xstream.alias("searchResultList", SearchResultListBean.class);
-		xstream.addImplicitCollection(ConceptBean.Entry.class, "UnmodifiableCollection");
+		xstream.addImplicitCollection(EntryBean.class, "UnmodifiableCollection");
+		xstream.addImplicitCollection(EntryBean.class, "strings", String.class);
 		// xstream.addImplicitCollection(SearchResultListBean.class, "terms");
 		xstream.alias("searchResultList", List.class);
 		xstream.alias("list", List.class);
@@ -137,6 +141,10 @@ public class BioportalOntologyService implements OntologyService {
 
 	private void processParentsUrl(String ontologyAccession, String termAccession) throws OntologyServiceException {
 		processServiceURL("virtual/parents/", ontologyAccession, termAccession);
+	}
+
+	private void processPathUrl(String ontologyAccession, String termAccession) throws OntologyServiceException {
+		processServiceURL("virtual/rootpath/", ontologyAccession, termAccession);
 	}
 
 	private void processServiceURL(String signature, String ontologyID, String term) throws OntologyServiceException {
@@ -526,8 +534,25 @@ public class BioportalOntologyService implements OntologyService {
 	 */
 	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		// PARSE THE XML OUTPUT
+		processPathUrl(ontologyAccession, termAccession);
+		// so it's not true ontology term per se, but the way
+		// bioportal process this query it will dump the path
+		// as a list of *slightly modified* classBeans
+		ConceptBean firstPath = (ConceptBean) this.getSearchResults().get(0);
+		String PathString = firstPath.getPathString();
+		// This will be a list of accessions separated by point
+		String[] Accessions = PathString.split("\\.");
+
+		// GET TERMS FROM ACCESSIONS
+		List<OntologyTerm> path = new ArrayList<OntologyTerm>();
+		// include searched acc in path
+		path.add(this.getTerm(termAccession));
+		for (String tAcc : Accessions) {
+			path.add(this.getTerm(tAcc));
+		}
+		Collections.reverse(path);
+		return path;
 	}
 
 	@Override

@@ -33,7 +33,8 @@ public interface OntologyService {
 	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException;
 
 	/**
-	 * Retrieve a path to the root of the ontology
+	 * Retrieve a path to the root of the ontology. Returns a list of terms,
+	 * starting with the root and finishing with the term itself
 	 * 
 	 * @param termAccession
 	 * @return terms
