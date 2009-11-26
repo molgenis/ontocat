@@ -28,7 +28,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.efo.bioportal.IBioportalIDTranslation;
+import uk.ac.ebi.efo.bioportal.IOntologyIDTranslation;
 import uk.ac.ebi.ontoapi.Ontology;
 import uk.ac.ebi.ontoapi.OntologyService;
 import uk.ac.ebi.ontoapi.OntologyServiceException;
@@ -45,7 +45,7 @@ import com.thoughtworks.xstream.io.StreamException;
 /**
  * The Class BioportalService.
  * 
- * @author Tomasz Adamusiak
+ * @author Tomasz Adamusiak, Morris Swertz
  */
 public class BioportalOntologyService implements OntologyService {
 
@@ -84,7 +84,7 @@ public class BioportalOntologyService implements OntologyService {
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	private final IBioportalIDTranslation termResolver;
+	private final IOntologyIDTranslation termResolver;
 
 	/**
 	 * Instantiates a new bioportal service.
@@ -92,9 +92,9 @@ public class BioportalOntologyService implements OntologyService {
 	 * @param email
 	 *            the email
 	 */
-	public BioportalOntologyService(String email, IBioportalIDTranslation resolver) {
+	public BioportalOntologyService(String email, IOntologyIDTranslation resolver) {
 		// Now map the xml to the java beans
-		//FIXME level?
+		// FIXME level?
 		urlAddOn = "?includeproperties=1&email=" + email + "&level=1";
 		termResolver = resolver;
 		configureXstream();
@@ -141,7 +141,7 @@ public class BioportalOntologyService implements OntologyService {
 
 	private void processServiceURL(String signature, String ontologyID, String term) throws OntologyServiceException {
 		try {
-			this.queryURL = new URL(urlBASE + signature + ontologyID + "/" + term + urlAddOn );
+			this.queryURL = new URL(urlBASE + signature + ontologyID + "/" + term + urlAddOn);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -407,14 +407,8 @@ public class BioportalOntologyService implements OntologyService {
 		return this.getOntologyList();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * plugin.OntologyBrowser.OntologyService#getOntologyDescrition(java.lang
-	 * .String)
-	 */
-	public Ontology getOntologyDescription(String ontologyAccession) throws OntologyServiceException {
+	@Override
+	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException {
 		processOntologyUrl(ontologyAccession);
 		return this.getOntologyBean();
 	}
@@ -537,27 +531,18 @@ public class BioportalOntologyService implements OntologyService {
 	}
 
 	@Override
-	public Ontology getOntology(String ontologyAccession)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public Map<String, String[]> getRelations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
-	{
+			throws OntologyServiceException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String makeLookupHyperlink(String termAccession)
-	{
+	public String makeLookupHyperlink(String termAccession) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public String[] getSynonyms(String ontologyAccession, String accession)
-	{
+	public String[] getSynonyms(String ontologyAccession, String accession) {
 		throw new UnsupportedOperationException();
 	}
 }
