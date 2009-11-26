@@ -2,9 +2,6 @@ package uk.ac.ebi.ontoapi.test;
 
 import static org.junit.Assert.fail;
 
-import java.util.List;
-import java.util.Map;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,7 +17,6 @@ public class BioportalOntologyServiceTest {
 	protected static OntologyService os;
 	protected static String ONTOLOGY_ACCESSION1 = "1029";
 	protected static String ONTOLOGY_ACCESSION2 = "1070";
-	protected static String ONTOLOGY_ACCESSION3 = "MSH";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -118,46 +114,19 @@ public class BioportalOntologyServiceTest {
 		System.out.println();
 	}
 
-	@Test
-	public final void testMesh() throws OntologyServiceException {
-		printCurrentTest();
-
-		List<Ontology> ontologies = os.getOntologies();
-
-		String ontologyAccession = "MSH";
-		for (Ontology e : ontologies) {
-			if (e.getLabel().contains("Medical Subject Headings")) {
-				System.out.println(e.getLabel() + " " + e.getAbbreviation() + " " + e.getVersionNumber());
-				ontologyAccession = e.getOntologyAccession();
-			}
-		}
-
-		List<OntologyTerm> terms = os.searchOntology(ontologyAccession, "back");
-
-		for (OntologyTerm t : terms) {
-			System.out.println(t.getAccession() + " " + t.getLabel() + " " + t.getOntologyAccession());
-			Map<String, String[]> annotations = os.getAnnotations(ontologyAccession, t.getAccession());
-			for (String key : annotations.keySet()) {
-				print(key + " " + arrayToString(annotations.get(key), ","));
-			}
-			break;
-		}
-
-	}
-
 	private static void print(String in) {
 		System.out.println(in);
 	}
-	
+
 	private String arrayToString(String[] a, String separator) {
-	    StringBuffer result = new StringBuffer();
-	    if (a.length > 0) {
-	        result.append(a[0]);
-	        for (int i=1; i<a.length; i++) {
-	            result.append(separator);
-	            result.append(a[i]);
-	        }
-	    }
-	    return result.toString();
+		StringBuffer result = new StringBuffer();
+		if (a.length > 0) {
+			result.append(a[0]);
+			for (int i = 1; i < a.length; i++) {
+				result.append(separator);
+				result.append(a[i]);
+			}
+		}
+		return result.toString();
 	}
 }
