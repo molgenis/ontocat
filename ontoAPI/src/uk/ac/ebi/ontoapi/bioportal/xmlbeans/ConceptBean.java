@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import uk.ac.ebi.ontoapi.OntologyServiceException;
 import uk.ac.ebi.ontoapi.OntologyTerm;
 import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
@@ -21,6 +23,7 @@ import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
 public class ConceptBean implements OntologyTerm {
 	/** The service that produced it */
 	BioportalOntologyService bioportal;
+	private static final Logger log = Logger.getLogger(ConceptBean.class.getName());
 
 	/** The label. */
 	private String label;
@@ -35,10 +38,14 @@ public class ConceptBean implements OntologyTerm {
 
 	private String ontologyVersionId;
 
+	private String[] synonyms;
+	private String[] definitions;
+	private String[] authors;
+
 	/** The relations. */
 	private EntryBean[] relations;
 
-	private String isBrowsable;
+	private String type;
 
 	/**
 	 * Gets the label.
@@ -116,10 +123,16 @@ public class ConceptBean implements OntologyTerm {
 	 * @see plugin.OntologyBrowser.OntologyTerm#getDefinitions()
 	 */
 	public String[] getDefinitions() {
-		for (EntryBean e : relations) {
-			if (e.getLabel().toLowerCase().startsWith("def") && !e.getLabel().equalsIgnoreCase("definition source")
-					&& !e.getLabel().equalsIgnoreCase("definition editor"))
-				return e.getList();
+		if (definitions != null) {
+			return definitions;
+		} else {
+			for (EntryBean e : relations) {
+				if (e.getLabel().toLowerCase().startsWith("def") && !e.getLabel().equalsIgnoreCase("definition source")
+						&& !e.getLabel().equalsIgnoreCase("definition editor")) {
+					log.warn("BP returned empty definitions list though there is some");
+					return e.getList();
+				}
+			}
 		}
 		return null;
 	}

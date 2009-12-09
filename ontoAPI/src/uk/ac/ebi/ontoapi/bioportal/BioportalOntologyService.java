@@ -85,7 +85,7 @@ public class BioportalOntologyService implements OntologyService {
 			+ "<xsl:copy-of select='success/accessDate'/>" + "</success>" + "</xsl:template>" + "</xsl:stylesheet>";
 
 	/** The Constant urlBASE. */
-	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
+	private static final String urlBASE = "http://stagerest.bioontology.org/bioportal/";
 
 	private final IOntologyIDTranslation termResolver;
 
