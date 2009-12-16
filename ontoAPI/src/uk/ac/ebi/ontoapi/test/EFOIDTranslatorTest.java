@@ -1,4 +1,4 @@
-package uk.ac.ebi.efo.test;
+package uk.ac.ebi.ontoapi.test;
 
 import static org.junit.Assert.fail;
 
@@ -31,8 +31,7 @@ public class EFOIDTranslatorTest {
 			try {
 				printResults(bw.getTerm(BPmap.getTestCode()));
 			} catch (OntologyServiceException e) {
-				System.out.println(BPmap.getTestCode() + " NOT FOUND");
-				fail();
+				fail(BPmap.getTestCode() + " NOT FOUND");
 			}
 		}
 	}

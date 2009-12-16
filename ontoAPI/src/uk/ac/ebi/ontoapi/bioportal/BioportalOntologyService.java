@@ -42,6 +42,7 @@ import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SearchBean;
 import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SuccessBean;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
 
 // TODO: Auto-generated Javadoc
@@ -85,7 +86,7 @@ public class BioportalOntologyService implements OntologyService {
 			+ "<xsl:copy-of select='success/accessDate'/>" + "</success>" + "</xsl:template>" + "</xsl:stylesheet>";
 
 	/** The Constant urlBASE. */
-	private static final String urlBASE = "http://stagerest.bioontology.org/bioportal/";
+	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
 	private final IOntologyIDTranslation termResolver;
 
@@ -336,7 +337,9 @@ public class BioportalOntologyService implements OntologyService {
 		} catch (StreamException e) {
 			throw new OntologyServiceException(e);
 		}
-
+		catch (ConversionException e){
+			throw new OntologyServiceException(e);
+		}
 	}
 
 	/**
