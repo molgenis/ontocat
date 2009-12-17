@@ -39,11 +39,18 @@ public class EFOIDTranslatorTest {
 	@Test
 	public void listResolvableOntologies() throws OntologyServiceException {
 		for (IOntologyMapping BPmap : new EFOIDTranslator().getMappings()) {
-			OntologyBean ob = (OntologyBean) bw.getOntology(BPmap.getOntologyAccession());
-			printMany(new String[] {
-					ob.getMetaAnnotation(), "Preferred name: " + ob.getPreferredNameSlot(),
-					"Synonym: " + ob.getSynonymSlot(), "Terminologies: " + ob.getTargetTerminologies()
-			});
+			try {
+				OntologyBean ob = (OntologyBean) bw.getOntology(BPmap.getOntologyAccession());
+				printMany(new String[] {
+						ob.getMetaAnnotation(), "Preferred name: " + ob.getPreferredNameSlot(),
+						"Synonym: " + ob.getSynonymSlot(), "Terminologies: " + ob.getTargetTerminologies()
+				});
+			} catch (OntologyServiceException e) {
+				e.printStackTrace();
+				fail(BPmap.getTestCode() + " " + BPmap.getOntologyAccession() + " NOT FOUND");
+				
+			}
+			
 		}
 
 	}

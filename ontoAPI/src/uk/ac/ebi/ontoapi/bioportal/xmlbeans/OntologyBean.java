@@ -48,6 +48,7 @@ public class OntologyBean implements Ontology {
 	private String oboFoundryId;
 	private String codingScheme;
 	private String publication;
+	private String documentationSlot;
 
 	/*
 	 * (non-Javadoc)
