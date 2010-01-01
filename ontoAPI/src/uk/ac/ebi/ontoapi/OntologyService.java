@@ -143,9 +143,19 @@ public interface OntologyService {
 	 * Load synonyms for a term
 	 * 
 	 * @param ontologyAccession
-	 * @param accession
+	 * @param termAccession
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public String[] getSynonyms(String ontologyAccession, String accession) throws OntologyServiceException;
+	public String[] getSynonyms(String ontologyAccession, String termAccession) throws OntologyServiceException;
+	
+	/**
+	 * Load definitions for a term
+	 * 
+	 * @param ontologyAccession
+	 * @param termAccession
+	 * @return
+	 * @throws OntologyServiceException
+	 */
+	public String[] getDefinitions(String ontologyAccession, String termAccession) throws OntologyServiceException;
 }

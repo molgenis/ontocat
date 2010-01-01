@@ -209,4 +209,10 @@ public class OlsOntologyService implements OntologyService
 	{
 		return qs;
 	}
+
+	@Override
+	public String[] getDefinitions(String ontologyAccession,
+			String termAccession) throws OntologyServiceException {
+		throw new UnsupportedOperationException();
+	}
 }
