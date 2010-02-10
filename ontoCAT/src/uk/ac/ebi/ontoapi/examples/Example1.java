@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ebi.ontoapi.bioportal.examples;
+package uk.ac.ebi.ontoapi.examples;
 
 import uk.ac.ebi.ontoapi.Ontology;
 import uk.ac.ebi.ontoapi.OntologyService;

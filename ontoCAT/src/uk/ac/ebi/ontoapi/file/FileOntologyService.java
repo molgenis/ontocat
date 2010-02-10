@@ -236,7 +236,8 @@ public final class FileOntologyService implements OntologyService {
 	@Override
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keyword) throws OntologyServiceException {
-		return searchAll(keyword);
+		throw new UnsupportedOperationException(
+				"Not implemented. Only one ontology available. Use searchAll instead.");
 	}
 
 	/*
