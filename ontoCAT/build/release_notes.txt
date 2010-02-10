@@ -1,0 +1,4 @@
+Onto CAT Release Notes
+
+Version 0.8, 10/02/2010
+	First public release.
