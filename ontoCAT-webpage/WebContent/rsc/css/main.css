@@ -8,7 +8,7 @@ logGreen has to be specified explicitly
 body {
 	color: #414042;
 	font-family: "Arial", Sans-serif;
-	background-color:white;
+	background-color: white;
 }
 
 .logoGreen {
@@ -79,7 +79,7 @@ div.mainContent {
 	width: 80%;
 	font-size: 14px;
 	z-index: 10;
-	background-color:white;
+	background-color: white;
 }
 
 .mainContent p {
@@ -93,10 +93,15 @@ div.mainContent {
 	color: #80A010;
 }
 
+.mainContent h1:first-child {
+		margin-top: 0px;
+}
+
 .mainContent h1 {
 	font-size: 14px;
 	font-weight: bold;
 	width: 300px;
+	margin-top: 60px;
 	border-bottom: 1px solid #414042;
 	border-left: 3px solid #414042;
 	padding-left: 5px;
@@ -110,7 +115,7 @@ div.mainContent {
 
 .mainContent pre {
 	margin-left: 10px;
-	padding:20px 20px 20px 20px;
-	width:600px;
+	padding: 20px 20px 20px 20px;
+	width: 600px;
 	background-color: #EEEEEE;
 }
