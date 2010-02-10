@@ -17,7 +17,7 @@ body {
 
 .pageHeader {
 	position: absolute;
-	top: 55px;
+	top: 50px;
 	left: 185px;
 	font-size: 60px;
 	white-space: nowrap;
@@ -98,10 +98,19 @@ div.mainContent {
 	font-weight: bold;
 	width: 300px;
 	border-bottom: 1px solid #414042;
+	border-left: 3px solid #414042;
+	padding-left: 5px;
 }
 
 .mainContent h2 {
 	font-size: 14px;
 	font-weight: bold;
 	padding-left: 5px;
+}
+
+.mainContent pre {
+	margin-left: 10px;
+	padding:20px 20px 20px 20px;
+	width:600px;
+	background-color: #EEEEEE;
 }
