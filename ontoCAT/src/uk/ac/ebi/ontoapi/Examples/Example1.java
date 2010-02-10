@@ -16,7 +16,9 @@ import uk.ac.ebi.ontoapi.ols.OlsOntologyService;
  */
 public class Example1 {
 	public static void main(String[] args) throws OntologyServiceException {
+		// Instantiate OLS service
 		OntologyService os = new OlsOntologyService();
+		// For all ontologies in OLS print their full label and abbreviation
 		for (Ontology o : os.getOntologies()) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(o.getAbbreviation());
