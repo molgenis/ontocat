@@ -23,42 +23,87 @@
 </head>
 <body>
 <!-- Common header -->
-<img
-	src="rsc/images/ontocat.png"
-	height="154px"
-></img>
 <span class="pageHeader">Ontology <span class="logoGreen">Common
 API Tasks</span></span>
-<table style="position: relative; top: 50px;">
+<!-- Navigation pane -->
+<table
+	class="navigationPane"
+	border="0"
+	cellpadding="0"
+	cellspacing="0"
+>
 	<tr>
-		<!-- Navigation pane -->
-		<td width="200px">
-		<ul class="navigationPane">
-			<li class="currentPage"><a href="index.html">Home</a></li>
-			<li><a href="http://sourceforge.net/projects/ontocat/files">Download</a></li>
-			<li><a href="docs.html">Documentation</a></li>
-			<li><a href="https://sourceforge.net/projects/ontocat">Project
-			details</a></li>
-			<li><a href="contact.html">Contact</a></li>
-		</ul>
-		</td>
-		<!-- Main content -->
-		<td valign="top">
-		<h1>About</h1>
-		<p>An open source common API tasks to query existing ontology
-		resources (Bioportal, OLS) using a standardised, uniform interface.</p>
-		</td>
+		<td><img
+			src="rsc/images/ontocat.png"
+			height="154px"
+		></img></td>
+	</tr>
+	<tr>
+		<td height="20px">&nbsp;</td>
+	</tr>
+	<tr class="menuCell currentPage">
+		<td width="165px"><a href="index.html">Home</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a href="downloands.html">Downloads</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a
+			target="_blank"
+			href="doc/index.html"
+		>Documentation</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a
+			target="_blank"
+			href="https://sourceforge.net/projects/ontocat"
+		>Project details</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a href="contact.html">Contact</a></td>
+	</tr>
+	<tr>
+		<td height="100px">&nbsp;</td>
 	</tr>
 </table>
+<!-- Main content -->
+<div class="mainContent">
+<h1>About</h1>
+<p><strong>Onto CAT</strong> or <strong>Ontology Common API Tasks</strong> is a
+java library aiming to simplify the hurdle of querying many existing ontology
+resources. In its most current version it supports not only both the main ontology browsers: <a
+	href="http://bioportal.bioontology.org"
+	target="_blank"
+>NCBO BioPortal</a> and <a
+	href="http://www.ebi.ac.uk/ontology-lookup/"
+	target="_blank"
+>EBI Ontology Lookup Service (OLS)</a>, providing a convenient wrapper
+around their original Web Services, but also supports querying local OWL
+and OBO resources employing the <a
+	href="http://owlapi.sourceforge.net/2.x.x/index.html"
+> OWL API</a>. <strong>Onto CAT</strong> provides the same standardised, uniform interface for all of them.</p>
+<p><strong>Onto CAT</strong> is open source and is available under the <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html"
+target="_blank">GPLv3 license</a>.</p>
+<p>Releases are often and comprehensively tested, so the end user does not have to worry about the updates in 
+access to underlying resources.</p>
+<h1>News</h1>
+<p>We have new web page.</p>
+</div>
 <!-- SourceForge logo -->
-<div class="footer"><a
-	href="http://sourceforge.net/projects/ontocat"
-><img
+<div class="footer">
+<div
+	style="position: relative; top: -5px; display: inline; padding-right: 20px;"
+>Last modified on 10/02/2010</div>
+<a href="http://sourceforge.net/projects/ontocat"><img
 	src="http://sflogo.sourceforge.net/sflogo.php?group_id=281068&amp;type=10"
 	width="80"
 	height="15"
 	alt="Get ontoCAT at SourceForge.net. Fast, secure and Free Open Source software downloads"
-/></a></div>
+/></a>
+<div
+	style="position: relative; top: -5px; display: inline; padding-left: 20px;"
+>ontoCAT logo courtesy of Eamonn Maguire</div>
+</div>
 <!-- Google Analytics tracking code -->
 <script type="text/javascript">
 	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl."

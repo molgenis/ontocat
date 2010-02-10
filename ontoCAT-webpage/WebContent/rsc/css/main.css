@@ -16,9 +16,10 @@ body {
 
 .pageHeader {
 	position: absolute;
-	top: 68px;
+	top: 55px;
 	left: 185px;
 	font-size: 60px;
+	white-space: nowrap;
 }
 
 .footer {
@@ -27,36 +28,69 @@ body {
 	bottom: 0px;
 	left: 0px;
 	width: 100%;
+	font-size: 10px;
 }
 
-ul.navigationPane {
+.navigationPane {
 	position: relative;
+	border-left: 1px solid #414042;
 }
 
-ul.navigationPane li {
-	margin-left: -60px;
-	list-style: none;
-	height: 40px;
-	line-height: 40px;
+.navigationPane td {
+	vertical-align: middle;
+	border-left: 5px solid #ADD136;
 }
 
-ul.navigationPane a {
+.navigationPane a {
 	text-decoration: none;
-	padding-left:30px;
+	padding-left: 20px;
 	display: block;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	color: #414042;
+	padding-bottom: 10px;
 }
 
-ul.navigationPane a:hover {
+.navigationPane a:hover {
 	color: #fff;
 	background: #ADD136;
+}
+
+.menuCell td:hover,.currentPage td {
+	color: #fff;
+	border-left: 5px solid #414042;
+}
+
+.menuCell td {
+	text-transform: uppercase;
+	font-size: 14px;
+}
+
+.currentPage a {
 	font-weight: bold;
 }
 
-ul.navigationPane li.currentPage {
+div.mainContent {
+	position: absolute;
+	left: 200px;
+	top: 180px;
+	width: 80%;
+	font-size: 14px;
+}
+
+.mainContent p {
+	padding-right: 100px;
+}
+
+.mainContent a {
+	text-decoration: none;
 	font-weight: bold;
+	color: #80A010;
 }
 
 h1 {
-	font-size: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	width: 300px;
+	border-bottom: 1px solid #414042;
 }
