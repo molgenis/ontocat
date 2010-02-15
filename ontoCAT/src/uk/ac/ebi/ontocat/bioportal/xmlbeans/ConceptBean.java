@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ebi.ontoapi.bioportal.xmlbeans;
+package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontoapi.OntologyServiceException;
-import uk.ac.ebi.ontoapi.OntologyTerm;
-import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
  * Wraps the Concept representation of BioPortal and maps it to the OntologyTerm

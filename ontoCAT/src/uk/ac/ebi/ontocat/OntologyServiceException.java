@@ -1,4 +1,4 @@
-package uk.ac.ebi.ontoapi;
+package uk.ac.ebi.ontocat;
 
 /**
  * @author Tomasz Adamusiak, Morris Swertz

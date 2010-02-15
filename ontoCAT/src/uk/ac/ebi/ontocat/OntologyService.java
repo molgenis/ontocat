@@ -1,4 +1,4 @@
-package uk.ac.ebi.ontoapi;
+package uk.ac.ebi.ontocat;
 
 import java.util.List;
 import java.util.Map;

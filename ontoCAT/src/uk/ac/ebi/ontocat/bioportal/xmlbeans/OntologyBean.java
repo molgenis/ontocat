@@ -1,14 +1,14 @@
 /**
  * 
  */
-package uk.ac.ebi.ontoapi.bioportal.xmlbeans;
+package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.ebi.ontoapi.Ontology;
-import uk.ac.ebi.ontoapi.OntologyServiceException;
-import uk.ac.ebi.ontoapi.OntologyTerm;
+import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
 
 
 /**

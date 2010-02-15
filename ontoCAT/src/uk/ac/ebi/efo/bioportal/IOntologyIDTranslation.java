@@ -5,7 +5,7 @@ package uk.ac.ebi.efo.bioportal;
 
 import java.util.ArrayList;
 
-import uk.ac.ebi.ontoapi.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyServiceException;
 
 /**
  * Ontology ID translation interface. Defines mappings and regular expressions

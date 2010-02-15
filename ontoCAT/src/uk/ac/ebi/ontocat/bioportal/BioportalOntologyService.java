@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ebi.ontoapi.bioportal;
+package uk.ac.ebi.ontocat.bioportal;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -31,15 +31,15 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.efo.bioportal.IOntologyIDTranslation;
-import uk.ac.ebi.ontoapi.Ontology;
-import uk.ac.ebi.ontoapi.OntologyService;
-import uk.ac.ebi.ontoapi.OntologyServiceException;
-import uk.ac.ebi.ontoapi.OntologyTerm;
-import uk.ac.ebi.ontoapi.bioportal.xmlbeans.ConceptBean;
-import uk.ac.ebi.ontoapi.bioportal.xmlbeans.EntryBean;
-import uk.ac.ebi.ontoapi.bioportal.xmlbeans.OntologyBean;
-import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SearchBean;
-import uk.ac.ebi.ontoapi.bioportal.xmlbeans.SuccessBean;
+import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.ConceptBean;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.EntryBean;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.OntologyBean;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.SearchBean;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.SuccessBean;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;

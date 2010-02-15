@@ -1,14 +1,14 @@
 /**
  * 
  */
-package uk.ac.ebi.ontoapi.bioportal.xmlbeans;
+package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ebi.ontoapi.OntologyServiceException;
-import uk.ac.ebi.ontoapi.OntologyTerm;
-import uk.ac.ebi.ontoapi.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
  *c @author $Id: SearchBean.java 8993 2009-09-18 17:14:46Z tomasz $
