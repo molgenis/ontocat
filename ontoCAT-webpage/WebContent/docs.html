@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head profile="http://www.w3.org/2005/10/profile">
+<meta
+	http-equiv="content-type"
+	content="text/html; charset=utf-8"
+/>
+<meta
+	name="description"
+	content="OntoCAT is an open source application providing a set of common API tasks to query existing 
+	ontology resources (Bioportal, OLS) using a standardised, uniform interface."
+/>
+<meta
+	name="keywords"
+	content="Open Source, Ontology, Bioportal, OWL, OBO, OLS, Software, Development, Developers, Projects, Downloads, Bio-Informatics, Advanced End Users, GNU General Public License version 3.0 (GPLv3), Java, OS Independent (Written in an interpreted language), ontoCAT, ontocat"
+/>
+<meta
+	name="author"
+	content="Tomasz Adamusiak, Morris Swertz"
+/>
+<title>ontoCAT - Ontology Common API Tasks</title>
+<link
+	rel="stylesheet"
+	type="text/css"
+	href="rsc/css/main.css"
+/>
+<link
+	rel="shortcut icon"
+	href="http://ontocat.sourceforge.net/rsc/images/favicon.ico"
+>
+</head>
+<body>
+<!-- Common header -->
+<span class="pageHeader">Ontology <span class="logoGreen">Common
+API Tasks</span></span>
+<!-- Navigation pane -->
+<table
+	class="navigationPane"
+	border="0"
+	cellpadding="0"
+	cellspacing="0"
+>
+	<tr class="logo">
+		<td><a href="index.html"><img
+			src="rsc/images/ontocat.png"
+			height="154px"
+		></img></a></td>
+	</tr>
+	<tr>
+		<td height="20px">&nbsp;</td>
+	</tr>
+	<tr class="menuCell">
+		<td width="165px"><a href="index.html">Home</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a href="downloads.html">Downloads</a></td>
+	</tr>
+	<tr class="menuCell currentPage">
+		<td><a href="docs.html">Documentation</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a href="examples.html">Examples</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a
+			target="_blank"
+			href="https://sourceforge.net/projects/ontocat"
+		>Project details</a></td>
+	</tr>
+	<tr class="menuCell">
+		<td><a href="contact.html">Contact</a></td>
+	</tr>
+	<tr>
+		<td height="100px">&nbsp;</td>
+	</tr>
+</table>
+<!-- Main content -->
+<div class="mainContent">
+<h1>Installation</h1>
+<p>Javadoc for Onto CAT may be found <a href="doc\index.html">here</a>
+(Note that javadoc is also included with the release).</p>
+<p>In order to use Onto CAT in your own applications, you should
+download the latest binary release and ensure that all of the jar files
+are in the application class path. Please see the next section for
+detailed instructions.</p>
+<h1>Getting started</h1>
+<p>Below are step-by-step instructions on how to get started with
+Onto CAT.</p>
+<p>If you're a proficient java programmer you may <a
+	href="#skipthebasics"
+>consider skipping to step 4</a>.</p>
+<ol>
+	<li>Download and install <a
+		href="http://www.eclipse.org/downloads/"
+	>Eclipse IDE for Java Developers</a>.<br></br>
+	Although any other IDE supporting Java will do, the following steps are
+	based on Eclipse. <img
+		class="docsImage"
+		src="rsc\images\docs_step1.bmp"
+		alt="Download Eclipse"
+	/></li>
+	<li>Start a new Java project: <img
+		class="docsImage"
+		src="rsc\images\docs_step2.bmp"
+		alt="Start a new Java project"
+	/></li>
+	<li>In your new project, lets call it <strong>Using
+	OntoCAT</strong>, add a <strong>Lib</strong> folder to store external libraries:
+	<img
+		class="docsImage"
+		src="rsc\images\docs_step3.bmp"
+		alt="Add a lib folder"
+	/></li>
+	<li><a name="skipthebasics"></a>Add all the required libraries to
+	your newly created lib folder.<br></br>
+	An up-to-date list of required external libraries is available from <a
+		href="https://ontocat.svn.sourceforge.net/svnroot/ontocat/trunk/ontoCAT/lib/"
+	>here</a>.<br></br>
+	<br></br>
+	Don't forget to add the <a href="downloads.html">latest version</a> of
+	Onto CAT in there as well. <img
+		class="docsImage"
+		src="rsc\images\docs_step4.bmp"
+		alt="Requied libraries"
+	/></li>
+	<li>
+	<ol type="a">
+		<li>Right click on the project folder and select properties.</li>
+		<li>Go to <strong>Java Build Path</strong> section.</li>
+		<li>Select <strong>Libraries</strong> tab.</li>
+		<li>Click <strong>Add JARs...</strong>.</li>
+		<li>Navigate to your project's lib folder and select all the
+		newly copied libraries and click <strong>OK</strong>. <img
+			class="docsImage"
+			src="rsc\images\docs_step5.bmp"
+			alt="Add jars to class path"
+		/></li>
+		<li>If all went well, you should see all the added jars under a
+		new section <strong>Referenced Libraries</strong> <br></br>
+		on the left side in Package Explorer.</li>
+	</ol>
+	</li>
+	<li>Add a new class to your project and call it <strong>Example</strong>:
+	<img
+		class="docsImage"
+		src="rsc\images\docs_step6.bmp"
+		alt="Add new class"
+	/></li>
+	<li>Copy the following example code or use any of the other
+	example provided on the <a href="examples.html">Examples page</a> to
+	test drive your installation. <pre>
+	import uk.ac.ebi.ontocat.Ontology;
+	import uk.ac.ebi.ontocat.OntologyService;
+	import uk.ac.ebi.ontocat.OntologyServiceException;
+	import uk.ac.ebi.ontocat.ols.OlsOntologyService;
+
+	/**
+ 	* Example 1
+ 	* 
+	 * Shows how to list all the available ontologies in OLS
+ 	* 
+ 	*/
+	public class Example {
+		public static void main(String[] args) throws OntologyServiceException {
+			// Instantiate OLS service
+			OntologyService os = new OlsOntologyService();
+			// For all ontologies in OLS print their
+			// full label and abbreviation
+			for (Ontology o : os.getOntologies()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(o.getAbbreviation());
+				sb.append("\t");
+				sb.append(o.getLabel());
+				System.out.println(sb.toString());
+			}
+		}
+	}
+	</pre></li>
+	<li>Right click on the Example class in Package Explorer and
+	select <strong>Run as Java Application</strong></li>
+	<li>All done! You're ready to use Onto CAT.</li>
+</ol>
+</div>
+<!-- SourceForge logo -->
+<div class="footer">
+<div
+	style="position: relative; top: -5px; display: inline; padding-right: 20px;"
+>Last modified on 17/02/2010</div>
+<a href="http://sourceforge.net/projects/ontocat"><img
+	src="http://sflogo.sourceforge.net/sflogo.php?group_id=281068&amp;type=10"
+	width="80"
+	height="15"
+	alt="Get ontoCAT at SourceForge.net. Fast, secure and Free Open Source software downloads"
+/></a></div>
+<!-- Google Analytics tracking code -->
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl."
+			: "http://www.");
+	document
+			.write(unescape("%3Cscript src='"
+					+ gaJsHost
+					+ "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	try {
+		var pageTracker = _gat._getTracker("UA-12921570-1");
+		pageTracker._trackPageview();
+	} catch (err) {
+	}
+</script>
+</body>
+</html>

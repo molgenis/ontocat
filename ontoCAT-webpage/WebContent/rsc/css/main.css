@@ -53,9 +53,20 @@ div.footer {
 	padding-bottom: 10px;
 }
 
+.logo a {
+	text-decoration: none;
+	padding: 0px 0px 0px 0px;
+	display: inline;
+}
+
 .navigationPane a:hover {
 	color: #fff;
-	background: #ADD136;
+	background-color: #ADD136;
+}
+
+.logo a:hover {
+	background-color: white;
+	cursor: default;
 }
 
 .menuCell td:hover,.currentPage td {
@@ -94,7 +105,7 @@ div.mainContent {
 }
 
 .mainContent h1:first-child {
-		margin-top: 0px;
+	margin-top: 0px;
 }
 
 .mainContent h1 {
@@ -116,6 +127,20 @@ div.mainContent {
 .mainContent pre {
 	margin-left: 10px;
 	padding: 20px 20px 20px 20px;
-	width: 600px;
+	width: 700px;
 	background-color: #EEEEEE;
+}
+
+li {
+	margin-bottom:10px;
+}
+
+img.docsImage {
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 30px;
+	padding:5px;
+	border: 1px solid #414042;
+	margin-right: auto;
+	width: 400px;
 }
