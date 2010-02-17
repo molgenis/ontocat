@@ -33,6 +33,8 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 	 */
 	private static ArrayList<BioportalMapping> initialiseMappings() {
 		ArrayList<BioportalMapping> temp = new ArrayList<BioportalMapping>();
+		temp.add(new BioportalMapping("^NCBITaxon:", "(NCBITaxon:.*)", "1132",
+				"NCBITaxon:2"));
 		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d+)", "1351", "MSH:D012512"));
 		temp.add(new BioportalMapping("^MO_", "(MO_.*)", "1131", "MO_565"));
 		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)", "1101", "ICD9CM_1988:04.03"));
@@ -55,7 +57,8 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 		temp.add(new BioportalMapping("^CL:", "1006", "CL:0000127"));
 		temp.add(new BioportalMapping("^CHEBI:", "1007", "CHEBI:2365"));
 		temp.add(new BioportalMapping("^GO:", "(GO:\\d+)", "1070", "GO:0009318"));
-		temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
+		// Can't resolve PO at the moment as it has been 'unloaded' -> see remote site
+		//temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
 		return temp;
 	}
 
