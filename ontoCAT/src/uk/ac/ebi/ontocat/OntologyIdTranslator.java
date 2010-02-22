@@ -1,11 +1,11 @@
 /**
  * 
  */
-package uk.ac.ebi.efo.bioportal;
+package uk.ac.ebi.ontocat;
 
 import java.util.ArrayList;
 
-import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.efo.bioportal.BioportalMapping;
 
 /**
  * Ontology ID translation interface. Defines mappings and regular expressions
@@ -14,7 +14,7 @@ import uk.ac.ebi.ontocat.OntologyServiceException;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface IOntologyIDTranslation {
+public interface OntologyIdTranslator {
 	public ArrayList<BioportalMapping> getMappings();
 
 	public String getOntologyAccessionFromConcept(String sConcept) throws OntologyServiceException;

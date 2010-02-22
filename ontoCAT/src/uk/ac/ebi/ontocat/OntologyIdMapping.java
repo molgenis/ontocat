@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ebi.efo.bioportal;
+package uk.ac.ebi.ontocat;
 
 import java.util.regex.Pattern;
 
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface IOntologyMapping {
+public interface OntologyIdMapping {
 
 	/**
 	 * A regular expression pattern which confirms that a particular concept

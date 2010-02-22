@@ -6,22 +6,24 @@ package uk.ac.ebi.efo.bioportal;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+import uk.ac.ebi.ontocat.OntologyIdTranslator;
+import uk.ac.ebi.ontocat.OntologyIdMapping;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 
 /**
- * Implementation of the IOntologyIDTranslation customised for how the term IDs
+ * Implementation of the OntologyIdTranslator customised for how the term IDs
  * are stored in the Experimental Factor Ontology (http://www.ebi.ac.uk/efo)
  * 
  * @author Tomasz Adamusiak
  */
-public class EFOIDTranslator implements IOntologyIDTranslation {
+public class EFOIDTranslator implements OntologyIdTranslator {
 	/** The Constant mappings. */
 	private static final ArrayList<BioportalMapping> mappings = initialiseMappings();
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see uk.ac.ebi.efo.bioportal.IOntologyIDTranslation#getMappings()
+	 * @see uk.ac.ebi.efo.bioportal.OntologyIdTranslator#getMappings()
 	 */
 	@Override
 	public ArrayList<BioportalMapping> getMappings() {
@@ -66,7 +68,7 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 	public String getOntologyAccessionFromConcept(String termID) throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (IOntologyMapping BPmap : mappings) {
+		for (OntologyIdMapping BPmap : mappings) {
 			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
 				return BPmap.getOntologyAccession();
 			}
@@ -78,7 +80,7 @@ public class EFOIDTranslator implements IOntologyIDTranslation {
 	public String getTermAccessionFromConcept(String termID) throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (IOntologyMapping BPmap : mappings) {
+		for (OntologyIdMapping BPmap : mappings) {
 			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
 				// Extract proper ID according to extratct pattern
 				Matcher matcher = BPmap.getExtractIDPattern().matcher(termID);

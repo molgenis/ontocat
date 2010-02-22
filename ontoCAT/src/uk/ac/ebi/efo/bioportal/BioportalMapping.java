@@ -5,6 +5,8 @@ package uk.ac.ebi.efo.bioportal;
 
 import java.util.regex.Pattern;
 
+import uk.ac.ebi.ontocat.OntologyIdMapping;
+
 /**
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
@@ -13,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * The Class BioportalMapping.
  */
-public class BioportalMapping implements IOntologyMapping {
+public class BioportalMapping implements OntologyIdMapping {
 
 	/** Confirms match to this particular ontology. */
 	private final Pattern pConfirmMatch;
@@ -25,28 +27,28 @@ public class BioportalMapping implements IOntologyMapping {
 	private final String testingCode;
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getConfirmMatchPattern()
+	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getConfirmMatchPattern()
 	 */
 	public Pattern getConfirmMatchPattern() {
 		return pConfirmMatch;
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getExtractIDPattern()
+	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getExtractIDPattern()
 	 */
 	public Pattern getExtractIDPattern() {
 		return pExtractID;
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getOntologyID()
+	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getOntologyID()
 	 */
 	public String getOntologyAccession() {
 		return ontologyID;
 	}
 
 	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.IOntologyMapping#getTestCode()
+	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getTestCode()
 	 */
 	public String getTestCode() {
 		return testingCode;

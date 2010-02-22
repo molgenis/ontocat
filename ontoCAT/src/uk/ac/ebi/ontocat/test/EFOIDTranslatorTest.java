@@ -6,7 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
-import uk.ac.ebi.efo.bioportal.IOntologyMapping;
+import uk.ac.ebi.ontocat.OntologyIdMapping;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -27,7 +27,7 @@ public class EFOIDTranslatorTest {
 
 	@Test
 	public void testMappings() {
-		for (IOntologyMapping BPmap : new EFOIDTranslator().getMappings()) {
+		for (OntologyIdMapping BPmap : new EFOIDTranslator().getMappings()) {
 			try {
 				printResults(bw.getTerm(BPmap.getTestCode()));
 			} catch (OntologyServiceException e) {
@@ -38,7 +38,7 @@ public class EFOIDTranslatorTest {
 
 	@Test
 	public void listResolvableOntologies() throws OntologyServiceException {
-		for (IOntologyMapping BPmap : new EFOIDTranslator().getMappings()) {
+		for (OntologyIdMapping BPmap : new EFOIDTranslator().getMappings()) {
 			try {
 				OntologyBean ob = (OntologyBean) bw.getOntology(BPmap.getOntologyAccession());
 				printMany(new String[] {

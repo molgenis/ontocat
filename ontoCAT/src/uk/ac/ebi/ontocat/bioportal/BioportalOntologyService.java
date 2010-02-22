@@ -30,8 +30,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.efo.bioportal.IOntologyIDTranslation;
 import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
@@ -99,7 +99,7 @@ public class BioportalOntologyService implements OntologyService {
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	private final IOntologyIDTranslation termResolver;
+	private final OntologyIdTranslator termResolver;
 
 	/**
 	 * Instantiates a new bioportal service.
@@ -108,7 +108,7 @@ public class BioportalOntologyService implements OntologyService {
 	 *            the email
 	 */
 	public BioportalOntologyService(String email,
-			IOntologyIDTranslation resolver) {
+			OntologyIdTranslator resolver) {
 		// Now map the xml to the java beans
 		// FIXME level?
 		urlAddOn = "?includeproperties=1&email=" + email + "&level=1";

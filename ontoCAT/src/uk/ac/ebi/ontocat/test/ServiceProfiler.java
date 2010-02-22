@@ -47,20 +47,22 @@ public class ServiceProfiler {
 			t1 = System.nanoTime();
 			osOLS.searchAll(randomStrings.get(i));
 			t2 = System.nanoTime();
-			logger.info("OLS\t" + ((t2 - t1) * 1e-6));
+			logger.info("OLS\t" + ((t2 - t1) * 1e-6) + "\t");
+			// + ((OlsOntologyService) osOLS).extRequestTime);
 
-			t1 = System.nanoTime();
-			try {
-				osBP.searchAll(randomStrings.get(i));
-			} catch (Exception e) {
-			}
-			t2 = System.nanoTime();
-			logger.info("BP\t" + ((t2 - t1) * 1e-6));
+			// t1 = System.nanoTime();
+			// try {
+			// osBP.searchAll(randomStrings.get(i));
+			// } catch (Exception e) {
+			// }
+			// t2 = System.nanoTime();
+			// logger.info("BP\t" + ((t2 - t1) * 1e-6) + "\t"
+			// + ((BioportalOntologyService) osBP).extRequestTime);
 
-			t1 = System.nanoTime();
-			osOWL.searchAll(randomStrings.get(i));
-			t2 = System.nanoTime();
-			logger.info("OWL\t" + ((t2 - t1) * 1e-6));
+			// t1 = System.nanoTime();
+			// osOWL.searchAll(randomStrings.get(i));
+			// t2 = System.nanoTime();
+			// logger.info("OWL\t" + ((t2 - t1) * 1e-6));
 		}
 	}
 }

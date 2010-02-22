@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
-import uk.ac.ebi.efo.bioportal.IOntologyIDTranslation;
 import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -25,7 +25,7 @@ public class Example2 {
 	 * provide mappings between your id space to fully use it. See
 	 * {@link EFOIDTranslator} for an example
 	 */
-	private static IOntologyIDTranslation IDtranslator = new IOntologyIDTranslation() {
+	private static OntologyIdTranslator IDtranslator = new OntologyIdTranslator() {
 		@Override
 		public ArrayList<BioportalMapping> getMappings() {
 			// TODO Auto-generated method stub
