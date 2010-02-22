@@ -2,11 +2,8 @@ package uk.ac.ebi.ontocat.ols;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.rpc.ServiceException;
 
@@ -213,6 +210,6 @@ public class OlsOntologyService implements OntologyService
 	@Override
 	public String[] getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		throw new UnsupportedOperationException();
+		return getTerm(ontologyAccession, termAccession).getDefinitions();
 	}
 }

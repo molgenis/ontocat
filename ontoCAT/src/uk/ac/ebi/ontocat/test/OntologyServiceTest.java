@@ -98,6 +98,14 @@ public abstract class OntologyServiceTest {
 		}
 	}
 
+	@Test
+	public final void testGetDefinitions() throws OntologyServiceException {
+		printCurrentTest();
+		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION1);
+		System.out.println(os.getDefinitions(ONTOLOGY_ACCESSION2,
+				TERM_ACCESSION1)[0]);
+	}
+
 	private void printCurrentTest() {
 		println();
 		println("**************************");
