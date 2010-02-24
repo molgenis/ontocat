@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>MOLGENIS load page</title>
+<script language="JavaScript">
+<!--
+//url to move to is path + "molgenid.do"
+var sURL = unescape(window.location.pathname) + "molgenis.do";
+
+function doLoad()
+{
+    // the timeout value should be the same as in the "refresh" meta-tag
+    setTimeout( "refresh()", 2*1000 );
+}
+
+function refresh()
+{
+    //  This version of the refresh function will cause a new
+    //  entry in the visitor's history.  It is provided for
+    //  those browsers that only support JavaScript 1.0.
+    //
+    //	alert("loading to "+sURL);
+    window.location.href = sURL;
+}
+//-->
+</script>
+</head>
+
+<!--
+    Use the "onload" event to start the refresh process.
+-->
+<body onload="doLoad()">
+MOLGENIS is being loaded at
+<script language="JavaScript">
+<!--
+    // we put this here so we can see something change
+    document.write('<b>' + (new Date).toLocaleString() + '</b>');
+//-->
+</script>
+
+
+</body>
+
+</html>

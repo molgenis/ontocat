@@ -1,0 +1,300 @@
+
+<html>
+
+<head>
+	<title>ontocatdb TAB exchange format reference documentation</title>
+	
+	<meta name="keywords"			content="">
+	<meta name="description"		content="">
+	<meta http-equiv="Contect-Type"	content="text/html; charset-UTF-8">
+	
+	<style type="text/css">
+		body
+		{
+			background:		#ffffff;
+			color:			#000000;
+			font-family:	arial, sans-serif;
+			font-size:		10pt;
+		}
+		
+		td
+		{
+			font-family:	arial, sans-serif;
+			font-size:		10pt;
+			vertical-align: top;
+		}
+		.tablehead
+		{
+			background:		#888888;
+			color:			#ffffff;
+			text-align:		left;
+			font-family:	arial, sans-serif;
+			font-size:		10pt;
+			font-weight:	bold;
+		}
+		th
+		{
+			font-family:	arial, sans-serif;
+			font-size:		10pt;
+			font-weight:	bold;
+		}
+	</style>
+</head>
+
+
+
+<body>
+<h1>OntoCAT-DB file format reference</h1>
+<p>
+This is documentation on the data exchange format for the 'OntoCAT-DB' system. 
+<p>
+<p>To ease data exchange this system comes with a simple 'tab separated values' file format. 
+In such text files the data is formatted in tables with the columns separated using tabs, colons, or semi-colons.
+Advantage is that these files can be easily created and parsed using common spreadsheet tools like Excel. 
+An example of such tab delimited file is shown below:
+<pre>
+name	description	date
+Experiment1	This is my first experiment	2010-01-19
+Experiment2	This is my second experiment	2010-01-20
+</pre>
+This document describes what file types and columns are defined for the 'OntoCAT-DB' system. 
+Data in this format can be uploaded to the database via the user interface using the 'File' menu). 
+Alternatively, a whole directory of such files can be loaded in batch using the CsvImport program. 
+The following files are currently recognized by this program (grouped by topic):
+</p>
+<!-- per module -->
+<ul>
+<!-- outside module -->
+<li><b>OntoCAT-DB</b> files:
+<ul>
+<li><a href="#Investigation_entity">investigation.txt</a>
+<li><a href="#OntologySource_entity">ontologysource.txt</a>
+<li><a href="#OntologyTerm_entity">ontologyterm.txt</a>
+<li><a href="#Sample_entity">sample.txt</a>
+</ul>
+</li>
+</ul>
+Below, the columns for each of these file types are detailed as well as example data shown (if available).
+
+
+<!-- entities inside modules -->
+
+<!-- entities outside modules -->
+<h2>ontocatdb file types</h2>
+<h3><a name="#Investigation_entity">File: investigation.txt</a></h3> 
+<p>Contents:<br/>  Investigation defines self-contained units of study. For
+				example: Framingham study. Each investigation has a unique name and a group
+				of actions (ProtoclApplications), subjects of observation
+				(ObservableTarget), traits of observation (ObservableFeature), and/or
+				results (in ObservedValues). Maps to XGAP/FuGE Investigation, MAGE-TAB
+				experiment and METABASE:Study.
+.</p>
+<p/>Structure:<br/>
+<table width="100%" cellspacing="0" border="1" bordercolor="#000000">
+	<!-- table header -->
+	<tr>
+		<th>column name</th>
+		<th>type</th>
+		<th>required?</th>
+		<th>description</th>
+	</tr>
+	
+	<!-- all required fields -->
+	<tr>
+		<td width="150">name</td>
+		<td width="50">string</td>
+		<td width="20">Y</td>
+		<td>A human-readable and potentially ambiguous common identifier.<br/>.</td>
+	</tr>	
+	<!-- all optional fields -->
+	<tr>
+		<td width="150">description</td>
+		<td width="50">text</td>
+		<td width="20">&nbsp;</td>
+		<td>(Optional) Rudimentary meta data about the investigation.<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">accession</td>
+		<td width="50">string</td>
+		<td width="20">&nbsp;</td>
+		<td>(Optional) URI or accession number to indicate source of investigation. E.g. arrayexpress:M-EXP-2345.<br/>.</td>
+	</tr>	
+	<!-- all the uniques -->
+<tr><td colspan="4">Constraint: values in column id should unique.</td></tr>
+<tr><td colspan="4">Constraint: values in column name should unique.</td></tr>
+</table>
+</p>
+
+
+<h3><a name="#OntologySource_entity">File: ontologysource.txt</a></h3> 
+<p>Contents:<br/>  OntologySource defines a reference to a an existing ontology or
+				controlled vocabulary from which well-defined and stable (ontology) terms
+				can be obtained. For instance: MO, GO, EFO, MP, HPO, UMLS, MeSH, etc. Use of
+				existing ontologies/vocabularies is recommended to harmonize phenotypic
+				feature and value descriptions. The OntologySource class maps to
+				FuGE::OntologySource, MAGE-TAB::TermSourceREF.
+.</p>
+<p/>Structure:<br/>
+<table width="100%" cellspacing="0" border="1" bordercolor="#000000">
+	<!-- table header -->
+	<tr>
+		<th>column name</th>
+		<th>type</th>
+		<th>required?</th>
+		<th>description</th>
+	</tr>
+	
+	<!-- all required fields -->
+	<tr>
+		<td width="150">name</td>
+		<td width="50">string</td>
+		<td width="20">Y</td>
+		<td>A human-readable and potentially ambiguous common identifier.<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">investigation_name</td>
+		<td width="50">xref</td>
+		<td width="20">Y</td>
+		<td>Reference to the Investigation this OntologySource belongs to..<br/> Requires a matching value in column 'name' in <a href="#Investigation_entity">investigation.txt</a> for each reference 
+		.</td>
+	</tr>	
+	<!-- all optional fields -->
+	<tr>
+		<td width="150">ontologyaccession</td>
+		<td width="50">string</td>
+		<td width="20">&nbsp;</td>
+		<td>A, preferably unique, identifier that uniquely identifies the ontology (typically an acronym)..<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">ontologyuri</td>
+		<td width="50">hyperlink</td>
+		<td width="20">&nbsp;</td>
+		<td>A URI that references the location of the ontology..<br/>.</td>
+	</tr>	
+	<!-- all the uniques -->
+<tr><td colspan="4">Constraint: values in column id should unique.</td></tr>
+<tr><td colspan="4">Contraint: values in the combined columns (name, investigation) should be unique.</td></tr>
+</table>
+</p>
+
+
+<h3><a name="#OntologyTerm_entity">File: ontologyterm.txt</a></h3> 
+<p>Contents:<br/>  OntologyTerm defines references to a single entry (term) from
+				an ontology or a controlled vocabulary. Other data entities can reference to
+				this OntologyTerm to harmonize naming of concepts. Each term should have a
+				local, unique label within the investigation. Good practice is to label it
+				'sourceid:term', e.g. 'MO:cell' If no suitable ontology term exists then one
+				can define new terms locally (in which case there is no formal accession for
+				the term limiting its use for cross-investigation queries). In those cases
+				the local name should be repeated in both term and termAccession. Maps to
+				FuGE::OntologyIndividual; in MAGE-TAB there is no separate entity to model
+				terms.
+.</p>
+<p/>Structure:<br/>
+<table width="100%" cellspacing="0" border="1" bordercolor="#000000">
+	<!-- table header -->
+	<tr>
+		<th>column name</th>
+		<th>type</th>
+		<th>required?</th>
+		<th>description</th>
+	</tr>
+	
+	<!-- all required fields -->
+	<tr>
+		<td width="150">name</td>
+		<td width="50">string</td>
+		<td width="20">Y</td>
+		<td>A human-readable and potentially ambiguous common identifier.<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">investigation_name</td>
+		<td width="50">xref</td>
+		<td width="20">Y</td>
+		<td>Reference to the Investigation this OntologyTerm belongs to..<br/> Requires a matching value in column 'name' in <a href="#Investigation_entity">investigation.txt</a> for each reference 
+		.</td>
+	</tr>	
+	<tr>
+		<td width="150">term</td>
+		<td width="50">string</td>
+		<td width="20">Y</td>
+		<td>The ontology term itself, also known as the 'local name' in some ontologies..<br/>.</td>
+	</tr>	
+	<!-- all optional fields -->
+	<tr>
+		<td width="150">termdefinition</td>
+		<td width="50">string</td>
+		<td width="20">&nbsp;</td>
+		<td>(Optional) The definition of the term..<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">termaccession</td>
+		<td width="50">string</td>
+		<td width="20">&nbsp;</td>
+		<td>(Optional) The accession number assigned to the ontology term in its source ontology. If empty it is assumed to be a locally defined term..<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">termsource_name</td>
+		<td width="50">xref</td>
+		<td width="20">&nbsp;</td>
+		<td>(Optional) The source ontology or controlled vocabulary list that ontology terms have been obtained from. One can define a local ontology if needed..<br/> Requires a matching value in column 'name' in <a href="#OntologySource_entity">ontologysource.txt</a> for each reference 
+		.</td>
+	</tr>	
+	<tr>
+		<td width="150">termpath</td>
+		<td width="50">string</td>
+		<td width="20">&nbsp;</td>
+		<td>ADDITION. The Ontology Lookup Service path that contains this term..<br/>.</td>
+	</tr>	
+	<!-- all the uniques -->
+<tr><td colspan="4">Constraint: values in column id should unique.</td></tr>
+<tr><td colspan="4">Contraint: values in the combined columns (term, investigation) should be unique.</td></tr>
+</table>
+</p>
+
+
+<h3><a name="#Sample_entity">File: sample.txt</a></h3> 
+
+<p/>Structure:<br/>
+<table width="100%" cellspacing="0" border="1" bordercolor="#000000">
+	<!-- table header -->
+	<tr>
+		<th>column name</th>
+		<th>type</th>
+		<th>required?</th>
+		<th>description</th>
+	</tr>
+	
+	<!-- all required fields -->
+	<tr>
+		<td width="150">name</td>
+		<td width="50">string</td>
+		<td width="20">Y</td>
+		<td>A human-readable and potentially ambiguous common identifier.<br/>.</td>
+	</tr>	
+	<tr>
+		<td width="150">annotations_name</td>
+		<td width="50">mref</td>
+		<td width="20">Y</td>
+		<td>annotations.<br/> Requires a matching value in column 'name' in <a href="#OntologyTerm_entity">ontologyterm.txt</a> for each reference 
+		. <br/>More than one reference can be added separated by '|', for example: ref1|ref2|ref3..</td>
+	</tr>	
+	<!-- all optional fields -->
+	<!-- all the uniques -->
+<tr><td colspan="4">Constraint: values in column id should unique.</td></tr>
+</table>
+</p>
+
+<p>Example:<br/>
+<pre>
+name	experiment_name	species	tissue	sex	sampleTime	
+Sample1_1	Experiment1	Hs	Liver	male	2010-01-09 12:11:00	
+Sample1_2	Experiment1	Hs	Spleen	female	2010-01-09 12:12:00	
+Sample2_1	Experiment2	Mm	Brain	unknown	2010-01-09 12:13:00	
+Sample2_2	Experiment2	Mm	Tail	unknown	2010-01-09 12:14:00	
+
+</pre>
+</p>
+
+</body></html>
+

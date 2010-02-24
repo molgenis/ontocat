@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<molgenis name="org.molgenis.auth" label="My First MOLGENIS">
+	<!-- prototyping of security -->
+	<entity name="MolgenisUserGroup" system="true">
+		<description>MolgenisUserGroup is the local administration of MOLGENIS user groups; group have the permissions to edit/view certain elements</description>
+		<field name="id" type="autoid" />
+		<field name="name" unique="true" />
+		<field name="superuser" type="bool" default="false"/>
+		<field name="members" type="mref" xref_field="MolgenisUser.id" xref_label="name"/>
+		<field name="canRead" type="mref" xref_field="MolgenisEntityMetaData.id" xref_label="name"/>
+		<field name="canWrite" type="mref" xref_field="MolgenisEntityMetaData.id" xref_label="name"/>
+	</entity>
+	<entity name="MolgenisUser" system="true">
+	<description>Users known within this MOLGENIS. May be derived from another authentication source at first login like LDAP.</description>
+		<field name="id" type="autoid" />
+		<field name="name" unique="true" />
+		<field name="password" type="string" description="big fixme: password type"/>
+		<field name="emailaddress" type="string" unique="true"/>
+		<field name="activationCode" type="string" description="Used as alternative authentication mechanism to verify user email and/or if user has lost password."/>
+		<field name="active" type="bool" default="false" description="Boolean to indicate if this account can be used to login" />
+		<!-- todo: profile: picture, first, last name, institute, field, address, zip, city, country , timezone, flag to set public email, website, other details-->
+		
+	</entity>
+	<entity name="MolgenisEntityMetaData" system="true">
+		<description>Catalog of entity names to be used as reference for permissions</description>
+		<field name="id" type="autoid" />
+		<field name="name" unique="true" description="name of the data type"/>
+		<field name="className" description="Full name of the data type" />
+	</entity>
+	<!-- entity name="MolgenisFieldMetaData" system="true">
+		<description>Catalog of field names</description>
+		<field name="id" type="autoid" />
+		<field name="entity" type="xref" xref_field="Molgenis_EntityMetaData.id" xref_label="name"/>		
+		<field name="name"/>
+		<field name="description" type="text" nillable="true"/>
+		<unique fields="name,entity"/>
+	</entity -->	
+</molgenis>

@@ -1,0 +1,4 @@
+name	experiment_name	molecular
+Height	Experiment1	false
+Age	Experiment1	false
+Albumin	Experiment2	true

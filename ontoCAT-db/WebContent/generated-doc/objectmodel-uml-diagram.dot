@@ -1,0 +1,137 @@
+digraph G {
+		compound = true
+		fontname = "Bitstream Vera Sans"
+		fontsize = 8
+		pagedir="TB"
+		rankdir="BT"
+		bgcolor = "lightyellow"  
+		labelfloat = "true"
+		mode = "hier"
+		overlap = "false"
+		splines = "true"
+		layers = "1:2"
+		clusterrank = "local"
+		outputorder="edgesfirst"
+
+        node [
+			fontname = "Arial"
+            fontsize = 8
+            shape = "record"
+            color = "#808080"
+            style="filled"
+            fillcolor = "white"
+            layer = "2"
+            colorscheme = pastel19
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                layer = "1"
+        ]
+
+/* entities outside modules*/
+               "Identifiable" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial-Italic"
+			        	fontcolor = "dimgrey"
+			        	color = "dimgrey"
+                
+                        label = "{Interface:Identifiable|id : int*\l}"
+                ]
+
+               "Nameable" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial-Italic"
+			        	fontcolor = "dimgrey"
+			        	color = "dimgrey"
+                
+                        label = "{Interface:Nameable|name : string*\l}"
+                ]
+
+               "Investigation" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial"
+			        	fontcolor = "black"
+			        	color = "black"
+                
+                        label = "{Investigation\n implements Identifiable, Nameable|name : string*\ldescription : text\laccession : string\l}"
+                ]
+
+               "OntologySource" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial"
+			        	fontcolor = "black"
+			        	color = "black"
+                
+                        label = "{OntologySource\n implements Identifiable, Nameable|name : string*\linvestigation : xref-&gt;investigation*\lontologyAccession : string\lontologyURI : hyperlink\l}"
+                ]
+
+               "OntologyTerm" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial"
+			        	fontcolor = "black"
+			        	color = "black"
+                
+                        label = "{OntologyTerm\n implements Identifiable, Nameable|name : string*\linvestigation : xref-&gt;investigation*\lterm : string*\ltermDefinition : string\ltermAccession : string\ltermSource : xref-&gt;ontologySource\ltermPath : string\l}"
+                ]
+
+               "Sample" [
+                	    style = "filled"
+                	    fillcolor =  "white"
+			        	fontname = "Arial"
+			        	fontcolor = "black"
+			        	color = "black"
+                
+                        label = "{Sample\n implements Identifiable, Nameable|name : string*\lannotations : mref-&gt;ontologyTerm*\l}"
+                ]
+
+/*entities inside modules*/
+
+/*interface relationships*/
+        edge [
+                color = "#808080"
+        ]
+
+/*inheritance relationships*/
+        edge [
+                arrowhead = "empty"
+                color = "black"
+        ]
+
+/*one to many 'xref' foreign key relationships*/
+        edge [
+                arrowhead = "open"
+                arrowsize = 0.6
+        ]
+		"OntologySource" -> "Investigation" [
+			headlabel = "1"
+			taillabel = "*"
+		]
+		"OntologyTerm" -> "Investigation" [
+			headlabel = "1"
+			taillabel = "*"
+		]
+		"OntologyTerm" -> "OntologySource" [
+			headlabel = "0..1"
+			taillabel = "*"
+		]
+        
+        
+/*many to many 'mref' foreign key relationships*/
+        edge [
+             arrowtail = "open"
+             color = "black"
+             headlabel = "*"
+             taillabel = "*"
+             arrowsize = 0.6
+             constraint = false
+        ]
+		"OntologyTerm" -> "Sample"[
+			]
+}
