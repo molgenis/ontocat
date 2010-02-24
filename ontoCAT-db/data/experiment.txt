@@ -1,3 +1,0 @@
-name	description	date
-Experiment1	This is my first experiment	2010-01-19
-Experiment2	This is my second experiment	2010-01-20

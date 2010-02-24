@@ -1,5 +1,0 @@
-name	experiment_name	species	tissue	sex	sampleTime
-Sample1_1	Experiment1	Hs	Liver	male	2010-01-09 12:11:00	
-Sample1_2	Experiment1	Hs	Spleen	female	2010-01-09 12:12:00
-Sample2_1	Experiment2	Mm	Brain	unknown	2010-01-09 12:13:00
-Sample2_2	Experiment2	Mm	Tail	unknown	2010-01-09 12:14:00
