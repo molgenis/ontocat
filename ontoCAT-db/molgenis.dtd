@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT molgenis (description? , (module | entity |form | menu | plugin)*)>
+	<!ATTLIST molgenis name CDATA #REQUIRED>
+	<!ATTLIST molgenis label CDATA #IMPLIED>
+	<!ATTLIST molgenis version CDATA #IMPLIED>
+<!ELEMENT description ANY>
+<!ELEMENT module (description?, entity+)>
+	<!ATTLIST module name CDATA #REQUIRED>
+<!ELEMENT entity (description?,field*,unique*)>
+	<!ATTLIST entity name CDATA #REQUIRED>
+	<!ATTLIST entity abstract (true|false) #IMPLIED>
+	<!ATTLIST entity implements CDATA #IMPLIED>
+	<!ATTLIST entity extends CDATA #IMPLIED>
+	<!ATTLIST entity decorator CDATA #IMPLIED>
+	<!ATTLIST entity description CDATA #IMPLIED>	
+<!ELEMENT field EMPTY>
+	<!ATTLIST field name CDATA #REQUIRED>
+	<!ATTLIST field label CDATA #IMPLIED>
+	<!ATTLIST field type CDATA #IMPLIED>
+	<!ATTLIST field length CDATA #IMPLIED>
+	<!ATTLIST field description CDATA #IMPLIED>
+	<!ATTLIST field nillable (true|false) #IMPLIED>
+	<!ATTLIST field auto (true|false) #IMPLIED>
+	<!ATTLIST field xref_field CDATA #IMPLIED>
+	<!ATTLIST field xref_label CDATA #IMPLIED>
+	<!ATTLIST field xref_entity CDATA #IMPLIED>
+	<!ATTLIST field unique (true|false) #IMPLIED>
+	<!ATTLIST field readonly (true|false) #IMPLIED>
+	<!ATTLIST field hidden (true|false) #IMPLIED>	
+	<!ATTLIST field enum_options CDATA #IMPLIED>
+	<!ATTLIST field default CDATA #IMPLIED>
+<!ELEMENT unique EMPTY>
+	<!ATTLIST unique fields CDATA #REQUIRED>
+	<!ATTLIST unique description CDATA #IMPLIED>
+	<!ATTLIST unique subclass (true|false) #IMPLIED>
+<!ELEMENT form (form*,menu*,plugin*)>
+	<!ATTLIST form name CDATA #REQUIRED>
+	<!ATTLIST form entity CDATA #REQUIRED>
+	<!ATTLIST form label CDATA #IMPLIED>
+	<!ATTLIST form view (list|record) #IMPLIED>
+	<!ATTLIST form readonly (yes|no) #IMPLIED>
+<!ELEMENT menu (form*,menu*,plugin*)>
+	<!ATTLIST menu name CDATA #REQUIRED>
+	<!ATTLIST menu label CDATA #IMPLIED>
+<!ELEMENT plugin (form*,menu*,plugin*)>
+	<!ATTLIST plugin name CDATA #REQUIRED>
+	<!ATTLIST plugin label CDATA #IMPLIED>
+	<!ATTLIST plugin type CDATA #REQUIRED>

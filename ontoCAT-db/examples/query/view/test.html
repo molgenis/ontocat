@@ -1,0 +1,29 @@
+<html>
+<head>
+</head>
+<body>
+<script>
+function showQueryTree(input)
+{
+	var tree = new MolgenisQueryTree(input);
+}
+function MolgenisQueryTree(input)
+{
+	this.init(input);
+}
+
+MolgenisQueryTree.prototype = {
+	init: function(input)
+	{	
+		var json = input.content;
+		alert(json);
+	}
+}
+</script>
+
+<div id="mytree" onclick="showQueryTree(this);">
+blaat
+</div>
+
+</body>
+</html>

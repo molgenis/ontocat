@@ -1,0 +1,84 @@
+
+package dataType;
+primitive bool;
+primitive int; 
+primitive string; 
+primitive decimal; 
+primitive xref;
+primitive mref;
+primitive file;
+primitive date;
+primitive datetime;
+end.
+
+
+package ontocatdb;
+
+(*(For implementation purposes) The Identifiable interface
+				provides its sub-classes with a unique numeric identifier within the scope
+				of one database. This class maps to FuGE::Identifiable (together with
+				Nameable interface)*)
+interface Identifiable
+  attribute id : dataType::int;
+end;
+
+(*(For modeling purposes) The Nameable interface provides its
+				sub-classes a meaningful name that need not be unique. This class maps to
+				FuGE::Identifiable (together with Identifiable interface)*)
+interface Nameable
+  attribute name : dataType::string;
+end;
+
+(*Investigation defines self-contained units of study. For
+				example: Framingham study. Each investigation has a unique name and a group
+				of actions (ProtoclApplications), subjects of observation
+				(ObservableTarget), traits of observation (ObservableFeature), and/or
+				results (in ObservedValues). Maps to XGAP/FuGE Investigation, MAGE-TAB
+				experiment and METABASE:Study.*)
+class Investigation
+  implements Identifiable, Nameable
+  attribute description : dataType::text;
+  attribute accession : dataType::string;
+  attribute id : dataType::int;
+end;
+
+(*OntologySource defines a reference to a an existing ontology or
+				controlled vocabulary from which well-defined and stable (ontology) terms
+				can be obtained. For instance: MO, GO, EFO, MP, HPO, UMLS, MeSH, etc. Use of
+				existing ontologies/vocabularies is recommended to harmonize phenotypic
+				feature and value descriptions. The OntologySource class maps to
+				FuGE::OntologySource, MAGE-TAB::TermSourceREF.*)
+class OntologySource
+  implements Identifiable, Nameable
+  attribute ontologyAccession : dataType::string;
+  attribute ontologyURI : dataType::hyperlink;
+  attribute id : dataType::int;
+end;
+
+(*OntologyTerm defines references to a single entry (term) from
+				an ontology or a controlled vocabulary. Other data entities can reference to
+				this OntologyTerm to harmonize naming of concepts. Each term should have a
+				local, unique label within the investigation. Good practice is to label it
+				'sourceid:term', e.g. 'MO:cell' If no suitable ontology term exists then one
+				can define new terms locally (in which case there is no formal accession for
+				the term limiting its use for cross-investigation queries). In those cases
+				the local name should be repeated in both term and termAccession. Maps to
+				FuGE::OntologyIndividual; in MAGE-TAB there is no separate entity to model
+				terms.*)
+class OntologyTerm
+  implements Identifiable, Nameable
+  attribute term : dataType::string;
+  attribute termDefinition : dataType::string;
+  attribute termAccession : dataType::string;
+  attribute termPath : dataType::string;
+  attribute id : dataType::int;
+end;
+
+(**)
+class Sample
+  implements Identifiable, Nameable
+  attribute id : dataType::int;
+end;
+
+
+end.
