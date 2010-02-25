@@ -5,7 +5,6 @@ package uk.ac.ebi.ontocat.file;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -111,7 +110,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			// TODO: test if reasoner works with OBO ontologies
 			if (cls.getSuperClasses(ontology).size() == 0)
 			{
-				rootTerms.add(new FileOntologyTerm(cls, ontology, slots));
+				rootTerms.add(new FileOntologyTerm(this, cls, ontology, slots));
 			}
 		}
 		return rootTerms;
@@ -157,7 +156,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 				if (cls.getURI().toString().endsWith(termAccession))
 				{
 					cache.put(termAccession, cls);
-					return new FileOntologyTerm(cls, ontology, slots);
+					return new FileOntologyTerm(this, cls, ontology, slots);
 				}
 			}
 
@@ -207,7 +206,8 @@ public final class FileOntologyService extends AbstractOntologyService implement
 		{
 			if (!desc.isAnonymous())
 			{
-				list.add(new FileOntologyTerm(desc.asOWLClass(), ontology, slots));
+				list.add(new FileOntologyTerm(this, desc.asOWLClass(),
+						ontology, slots));
 			}
 		}
 		return list;
@@ -228,7 +228,8 @@ public final class FileOntologyService extends AbstractOntologyService implement
 		{
 			if (!desc.isAnonymous())
 			{
-				list.add(new FileOntologyTerm(desc.asOWLClass(), ontology, slots));
+				list.add(new FileOntologyTerm(this, desc.asOWLClass(),
+						ontology, slots));
 			}
 		}
 		return list;
@@ -271,7 +272,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			for (OWLAnnotation annot : cls.getAnnotations(ontology))
 			{
 				if (annot.getAnnotationValueAsConstant().getLiteral().contains(keyword))
-					terms.add(new FileOntologyTerm(cls, ontology, slots));
+					terms.add(new FileOntologyTerm(this, cls, ontology, slots));
 			}
 		}
 

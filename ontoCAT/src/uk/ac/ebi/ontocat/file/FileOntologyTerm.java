@@ -4,15 +4,10 @@
 package uk.ac.ebi.ontocat.file;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.semanticweb.owl.model.OWLAnnotation;
 import org.semanticweb.owl.model.OWLClass;
 import org.semanticweb.owl.model.OWLOntology;
 
@@ -39,6 +34,8 @@ public final class FileOntologyTerm extends OntologyTerm {
 	/** The slots. */
 	private final FieldDescriptor slots;
 
+	private FileOntologyService fos;
+
 	/**
 	 * Gets the oWL class.
 	 * 
@@ -55,8 +52,10 @@ public final class FileOntologyTerm extends OntologyTerm {
 	 * @param owl_ontology the owl_ontology
 	 * @param fieldDesc the field desc
 	 */
-	public FileOntologyTerm(OWLClass owl_cls, OWLOntology owl_ontology,
+	public FileOntologyTerm(FileOntologyService fos, OWLClass owl_cls,
+			OWLOntology owl_ontology,
 			FieldDescriptor fieldDesc) {
+		this.fos = fos;
 		cls = owl_cls;
 		ontology = owl_ontology;
 		slots = fieldDesc;
@@ -77,7 +76,7 @@ public final class FileOntologyTerm extends OntologyTerm {
 	@Override
 	public String getLabel() throws OntologyServiceException {
 		// in theory there can be multiple labels but return first
-		return getAnnotations().get(slots.labelSlot).get(0);
+		return fos.getAnnotations(this).get(slots.labelSlot).get(0);
 	}
 
 	/* (non-Javadoc)
