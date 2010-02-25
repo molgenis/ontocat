@@ -3,10 +3,6 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
-import java.util.List;
-import java.util.Map;
-
-import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
@@ -14,7 +10,7 @@ import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
  *c @author $Id: SearchBean.java 8993 2009-09-18 17:14:46Z tomasz $
  * 
  */
-public class SearchBean implements OntologyTerm {
+public class SearchBean extends OntologyTerm {
 	//handle to the service
 	private BioportalOntologyService bioportal;
 	
@@ -84,46 +80,27 @@ public class SearchBean implements OntologyTerm {
 		return contents;
 	}
 
-	@Override
-	public String[] getDefinitions() throws OntologyServiceException
-	{
-		throw new OntologyServiceException("getDefinitions not implemented");
-	}
+//	@Override
+//	public String[] getDefinitions() throws OntologyServiceException
+//	{
+//		throw new OntologyServiceException("getDefinitions not implemented");
+//	}
 
-	@Override
-	public Map<String, String[]> getAnnotations() throws OntologyServiceException
-	{
-		return bioportal.getAnnotations(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public String[] getSynonyms() throws OntologyServiceException
-	{
-		return bioportal.getSynonyms(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public List<OntologyTerm> getChildren() throws OntologyServiceException
-	{
-		return bioportal.getChildren(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public List<OntologyTerm> getParents() throws OntologyServiceException
-	{
-		return bioportal.getParents(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public Map<String, String[]> getRelations() throws OntologyServiceException
-	{
-		return bioportal.getRelations(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public List<OntologyTerm> getTermPath() throws OntologyServiceException
-	{
-		return bioportal.getTermPath(this.getOntologyAccession(), this.getAccession());
-	}
-
+//	@Override
+//	public Map<String, String[]> getAnnotations() throws OntologyServiceException
+//	{
+//		return bioportal.getAnnotations(this.getOntologyAccession(), this.getAccession());
+//	}
+//
+//	@Override
+//	public String[] getSynonyms() throws OntologyServiceException
+//	{
+//		return bioportal.getSynonyms(this.getOntologyAccession(), this.getAccession());
+//	}
+//
+//	@Override
+//	public Map<String, String[]> getRelations() throws OntologyServiceException
+//	{
+//		return bioportal.getRelations(this.getOntologyAccession(), this.getAccession());
+//	}
 }

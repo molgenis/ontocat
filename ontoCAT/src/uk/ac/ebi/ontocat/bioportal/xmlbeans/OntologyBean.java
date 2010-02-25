@@ -4,11 +4,9 @@
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 
 
 /**
@@ -18,7 +16,7 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * @author $Id: ConceptBean.java 8301 2009-07-31 13:41:14Z tomasz $
  * 
  */
-public class OntologyBean implements Ontology {
+public class OntologyBean extends Ontology {
 	private String id;
 	private String ontologyId;
 	private String virtualViewIds;
@@ -137,13 +135,7 @@ public class OntologyBean implements Ontology {
 	}
 
 	@Override
-	public String getDescription() throws OntologyServiceException
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<OntologyTerm> getRootTerms() throws OntologyServiceException
+	public String getDescription()
 	{
 		throw new UnsupportedOperationException();
 	}

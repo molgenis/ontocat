@@ -30,6 +30,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ebi.ontocat.AbstractOntologyService;
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
@@ -51,7 +52,7 @@ import com.thoughtworks.xstream.io.StreamException;
  * 
  * @author Tomasz Adamusiak, Morris Swertz
  */
-public class BioportalOntologyService implements OntologyService {
+public class BioportalOntologyService extends AbstractOntologyService implements OntologyService {
 
 	/** The query url. */
 	private URL queryURL;
@@ -529,9 +530,9 @@ public class BioportalOntologyService implements OntologyService {
 	 * plugin.OntologyBrowser.OntologyService#getAnnotations(java.lang.String,
 	 * java.lang.String)
 	 */
-	public Map<String, String[]> getAnnotations(String ontologyAccession,
+	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return getTerm(ontologyAccession, termAccession).getAnnotations();
+		return ((ConceptBean)getTerm(ontologyAccession, termAccession)).getAnnotations();
 	}
 
 	/*
@@ -601,7 +602,7 @@ public class BioportalOntologyService implements OntologyService {
 	}
 
 	@Override
-	public Map<String, String[]> getRelations(String ontologyAccession,
+	public Map<String, List<String>> getRelations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		throw new UnsupportedOperationException();
 	}
@@ -612,14 +613,14 @@ public class BioportalOntologyService implements OntologyService {
 	}
 
 	@Override
-	public String[] getSynonyms(String ontologyAccession, String termAccession)
+	public List<String> getSynonyms(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return getTerm(ontologyAccession, termAccession).getSynonyms();
+		return ((ConceptBean)getTerm(ontologyAccession, termAccession)).getSynonyms();
 	}
 
 	@Override
-	public String[] getDefinitions(String ontologyAccession,
+	public List<String> getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return getTerm(ontologyAccession,termAccession).getDefinitions();
+		return ((ConceptBean)getTerm(ontologyAccession,termAccession)).getDefinitions();
 	}
 }

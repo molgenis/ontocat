@@ -20,7 +20,7 @@ import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
  * 
  * @author $Id: ConceptBean.java 9019 2009-09-22 12:39:01Z tomasz $
  */
-public class ConceptBean implements OntologyTerm {
+public class ConceptBean extends OntologyTerm {
 	/** The service that produced it */
 	BioportalOntologyService bioportal;
 	private static final Logger log = Logger.getLogger(ConceptBean.class.getName());
@@ -39,7 +39,7 @@ public class ConceptBean implements OntologyTerm {
 	private String ontologyVersionId;
 
 	private String[] synonyms;
-	private String[] definitions;
+	private List<String> definitions;
 	private String[] authors;
 
 	/** The relations. */
@@ -79,8 +79,8 @@ public class ConceptBean implements OntologyTerm {
 	 * 
 	 * @see plugin.OntologyBrowser.OntologyTermExt#getMetadata()
 	 */
-	public Map<String, String[]> getAnnotations() {
-		Map<String, String[]> metadata = new HashMap<String, String[]>();
+	public Map<String, List<String>> getAnnotations() {
+		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
 		for (EntryBean e : relations) {
 			if (e.getList() != null)
 				metadata.put(e.getLabel(), e.getList());
@@ -102,7 +102,7 @@ public class ConceptBean implements OntologyTerm {
 	 * 
 	 * @see plugin.OntologyBrowser.OntologyTerm#getSynonyms()
 	 */
-	public String[] getSynonyms() {
+	public List<String> getSynonyms() {
 		for (EntryBean e : relations) {
 			if (e.getLabel().equalsIgnoreCase("exact synonym") || e.getLabel().equalsIgnoreCase("synonym")
 					|| e.getLabel().equalsIgnoreCase("FULL_SYN") || e.getLabel().equalsIgnoreCase("SYNONYM Full Form")) {
@@ -122,7 +122,7 @@ public class ConceptBean implements OntologyTerm {
 	 * 
 	 * @see plugin.OntologyBrowser.OntologyTerm#getDefinitions()
 	 */
-	public String[] getDefinitions() {
+	public List<String> getDefinitions() {
 		if (definitions != null) {
 			return definitions;
 		} else {
@@ -154,24 +154,14 @@ public class ConceptBean implements OntologyTerm {
 		this.ontAccession = ontAccession;
 	}
 
-	@Override
-	public List<OntologyTerm> getParents() throws OntologyServiceException {
-		return bioportal.getParents(this.getOntologyAccession(), this.getAccession());
-	}
-
-	@Override
-	public Map<String, String[]> getRelations() throws OntologyServiceException {
-		Map<String, String[]> result = new LinkedHashMap<String, String[]>();
-		for (EntryBean e : this.relations) {
-			result.put(e.getLabel(), e.getList());
-		}
-		return result;
-	}
-
-	@Override
-	public List<OntologyTerm> getTermPath() throws OntologyServiceException {
-		return bioportal.getTermPath(this.getOntologyAccession(), this.getAccession());
-	}
+//	@Override
+//	public Map<String, String[]> getRelations() throws OntologyServiceException {
+//		Map<String, String[]> result = new LinkedHashMap<String, String[]>();
+//		for (EntryBean e : this.relations) {
+//			result.put(e.getLabel(), e.getList());
+//		}
+//		return result;
+//	}
 
 	// helper function
 	public void setBioportalService(BioportalOntologyService bioportal) {

@@ -46,10 +46,10 @@ public class EntryBean {
 	 * @return the list
 	 */
 	@SuppressWarnings("unchecked")
-	public String[] getList() {
+	public List<String> getList() {
 		try {
 			if (list != null && list.get(0) instanceof String) {
-				return (String[]) list.toArray(new String[0]);
+				return list;
 			} else
 				return null;
 		} catch (ArrayStoreException ex) {
