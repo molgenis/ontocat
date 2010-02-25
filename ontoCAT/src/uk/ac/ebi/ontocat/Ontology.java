@@ -1,74 +1,114 @@
-/**
- * 
- */
 package uk.ac.ebi.ontocat;
 
-import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Wraps metadata for a whole ontology. E.g. EFO, OBI.
- * 
- * @author Tomasz Adamusiak, Morris Swertz
- * @version $Id$
- */
-public interface Ontology
+@XmlRootElement(name="ontology")
+@XmlAccessorType(XmlAccessType.PROPERTY)
+public class Ontology
 {
-	/**
-	 * Property where this ontology stores annotations of synonym terms
-	 * 
-	 * @return
-	 */
-	public String getSynonymSlot() throws OntologyServiceException;
+	private String abbreviation;
+	private String dateReleased;
+	private String description;
+	private String label;
+	private String ontologyAccession;
+	private String synonymSlot;
+	private String versionNumber;
 
-	/**
-	 * Version of the ontology if available
-	 * 
-	 * @return
-	 */
-	public String getVersionNumber() throws OntologyServiceException;
-
-	/**
-	 * Date when this ontology was released
-	 * 
-	 * @return
-	 * @throws OntologyServiceException 
-	 */
-	public String getDateReleased() throws OntologyServiceException;
-
-	/**
-	 * Pretty printing label
-	 * 
-	 * @return
-	 */
-	public String getLabel() throws OntologyServiceException;
-
-	/**
-	 * Abbreviation if applicable. E.g. 'GO'.
-	 * 
-	 * @return
-	 */
-	public String getAbbreviation() throws OntologyServiceException;
-
-	/**
-	 * Accession for the ontology. Depends on the source.
-	 * 
-	 * @return
-	 */
-	public String getOntologyAccession() throws OntologyServiceException;
+	public Ontology()
+	{
+		
+	}
 	
-	/**
-	 * Rich description of the ontology.
-	 */
-	public String getDescription() throws OntologyServiceException;
+	public Ontology(String ontologyAccession)
+	{
+		this.ontologyAccession = ontologyAccession;
+	}
+
+	public String getAbbreviation()
+	{
+		return abbreviation;
+	}
+
+	public void setAbbreviation(String abbreviation)
+	{
+		this.abbreviation = abbreviation;
+	}
+
+	public String getDateReleased() throws OntologyServiceException
+	{
+		return dateReleased;
+	}
+
+	public void setDateReleased(String dateReleased)
+	{
+		this.dateReleased = dateReleased;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public String getLabel() throws OntologyServiceException
+	{
+		return label;
+	}
+
+	public void setLabel(String label)
+	{
+		this.label = label;
+	}
+
+	public String getOntologyAccession()
+	{
+		return ontologyAccession;
+	}
+
+	public void setOntologyAccession(String ontologyAccession)
+	{
+		this.ontologyAccession = ontologyAccession;
+	}
+
+	public String getSynonymSlot()
+	{
+		return synonymSlot;
+	}
+
+	public void setSynonymSlot(String synonymSlot)
+	{
+		this.synonymSlot = synonymSlot;
+	}
+
+	public String getVersionNumber() throws OntologyServiceException
+	{
+		return versionNumber;
+	}
+
+	public void setVersionNumber(String versionNumber)
+	{
+		this.versionNumber = versionNumber;
+	}
 	
-	/**
-	 * Find the root terms for this ontology
-	 * 
-	 * @param ontologyAccession
-	 * @return terms
-	 * @throws OntologyServiceException
-	 */
-	public List<OntologyTerm> getRootTerms() throws OntologyServiceException;
-
-
+	public String toString()
+	{
+		try
+		{
+			return String
+					.format(
+							"Ontology(abbreviation=%s, label=%s, ontologyAccession=%s,  dateReleased=%s, synonymSlot=%s, versionNumber=%s, description=%s)",
+							getAbbreviation(), getLabel(), getOntologyAccession(), getDateReleased(), getSynonymSlot(), getVersionNumber(), getDescription());
+		}
+		catch (OntologyServiceException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

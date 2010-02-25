@@ -9,7 +9,8 @@ import java.util.Map;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyService {
+public interface OntologyService
+{
 	/**
 	 * Retrieve a term using its accession.
 	 * 
@@ -44,6 +45,16 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
+	 * Retrieve a path to the root of the ontology. Returns a list of terms,
+	 * starting with the root and finishing with the term itself
+	 * 
+	 * @param term
+	 * @return terms
+	 * @throws OntologyServiceException
+	 */
+	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException;
+
+	/**
 	 * List available ontology accessions
 	 * 
 	 * @return terms
@@ -55,21 +66,21 @@ public interface OntologyService {
 	 * Find terms matching key word within a particular ontology accession. This
 	 * only returns a subset of information for each of the terms.
 	 * 
-	 * @param keyword
+	 * @param keywords
 	 * @param ontologyAccession
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-	public List<OntologyTerm> searchOntology(String ontologyAccession, String keyword) throws OntologyServiceException;
+	public List<OntologyTerm> searchOntology(String ontologyAccession, String keywords) throws OntologyServiceException;
 
 	/**
 	 * Find terms matching key word
 	 * 
-	 * @param keyword
+	 * @param keywords
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-	public List<OntologyTerm> searchAll(String keyword) throws OntologyServiceException;
+	public List<OntologyTerm> searchAll(String keywords) throws OntologyServiceException;
 
 	/**
 	 * Find the root terms for this ontology
@@ -79,6 +90,15 @@ public interface OntologyService {
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getRootTerms(String ontologyAccession) throws OntologyServiceException;
+
+	/**
+	 * Find the root terms for this ontology
+	 * 
+	 * @param ontology
+	 * @return terms
+	 * @throws OntologyServiceException
+	 */
+	public List<OntologyTerm> getRootTerms(Ontology ontology) throws OntologyServiceException;
 
 	/**
 	 * Find child concepts for this termAccession
@@ -91,15 +111,32 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
+	 * Find child concepts for this termAccession
+	 * 
+	 * @param term
+	 * @return terms
+	 * @throws OntologyServiceException
+	 */
+	public List<OntologyTerm> getChildren(OntologyTerm term) throws OntologyServiceException;
+
+	/**
 	 * Find parent concepts for this termAccession
 	 * 
 	 * @param termAccession
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-
 	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
 			throws OntologyServiceException;
+
+	/**
+	 * Find parent concepts for this termAccession
+	 * 
+	 * @param termAccession
+	 * @return terms
+	 * @throws OntologyServiceException
+	 */
+	public List<OntologyTerm> getParents(OntologyTerm term) throws OntologyServiceException;
 
 	/**
 	 * Find annotations for this termAccession.
@@ -109,8 +146,17 @@ public interface OntologyService {
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, String[]> getAnnotations(String ontologyAccession, String termAccession)
+	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException;
+
+	/**
+	 * Find annotations for this termAccession.
+	 * 
+	 * @param term
+	 * @return
+	 * @throws OntologyServiceException
+	 */
+	public Map<String, List<String>> getAnnotations(OntologyTerm term) throws OntologyServiceException;
 
 	/**
 	 * Find relations for this termAccession.
@@ -120,8 +166,17 @@ public interface OntologyService {
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, String[]> getRelations(String ontologyAccession, String termAccession)
+	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException;
+
+	/**
+	 * Find relations for this termAccession.
+	 * 
+	 * @param term
+	 * @return
+	 * @throws OntologyServiceException
+	 */
+	public Map<String, List<String>> getRelations(OntologyTerm term) throws OntologyServiceException;
 
 	/**
 	 * Generate a hyperlink to drill down to ontology source
@@ -147,8 +202,17 @@ public interface OntologyService {
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public String[] getSynonyms(String ontologyAccession, String termAccession) throws OntologyServiceException;
-	
+	public List<String> getSynonyms(String ontologyAccession, String termAccession) throws OntologyServiceException;
+
+	/**
+	 * Load synonyms for a term
+	 * 
+	 * @param term
+	 * @return
+	 * @throws OntologyServiceException
+	 */
+	public List<String> getSynonyms(OntologyTerm term) throws OntologyServiceException;
+
 	/**
 	 * Load definitions for a term
 	 * 
@@ -157,5 +221,15 @@ public interface OntologyService {
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public String[] getDefinitions(String ontologyAccession, String termAccession) throws OntologyServiceException;
+	public List<String> getDefinitions(String ontologyAccession, String termAccession) throws OntologyServiceException;
+
+	/**
+	 * Load definitions for a term
+	 * 
+	 * @param term
+	 * @return
+	 * @throws OntologyServiceException
+	 */
+	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException;
+
 }

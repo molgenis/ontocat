@@ -1,85 +1,113 @@
-/**
- * 
- */
 package uk.ac.ebi.ontocat;
 
-import java.util.List;
-import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * A term within an ontology.
- * 
- * @author Tomasz Adamusiak, Morris Swertz
- * @version $Id$
- */
-public interface OntologyTerm {
-	/**
-	 * Gets the accession.
-	 * 
-	 * @return the accession
-	 */
-	public String getAccession();
+@XmlRootElement(name = "term")
+@XmlAccessorType(XmlAccessType.PROPERTY)
+public class OntologyTerm
+{
+	private String accession;
+	private String label;
+	private String ontologyAccession;
 
-	/**
-	 * Gets the ontology accession.
-	 * 
-	 * @return the ontology accession
-	 */
-	public String getOntologyAccession();
+	public OntologyTerm()
+	{
 
-	/**
-	 * Gets the label.
-	 * 
-	 * @return the label
-	 * @throws OntologyServiceException 
-	 */
-	public String getLabel() throws OntologyServiceException;
-	
-	/**
-	 * Gets the metadata.
-	 * 
-	 * @return the metadata
-	 * @throws OntologyServiceException 
-	 */
-	public Map<String, String[]> getAnnotations() throws OntologyServiceException;
+	}
 
-	/**
-	 * Gets the synonyms.
-	 * 
-	 * @return the synonyms
-	 * @throws OntologyServiceException 
-	 */
-	public String[] getSynonyms() throws OntologyServiceException;
+	/** Copy constructor 
+	 * @throws OntologyServiceException */
+	public OntologyTerm(OntologyTerm term) throws OntologyServiceException
+	{
+		this.setAccession(term.getAccession());
+		this.setLabel(term.getLabel());
+		this.setOntologyAccession(term.getOntologyAccession());
+	}
 
-	/**
-	 * Gets the definitions.
-	 * 
-	 * @return the definitions
-	 * @throws OntologyServiceException 
-	 */
-	public String[] getDefinitions() throws OntologyServiceException;
-	
-	/**
-	 * Gets the relations
-	 */
-	public Map<String, String[]> getRelations() throws OntologyServiceException;
-	
-	/**
-	 * Get the terms indicated as children
-	 * @throws OntologyServiceException 
-	 */
-	public List<OntologyTerm> getChildren() throws OntologyServiceException;
-	
-	/**
-	 * Get the terms indicated as parents
-	 */
-	public List<OntologyTerm> getParents() throws OntologyServiceException;
-	
-	/**
-	 * Retrieve a path to the root of the ontology
-	 * 
-	 * @return terms
-	 * @throws OntologyServiceException
-	 */
-	public List<OntologyTerm> getTermPath()	throws OntologyServiceException;
+	public String getAccession() throws OntologyServiceException
+	{
+		return accession;
+	}
+
+	public void setAccession(String accession)
+	{
+		this.accession = accession;
+	}
+
+	// public String[] getDefinitions() throws OntologyServiceException
+	// {
+	// return definitions;
+	// }
+	// public void setDefinitions(String[] definitions)
+	// {
+	// this.definitions = definitions;
+	// }
+	public String getLabel() throws OntologyServiceException
+	{
+		return label;
+	}
+
+	public void setLabel(String label)
+	{
+		this.label = label;
+	}
+
+	public String getOntologyAccession() throws OntologyServiceException
+	{
+		return ontologyAccession;
+	}
+
+	public void setOntologyAccession(String ontologyAccession)
+	{
+		this.ontologyAccession = ontologyAccession;
+	}
+
+	// public String[] getSynonyms() throws OntologyServiceException
+	// {
+	// return synonyms;
+	// }
+	// public void setSynonyms(String[] synonyms)
+	// {
+	// this.synonyms = synonyms;
+	// }
+	// public Map<String, String[]> getAnnotations() throws
+	// OntologyServiceException
+	// {
+	// return annotations;
+	// }
+	// public void setAnnotations(Map<String, String[]> annotations)
+	// {
+	// this.annotations = annotations;
+	// }
+
+	public String toString()
+	{
+		try
+		{
+			return String.format("OntologyTerm(accession=%s, label=%s, ontologyAccession=%s)", getAccession(),
+					getLabel(), getOntologyAccession());
+		}
+		catch (OntologyServiceException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+//	private String toString(String[] array)
+//	{
+//		String result = null;
+//		if (array != null)
+//		{
+//			result = "";
+//			for (int i = 0; i < array.length; i++)
+//			{
+//				result += (i == 0 ? "" : ",") + array[i];
+//			}
+//		}
+//		return result;
+//	}
 }
