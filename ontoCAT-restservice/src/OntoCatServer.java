@@ -23,6 +23,9 @@ public class OntoCatServer
 		//setup ontocat
 		OntologyService os = new OlsOntologyService();
 		
+		// set the path
+		String url = "http://localhost:9000/";
+
 		//configuration to use badgerfish
 		Map<String,Object> properties = new HashMap<String,Object>();
 		BadgerFishXMLInputFactory xif = new BadgerFishXMLInputFactory();
@@ -35,7 +38,7 @@ public class OntoCatServer
 		sf.setProperties(properties);
 		sf.setResourceClasses(OntocatService.class);
 		sf.setResourceProvider(OntocatService.class, new SingletonResourceProvider(new OntocatService(os)));
-		sf.setAddress("http://localhost:9000/");
+		sf.setAddress(url);
 				
 		BindingFactoryManager manager = sf.getBus().getExtension(BindingFactoryManager.class);
 		JAXRSBindingFactory factory = new JAXRSBindingFactory();
