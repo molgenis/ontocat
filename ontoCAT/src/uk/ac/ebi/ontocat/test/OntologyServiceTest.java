@@ -89,7 +89,7 @@ public abstract class OntologyServiceTest {
 	@Test
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
-		for (Entry<String, String[]> e : os.getAnnotations(ONTOLOGY_ACCESSION2,
+		for (Entry<String, List<String>> e : os.getAnnotations(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION1).entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
@@ -103,7 +103,7 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION1);
 		System.out.println(os.getDefinitions(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1)[0]);
+				TERM_ACCESSION1).get(0));
 	}
 
 	private void printCurrentTest() {

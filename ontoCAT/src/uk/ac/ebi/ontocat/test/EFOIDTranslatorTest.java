@@ -69,18 +69,18 @@ public class EFOIDTranslatorTest {
 		System.out.println("ID " + ontologyTerm.getAccession());
 		System.out.println("LABEL " + ontologyTerm.getLabel());
 		System.out.print("SYNONYMS ");
-		if (ontologyTerm.getSynonyms() != null) {
-			for (String syn : ontologyTerm.getSynonyms()) {
-				System.out.print(syn + "\t");
-			}
-		}
+//		if (ontologyTerm.getSynonyms() != null) {
+//			for (String syn : ontologyTerm.getSynonyms()) {
+//				System.out.print(syn + "\t");
+//			}
+//		}
 		System.out.println();
 		System.out.print("DEFINITON ");
-		if (ontologyTerm.getDefinitions() != null) {
-			for (String def : ontologyTerm.getDefinitions()) {
-				System.out.print(def + "\t");
-			}
-		}
+//		if (ontologyTerm.getDefinitions() != null) {
+//			for (String def : ontologyTerm.getDefinitions()) {
+//				System.out.print(def + "\t");
+//			}
+//		}
 		System.out.println("SourceUrl " + bw.getQueryURL());
 
 		System.out.println(bw.getSuccessBean().getAccessDate());
