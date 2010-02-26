@@ -68,9 +68,12 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			throws OntologyServiceException {
 		// If an exception if thrown here, the OntologyService
 		// interface must have changed and you have to modify
-		// the <searchAll> string here and in invoke method
+		// the <searchAll> and <searchOntology> strings below
+		// and in the invoke method
 		try {
 			obj.getClass().getMethod("searchAll", String.class);
+			obj.getClass().getMethod("searchOntology",
+					new Class[] { String.class, String.class });
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			throw new OntologyServiceException(e);
@@ -100,8 +103,16 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			throws Throwable {
 		Object result = null;
 		try {
+			// in case for searching a particular ontology
+			// if it's accession is not in the imposed list
+			// return nothing
+			if (method.getName().equalsIgnoreCase("searchOntology")
+					&& !sortOrder.contains((String) args[0])) {
+				log.debug("Ontology explicitly set outside scope");
+				return null;
+			}
 			result = method.invoke(target, args);
-			// sort the results if the method was serachAll
+			// sort the results if the method was searchAll
 			if (method.getName().equalsIgnoreCase("searchAll"))
 				result = searchAllRanked((List<OntologyTerm>) result, sortOrder);
 
@@ -139,6 +150,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		Collections.sort(result, new OntologyRankComparator(sortOrder));
 		return result;
 	}
+
 
 	/**
 	 * The Class OntologyRankComparator.
