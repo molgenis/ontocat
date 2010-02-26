@@ -9,7 +9,7 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
-import uk.ac.ebi.ontocat.virtual.SortedSubsetFactory;
+import uk.ac.ebi.ontocat.virtual.SortedSubsetDecorator;
 
 public class SortedSubsetTest {
 	static OntologyService os;
@@ -19,7 +19,7 @@ public class SortedSubsetTest {
 	public static void setUpBeforeClass() throws Exception {
 
 		OntologyService osBP = new OlsOntologyService();
-		os = SortedSubsetFactory.getService(osBP, new ArrayList<String>() {
+		os = SortedSubsetDecorator.getService(osBP, new ArrayList<String>() {
 			{
 				add("HP");
 				add("EMAP");

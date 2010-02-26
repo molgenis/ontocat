@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -61,11 +62,30 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 *            the list
 	 * 
 	 * @return the object
+	 * @throws OntologyServiceException
 	 */
-	public static Object createProxy(Object obj, List list) {
+	private static Object createProxy(Object obj, List list)
+			throws OntologyServiceException {
+		// If an exception if thrown here, the OntologyService
+		// interface must have changed and you have to modify
+		// the <searchAll> string here and in invoke method
+		try {
+			obj.getClass().getMethod("searchAll", String.class);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			throw new OntologyServiceException(e);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			throw new OntologyServiceException(e);
+		}
 		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
 				.getClass().getInterfaces(), new SortedSubsetDecorator(obj,
 				list));
+	}
+
+	public static OntologyService getService(OntologyService os, List list)
+			throws OntologyServiceException {
+		return (OntologyService) SortedSubsetDecorator.createProxy(os, list);
 	}
 
 	// here the magic happens
