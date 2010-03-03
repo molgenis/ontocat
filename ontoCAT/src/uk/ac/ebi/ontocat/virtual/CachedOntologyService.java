@@ -3,6 +3,9 @@ package uk.ac.ebi.ontocat.virtual;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 import uk.ac.ebi.ontocat.AbstractOntologyService;
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
@@ -12,20 +15,35 @@ import uk.ac.ebi.ontocat.OntologyTerm;
 public class CachedOntologyService extends AbstractOntologyService implements
 		OntologyService {
 
-	OntologyService os;
+	private OntologyService os;
+	private static Cache ServiceCache;
+
+	private static CacheManager manager;
 
 	public CachedOntologyService(OntologyService os) {
 		this.os = os;
+		CacheInitialization();
 	}
 
+	private void CacheInitialization() {
+		manager = new CacheManager(getClass().getResource("ehcache.xml"));
+		ServiceCache = manager.getCache("OntologyServiceCache");
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		// TODO Auto-generated method stub
-		// check parameters if exist
-		// return from cache
-		// if not
-		return os.getAnnotations(ontologyAccession, termAccession);
+		String cacheKey = "getAnnotations|" + ontologyAccession + "|"
+				+ termAccession;
+		// add the result to cache
+		if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
+			ServiceCache.put(new Element(cacheKey, os.getAnnotations(
+					ontologyAccession, termAccession)));
+		}
+		// get the result from cache
+		return (Map<String, List<String>>) ServiceCache.get(cacheKey)
+				.getValue();
 	}
 
 	@Override
@@ -113,8 +131,13 @@ public class CachedOntologyService extends AbstractOntologyService implements
 	@Override
 	public List<OntologyTerm> searchAll(String keywords)
 			throws OntologyServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		String cacheKey = "searchAll|" + keywords;
+		// add the result to cache
+		if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
+			ServiceCache.put(new Element(cacheKey, os.searchAll(keywords)));
+		}
+		// get the result from cache
+		return (List<OntologyTerm>) ServiceCache.get(cacheKey).getValue();
 	}
 
 	@Override
@@ -122,6 +145,14 @@ public class CachedOntologyService extends AbstractOntologyService implements
 			String keywords) throws OntologyServiceException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	protected void finalize() throws Throwable {
+		try {
+			manager.shutdown();
+		} finally {
+			super.finalize();
+		}
 	}
 
 }

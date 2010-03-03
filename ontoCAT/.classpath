@@ -20,5 +20,10 @@
 	<classpathentry kind="lib" path="lib/pellet/pellet-owlapi.jar"/>
 	<classpathentry kind="lib" path="lib/pellet/relaxngDatatype.jar"/>
 	<classpathentry kind="lib" path="lib/pellet/xsdlib.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-1.7.2/ehcache-core-1.7.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-1.7.2/ehcache-core-1.7.2-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-1.7.2/ehcache-core-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-1.7.2/lib/slf4j-jdk14-1.5.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
