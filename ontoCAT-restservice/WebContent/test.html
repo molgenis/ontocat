@@ -1,0 +1,16 @@
+<html>
+<head>
+<script language="JavaScript" type="text/javascript"
+	src="jquery-1.4.2.js"></script>
+</head>
+<body>
+<script>
+$.getJSON("http://localhost:8080/ontocat/rest/json/dummy/testme", 
+        function(data){      
+        	  alert("JSON Data: " + data.term[0].accession ); 
+        });
+
+</script>
+
+</body>
+</html>

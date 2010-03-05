@@ -1,9 +1,11 @@
-This is the first try on an ontoCAT RESTfull service.
- * Just run OntoCatServer
- * Then browse to http://localhost:9000/ontocat/ontologies
+To run the ontoCAT resultful service
+ * In eclipse, rightclick your project and run -> run on server
+ * Then browse to http://localhost:8080/ontocat/rest/xml/ontologies
  * You will get a text listing of ontologies.
- * (note: your browser may show an error; view the source of the page to make sure).
  * This work was build with http://cxf.apache.org/docs/jax-rs.html
  
+Look to the file test.html 
+to see how you can interact with the service using jquery.
+ 
  A full list of services is available at
- http://localhost:9000/ontocat?_wadl
+ http://localhost:8080/ontocat/rest?_wadl

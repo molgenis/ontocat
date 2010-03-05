@@ -3,6 +3,7 @@
 	<name>ontoCAT-restservice</name>
 	<comment></comment>
 	<projects>
+		<project>ontoCAT</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

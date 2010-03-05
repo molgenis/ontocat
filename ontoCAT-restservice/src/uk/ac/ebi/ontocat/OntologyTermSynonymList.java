@@ -1,3 +1,4 @@
+package uk.ac.ebi.ontocat;
 import java.util.ArrayList;
 import java.util.List;
 

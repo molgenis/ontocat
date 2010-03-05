@@ -1,9 +1,10 @@
+package uk.ac.ebi.ontocat;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebMethod;
-import javax.jws.WebService;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,10 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyService;
-import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 import wrappers.OntologyList;
 import wrappers.OntologyTermAnnotation;
 import wrappers.OntologyTermAnnotationList;
@@ -25,13 +23,17 @@ import wrappers.OntologyTermList;
 import wrappers.OntologyTermRelation;
 import wrappers.OntologyTermRelationList;
 
-@Path("/ontocat/")
-@WebService
+@Path("/")
 public class OntocatService
 {
 	Logger logger = Logger.getLogger(OntocatService.class);
 	OntologyService os;
 
+	public OntocatService() throws OntologyServiceException
+	{
+		this.os = new OlsOntologyService();
+	}
+	
 	public OntocatService(OntologyService service)
 	{
 		this.os = service;
@@ -379,5 +381,27 @@ public class OntocatService
 		// TODO: cleaning!
 		else
 			return o.toString();
+	}
+	
+	@GET
+	@Path("json/dummy/{keywords}")
+	@Produces("application/json")
+	//@HttpResource(location = "/json/dummy/{keywords}")
+	public List<OntologyTerm> dummyJSON(@PathParam("keywords") String keywords) throws OntologyServiceException
+	{
+		List<OntologyTerm> tList = new ArrayList<OntologyTerm>();
+		tList.add(new OntologyTerm(keywords,"test","test"));
+		return tList;
+	}
+	
+	@GET
+	@Path("xml/dummy/{keywords}")
+	@Produces("application/xml")
+	//@HttpResource(location = "/json/dummy/{keywords}")
+	public List<OntologyTerm> dummyXML(@PathParam("keywords") String keywords) throws OntologyServiceException
+	{
+		List<OntologyTerm> tList = new ArrayList<OntologyTerm>();
+		tList.add(new OntologyTerm(keywords,"test","test"));
+		return tList;
 	}
 }

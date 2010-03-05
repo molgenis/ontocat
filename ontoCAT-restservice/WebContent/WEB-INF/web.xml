@@ -3,7 +3,7 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
-	<display-name>test_cxf</display-name>
+	<display-name>ontocat</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
@@ -14,14 +14,17 @@
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>OntoCatServlet</servlet-name>
-		<servlet-class>org.apache.cxf.transport.servlet.CXFNonSpringServlet</servlet-class>
+		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
 		<init-param>
-			<param-name>jaxws.serviceClasses</param-name>
-			<param-value>OntoCatServlet</param-value>
+			<param-name>jaxrs.serviceClasses</param-name>
+			<param-value>
+    			uk.ac.ebi.ontocat.OntocatService		      
+  			</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>OntoCatServlet</servlet-name>
-		<url-pattern>/ontocat/soap</url-pattern>
+		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 </web-app>
