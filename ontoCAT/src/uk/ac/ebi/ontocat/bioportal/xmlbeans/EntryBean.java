@@ -3,6 +3,7 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * 
  */
 
-public class EntryBean {
+public class EntryBean implements Serializable {
 
 	/** The string. */
 	private ArrayList<String> strings;

@@ -61,7 +61,7 @@ used with JMX monitors.
     Subdirectories can be specified below the property e.g. java.io.tmpdir/one
 
     -->
-    <diskStore path="C:\work\"/>
+    <diskStore path="java.io.tmpdir"/>
 
     <!--
     CacheManagerEventListener
@@ -740,7 +740,7 @@ used with JMX monitors.
     -->
     
     <cache name="OntologyServiceCache"
-            maxElementsInMemory="1"
+            maxElementsInMemory="100"
             eternal="false"
             timeToIdleSeconds="0"
             timeToLiveSeconds="86400"

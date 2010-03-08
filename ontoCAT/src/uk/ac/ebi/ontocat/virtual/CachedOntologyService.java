@@ -6,6 +6,9 @@ import java.util.Map;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
+import org.apache.log4j.Logger;
+
 import uk.ac.ebi.ontocat.AbstractOntologyService;
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
@@ -17,6 +20,8 @@ public class CachedOntologyService extends AbstractOntologyService implements
 
 	private OntologyService os;
 	private static Cache ServiceCache;
+	private static final Logger logger = Logger
+			.getLogger(CachedOntologyService.class);
 
 	private static CacheManager manager;
 
@@ -26,6 +31,7 @@ public class CachedOntologyService extends AbstractOntologyService implements
 	}
 
 	private void CacheInitialization() {
+		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
 		manager = new CacheManager(getClass().getResource("ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
 	}
@@ -136,6 +142,7 @@ public class CachedOntologyService extends AbstractOntologyService implements
 		if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
 			ServiceCache.put(new Element(cacheKey, os.searchAll(keywords)));
 		}
+
 		// get the result from cache
 		return (List<OntologyTerm>) ServiceCache.get(cacheKey).getValue();
 	}

@@ -3,6 +3,7 @@
  */
 package uk.ac.ebi.ontocat;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyIdMapping {
+public interface OntologyIdMapping extends Serializable {
 
 	/**
 	 * A regular expression pattern which confirms that a particular concept

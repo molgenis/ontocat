@@ -14,7 +14,7 @@ public abstract class OntologyServiceTest {
 	protected static OntologyService os;
 	protected static String ONTOLOGY_ACCESSION1;
 	protected static String ONTOLOGY_ACCESSION2;
-	protected static String TERM_ACCESSION1 = "GO:0009318";
+	protected static String TERM_ACCESSION1 = "GO:0005623";
 	protected static String TERM_ACCESSION2 = "GO:0005575";
 
 	@Test

@@ -3,6 +3,7 @@
  */
 package uk.ac.ebi.ontocat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import uk.ac.ebi.efo.bioportal.BioportalMapping;
@@ -14,7 +15,7 @@ import uk.ac.ebi.efo.bioportal.BioportalMapping;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyIdTranslator {
+public interface OntologyIdTranslator extends Serializable {
 	public ArrayList<BioportalMapping> getMappings();
 
 	public String getOntologyAccessionFromConcept(String sConcept) throws OntologyServiceException;

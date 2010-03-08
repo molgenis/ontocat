@@ -6,7 +6,6 @@ package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 import java.util.ArrayList;
 
 import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyServiceException;
 
 
 /**
@@ -137,6 +136,6 @@ public class OntologyBean extends Ontology {
 	@Override
 	public String getDescription()
 	{
-		throw new UnsupportedOperationException();
+		return description;
 	}
 }

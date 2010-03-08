@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -52,7 +53,8 @@ import com.thoughtworks.xstream.io.StreamException;
  * 
  * @author Tomasz Adamusiak, Morris Swertz
  */
-public class BioportalOntologyService extends AbstractOntologyService implements OntologyService {
+public class BioportalOntologyService extends AbstractOntologyService implements
+		OntologyService, Serializable {
 
 	/** The query url. */
 	private URL queryURL;
@@ -62,16 +64,16 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			.getLogger(BioportalOntologyService.class.getName());
 
 	/** The sw xml. */
-	private StringWriter swXML = null;
+	private transient StringWriter swXML = null;
 
 	/** The meta xml. */
-	private StringWriter metaXML = null;
+	private transient StringWriter metaXML = null;
 
 	/** The url add on. */
 	private final String urlAddOn;
 
 	/** The xstream. */
-	private final XStream xstream = new XStream();
+	private transient final XStream xstream = new XStream();
 
 	// transformations that strip surrounding xml markup
 	/** The Constant xsltBEAN. */
