@@ -751,5 +751,16 @@ used with JMX monitors.
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LFU"
             />
+            
+	<cache name="EternalServiceCache"
+            maxElementsInMemory="100"
+            eternal="true"
+            overflowToDisk="true"
+            diskSpoolBufferSizeMB="30"
+            maxElementsOnDisk="10000"
+            diskPersistent="true"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LFU"
+            />
 
 </ehcache>

@@ -73,7 +73,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private final String urlAddOn;
 
 	/** The xstream. */
-	private transient final XStream xstream = new XStream();
+	private static final XStream xstream = new XStream();
 
 	// transformations that strip surrounding xml markup
 	/** The Constant xsltBEAN. */

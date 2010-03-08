@@ -41,6 +41,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 			.getLogger(BioportalOntologyService.class.getName());
 
 	private static Cache ServiceCache;
+	private static Cache EternalCache;
 	private static CacheManager manager;
 
 	/**
@@ -57,6 +58,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
 		manager = new CacheManager(getClass().getResource("ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
+		EternalCache = manager.getCache("EternalServiceCache");
 	}
 
 	/**
@@ -92,20 +94,31 @@ public class CachedServiceDecorator implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 		Object result = null;
+		String cacheKey = method.getName() + ArgsToKey(args);
+
 		try {
-
-			String cacheKey = method.getName() + ArgsToKey(args);
-
 			// add the result to cache if it's not there already
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
 				ServiceCache.put(new Element(cacheKey, method.invoke(target,
 						args)));
+				Element el;
+
+				el = new Element(cacheKey, method.invoke(target, args));
+				ServiceCache.put(el);
+				EternalCache.put(el);
 			}
 			// get the result from cache
 			result = ServiceCache.get(cacheKey).getValue();
 
 		} catch (InvocationTargetException e) {
 			log.error(method.getName() + " throws " + e.getCause());
+			if (EternalCache != null && EternalCache.get(cacheKey) == null) {
+				result = EternalCache.get(cacheKey).getValue();
+				log.warn("Accessing eternal cache for " + cacheKey);
+			} else {
+				throw new OntologyServiceException(
+						"Service unavailable. No results in cache neither.");
+			}
 		}
 		return result;
 	}
