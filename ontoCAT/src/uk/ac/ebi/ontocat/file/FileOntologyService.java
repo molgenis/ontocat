@@ -267,8 +267,21 @@ public final class FileOntologyService extends AbstractOntologyService implement
 		HashSet<OntologyTerm> terms = new HashSet<OntologyTerm>();
 		// iterate through all classes annotations
 		// TODO: lucene index?
+		// TODO: implement equals for this hashset to prevent duplicates on
+		// the equals for FileOntologyTerm
 		for (OWLClass cls : ontology.getReferencedClasses())
 		{
+			// for standard fragments, e.g. www.obo.org/go#GO:00034
+			if (cls.getURI().getFragment() != null
+					&& cls.getURI().getFragment().contains(keyword)) {
+				terms.add(new FileOntologyTerm(this, cls, ontology, slots));
+				// for non-standard fragments, e.g.
+				// http://www.ebi.ac.uk/chebi/searchId.do;?chebiId=CHEBI:50138
+			} else if (cls.getURI().getFragment() == null
+					&& cls.getURI().toString().contains(keyword)) {
+				terms.add(new FileOntologyTerm(this, cls, ontology, slots));
+			}
+
 			for (OWLAnnotation annot : cls.getAnnotations(ontology))
 			{
 				if (annot.getAnnotationValueAsConstant().getLiteral().contains(keyword))
