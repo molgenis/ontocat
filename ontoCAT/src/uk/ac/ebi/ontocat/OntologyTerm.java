@@ -18,7 +18,14 @@ public class OntologyTerm implements Serializable
 	{
 
 	}
-
+	
+	public OntologyTerm(String accession, String label, String ontologyAccession)
+	{
+		this.setAccession(accession);
+		this.setLabel(label);
+		this.setOntologyAccession(ontologyAccession);
+	}
+	
 	/** Copy constructor 
 	 * @throws OntologyServiceException */
 	public OntologyTerm(OntologyTerm term) throws OntologyServiceException
