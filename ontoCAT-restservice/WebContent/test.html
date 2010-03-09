@@ -1,16 +1,48 @@
 <html>
 <head>
-<script language="JavaScript" type="text/javascript"
-	src="jquery-1.4.2.js"></script>
+<script language="JavaScript" type="text/javascript" src="jquery-1.4.2.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="jquery.tokeninput.js"></script>
+<script language="JavaScript" type="text/javascript" src="SemOntoCat.js"></script>
+
+<link rel="stylesheet" href="SemOntoCatCSS.css" type="text/css"/>
+
 </head>
 <body>
 <script>
-$.getJSON("http://localhost:8080/ontocat/rest/json/dummy/testme", 
+$.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca", 
         function(data){      
         	  alert("JSON Data: " + data.term[0].accession ); 
         });
 
 </script>
+
+
+
+<div id="header"></div>
+  
+	<div id="main">
+    	<div id="search_box">
+	    	<input type="text" id="tokenize" name="Input1" autocomplete="off" /> <br/><br/>
+			<input value="Search" type="button" id="submit_term"  name="submit_term"/>
+	    
+		</div> 
+	</div>
+	
+	 <div id="misc">
+		<div id="help">
+		    <h2> Help </h2>
+		    <div id="help_text" >	 Enter a term and pick a suggestion from the list. </div>  
+            </div> 
+	    <div id="help1"> <h2> Help </h2> 
+		    <div id="help1_text" > Enter a term and pick a suggestion from the list.Press the "search" button when the correct term have been inserted.
+	            </div>
+	    </div>
+     </div>	
+
+	  <div id="footer">
+       <div id="json_results">   </div> 
+	  </div> 
 
 </body>
 </html>
