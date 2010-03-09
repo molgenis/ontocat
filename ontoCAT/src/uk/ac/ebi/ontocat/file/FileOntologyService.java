@@ -42,7 +42,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 	private final FieldDescriptor slots;
 
 	/** The map with classes */
-	private Map<String, OWLClass> cache = new TreeMap<String, OWLClass>();
+	private final Map<String, OWLClass> cache = new TreeMap<String, OWLClass>();
 
 	/**
 	 * Instantiates a new file ontology service.
@@ -267,25 +267,25 @@ public final class FileOntologyService extends AbstractOntologyService implement
 		HashSet<OntologyTerm> terms = new HashSet<OntologyTerm>();
 		// iterate through all classes annotations
 		// TODO: lucene index?
-		// TODO: implement equals for this hashset to prevent duplicates on
-		// the equals for FileOntologyTerm
 		for (OWLClass cls : ontology.getReferencedClasses())
 		{
-			// for standard fragments, e.g. www.obo.org/go#GO:00034
+			// for standard fragments, e.g. www.obo.org/go#heart
 			if (cls.getURI().getFragment() != null
 					&& cls.getURI().getFragment().contains(keyword)) {
 				terms.add(new FileOntologyTerm(this, cls, ontology, slots));
 				// for non-standard fragments, e.g.
-				// http://www.ebi.ac.uk/chebi/searchId.do;?chebiId=CHEBI:50138
-			} else if (cls.getURI().getFragment() == null
-					&& cls.getURI().toString().contains(keyword)) {
+				// http://www.ebi.ac.uk/chebi/searchId.do;?chebiId=heart
+			} else if (cls.getURI().toString().contains(keyword)) {
 				terms.add(new FileOntologyTerm(this, cls, ontology, slots));
 			}
 
 			for (OWLAnnotation annot : cls.getAnnotations(ontology))
 			{
-				if (annot.getAnnotationValueAsConstant().getLiteral().contains(keyword))
+				if (annot.getAnnotationValueAsConstant().getLiteral().contains(
+						keyword)) {
 					terms.add(new FileOntologyTerm(this, cls, ontology, slots));
+				}
+
 			}
 		}
 

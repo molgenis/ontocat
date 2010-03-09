@@ -14,11 +14,9 @@ public class OntologyTerm implements Serializable
 	private String label;
 	private String ontologyAccession;
 
-	public OntologyTerm()
-	{
-
+	public OntologyTerm() {
 	}
-	
+
 	public OntologyTerm(String accession, String label, String ontologyAccession)
 	{
 		this.setAccession(accession);
@@ -91,6 +89,7 @@ public class OntologyTerm implements Serializable
 	// this.annotations = annotations;
 	// }
 
+	@Override
 	public String toString()
 	{
 		try
@@ -106,6 +105,57 @@ public class OntologyTerm implements Serializable
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accession == null) ? 0 : accession.hashCode());
+		result = prime * result + ((label == null) ? 0 : label.hashCode());
+		result = prime
+				* result
+				+ ((ontologyAccession == null) ? 0 : ontologyAccession
+						.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OntologyTerm other = (OntologyTerm) obj;
+		if (accession == null) {
+			if (other.accession != null)
+				return false;
+		} else if (!accession.equals(other.accession))
+			return false;
+		if (label == null) {
+			if (other.label != null)
+				return false;
+		} else if (!label.equals(other.label))
+			return false;
+		if (ontologyAccession == null) {
+			if (other.ontologyAccession != null)
+				return false;
+		} else if (!ontologyAccession.equals(other.ontologyAccession))
+			return false;
+		return true;
+	}
+
 //	private String toString(String[] array)
 //	{
 //		String result = null;
@@ -119,4 +169,5 @@ public class OntologyTerm implements Serializable
 //		}
 //		return result;
 //	}
+
 }
