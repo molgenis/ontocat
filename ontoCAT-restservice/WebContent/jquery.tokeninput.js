@@ -559,9 +559,12 @@ $.TokenList = function (input, settings) {
 
 	    if(settings.method == "POST") {
 			//    $.post(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {}, callback, settings.contentType);
-			    $.post(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {'q':query} , callback, settings.contentType);
+			    //$.post(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {'q':query} , callback, settings.contentType);
+			    $.post(settings.url +  query, {'q':query} , callback, settings.contentType);
 	    } else {
-		        $.get(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {}, callback, settings.contentType);
+		        //$.get(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {}, callback, settings.contentType);
+		        $.get(settings.url + query, {}, callback, settings.contentType);
+
 		    }
         }
     }
