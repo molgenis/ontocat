@@ -17,40 +17,7 @@ $(document).ready(function() {
 	alert ("this is  empty")};*/
 
 
-	$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json1/searchAll",  function(json) {
-			// Parse JSON objects 
-	       jJSON["accession"] = (function() {
-				response = {
-					values: [],
-					count: 0
-				};
-				$.each(json.term ,function(i,term) {
-						response.count++;
-						response.values[i] = term.accession;
-					
-				});
-				return response;
-			})();
-
-		jJSON["label"] = (function() {
-				response = {
-					values: [],
-					count: 0
-				};
-				$.each(json.term ,function(i,term) {
-						response.count++;
-						response.values[i] = term.label;
-				});
-				return response;
-			})();
-
-			$(jJSON.getValues("label",null)).appendTo("body");
-			$("<br/>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").appendTo("body");
-			$(jJSON.getValues("accession",null)).appendTo("body");
-			$("<br/></div>").appendTo("body");
-
-			//send the above in autocomplete item
-		 } ,
+	$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json/searchAll/",  
 	     {
 			hintText: "Enter a term",
             noResultsText: "No results available",
@@ -74,7 +41,7 @@ $(document).ready(function() {
            	 // alter tokenInput itself to use "new/url/to/call" instead of 
             	 // the original "url/to/call/"
 
-	       return "http://localhost:9000/ontocat/json/searchAll?q=";
+	       return "http://localhost:8080/ontocat/rest/json/searchAll/";
            }
         
 	});
@@ -111,11 +78,12 @@ $(document).ready(function() {
 //	$.getJSON("http://localhost:9000/ontocat/json1/searchAll?q=brca2",function(json){
 $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca", 
         function(data){      
-        	  alert("JSON Data 1: " + data.term[0].accession );
-        	  alert("JSON Data:2 " + data.term[0].label );
-        	  alert("JSON Data 3:" +  data.term[1].accession); 
-        	  alert("JSON Data 4: " + data.term[0].label);
-  			  alert("JSON Data 5: " + data.term[0].ontologyAccession);
+	//the below work!
+        	  //alert("JSON Data 1: " + data.term[0].accession );
+        	  //alert("JSON Data:2 " + data.term[0].label );
+        	  //alert("JSON Data 3:" +  data.term[1].accession); 
+        	  //alert("JSON Data 4: " + data.term[0].label);
+  			  //alert("JSON Data 5: " + data.term[0].ontologyAccession);
         });
 
 $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",  function(json){
