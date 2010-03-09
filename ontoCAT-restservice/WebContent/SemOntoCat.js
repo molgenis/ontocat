@@ -17,12 +17,12 @@ $(document).ready(function() {
 	alert ("this is  empty")};*/
 
 
-	$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json/searchAll/",  
+	$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json/searchAll/", 
 	     {
 			hintText: "Enter a term",
             noResultsText: "No results available",
             searchingText: "Searching...",
-            prePopulate: [{"id":"brca", "name":"brca"},{"id":"glioblastoma","name":"glioblastoma"},{"id":"Parahippocampal","name":"Parahippocampal"}],
+            prePopulate: [{"label":"brca", "accession":"brca"},{"label":"glioblastoma","accession":"glioblastoma"},{"label":"Parahippocampal","accession":"Parahippocampal"}],
 	    
             classes: {
                 tokenList: "token-input-list-facebook",
