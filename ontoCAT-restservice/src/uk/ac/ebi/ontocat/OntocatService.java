@@ -57,6 +57,17 @@ public class OntocatService
 	{
 		return getOntologiesXML();
 	}
+
+	
+//	os.searchAll(keyword)	
+	@GET
+	@Path("/json1/searchAll/")
+	@Produces("application/json")
+	@WebMethod
+	public List<OntologyTerm> searchAllJSON1(@PathParam("q") String keywords) throws OntologyServiceException
+	{
+		return this.searchAllXML(keywords).terms;
+	}
 	
 //		os.searchAll(keyword)	
 	@GET
