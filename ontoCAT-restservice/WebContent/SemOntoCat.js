@@ -1,29 +1,31 @@
 $(document).ready(function() {
 
-
-	$("#submit_term").click(function() {
-		var submitted_terms1 = $("#tokenize").val(); 
+	j$ = jQuery.noConflict();
+	j$("div").addClass("a");
+	
+	addHelpVisualization();
+	
+	j$("#submit_term").click(function() {
+		var submitted_terms1 = j$("#tokenize").val(); 
 		//alert($("#tokenize").val());	
 		//$("#dialog").dialog();
 	 
 	});
 
+   clearContents();
    
-	//the contents of the input is not empty 
-	/*if ($("#tokenize").length != 0) { 
-	      alert ("this is not empty "); 
-		  delete $("#tokenize").value;
-	}else {
-	alert ("this is  empty")};*/
 
-
-	$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json/searchAll/", 
-	     {
+	j$("#tokenize").tokenInput("http://localhost:8080/ontocat/rest/json/searchAll/",  function(data){      
+		  //the below work!
+  	  alert("JSON Data 1: " + data.term[0].accession );
+  	  alert("JSON Data:2 " + data.term[0].label );
+  	 
+  },
+  {
 			hintText: "Enter a term",
             noResultsText: "No results available",
             searchingText: "Searching...",
             prePopulate: [{"label":"brca", "accession":"brca"},{"label":"glioblastoma","accession":"glioblastoma"},{"label":"Parahippocampal","accession":"Parahippocampal"}],
-	    
             classes: {
                 tokenList: "token-input-list-facebook",
                 token: "token-input-token-facebook",
@@ -35,37 +37,16 @@ $(document).ready(function() {
                 dropdownItem2: "token-input-dropdown-item2-facebook",
                 selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
                 inputToken: "token-input-input-token-facebook"
+            },
+            focus: function(data) {alert("test");}
             
-           }        
-	});
-
-	
-
-	$("a").click(function(event){ 
-  		 //alert("As you can see, the link no longer took you to jquery.com");
-		 event.preventDefault();  
-   		 $(this).hide("slow");
-	 });
-
-	$("button").click(function(){
-    		$("p").css("background-color","yellow");
-  	});
-
-	$("#help").click(function(event) {
-	        $("#help_text").slideDown();  // $("#help_text").show();  
-	});
-
-	$("#help_text").click(function(event) {
-		$("#help_text").slideUp(1000);  // $("#help_text").hide();  
 	});
 
 
-	$("#help1").click(function(event) {
-	        $("#help1_text").toggle();
-	});
-
-	
  });
+
+
+
 
 
 $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca", 
@@ -85,7 +66,7 @@ $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",  function(js
 					values: [],
 					count: 0
 				};
-				$.each(json.term ,function(i,term) {
+				j$.each(json.term ,function(i,term) {
 						response.count++;
 						response.values[i] = term.accession;
 					
@@ -98,7 +79,7 @@ $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",  function(js
 					values: [],
 					count: 0
 				};
-				$.each(json.term ,function(i,term) {
+				j$.each(json.term ,function(i,term) {
 						response.count++;
 						response.values[i] = term.label;
 				});
@@ -106,11 +87,11 @@ $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",  function(js
 			})();
 
 			 
-			$("<div id='json_results2'><p>").appendTo("body");
-			$(jJSON.getValues("label",null)).appendTo("body");
-			$("<br/>").appendTo("body");
-			$(jJSON.getValues("accession",null)).appendTo("body");
-			$("<br/></div>").appendTo("body");
+			j$("<div id='json_results2'><p>").appendTo("body");
+			j$(jJSON.getValues("label",null)).appendTo("body");
+			j$("<br/>").appendTo("body");
+			j$(jJSON.getValues("accession",null)).appendTo("body");
+			j$("<br/></div>").appendTo("body");
 
 	});
 
@@ -161,7 +142,41 @@ $.ajax({
  });
 
 
+function addHelpVisualization() {
+	j$("a").click(function(event){ 
+ 		 //alert("As you can see, the link no longer took you to jquery.com");
+		 event.preventDefault();  
+  		 j$(this).hide("slow");
+	 });
 
+	j$("button").click(function(){
+   		j$("p").css("background-color","yellow");
+ 	});
+
+	j$("#help").click(function(event) {
+	        j$("#help_text").slideDown();  // $("#help_text").show();  
+	});
+
+	j$("#help_text").click(function(event) {
+		j$("#help_text").slideUp(1000);  // $("#help_text").hide();  
+	});
+
+
+	j$("#help1").click(function(event) {
+	        j$("#help1_text").toggle();
+	});
+	
+};
+
+
+function clearContents() {
+	//the contents of the input is not empty 
+	/*if ($("#tokenize").length != 0) { 
+      alert ("this is not empty "); 
+	  delete $("#tokenize").value;
+	}else {
+	alert ("this is  empty")};*/
+};
 
 
 
