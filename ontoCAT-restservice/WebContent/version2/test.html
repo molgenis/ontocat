@@ -1,0 +1,49 @@
+<html>
+<head>
+<script language="JavaScript" type="text/javascript" src="jquery-1.4.2.js"></script>
+<script language="JavaScript" type="text/javascript" src='jquery.autocomplete.js'></script>
+<script language="JavaScript" type="text/javascript" src='localdata.js'></script>
+
+<script language="JavaScript" type="text/javascript" src="JSemOntoCat.js"></script>
+
+<link rel="stylesheet" type="text/css" href="jquery.autocomplete.css" />
+<link rel="stylesheet" href="JSemOntoCatCSS.css" type="text/css"/>
+
+</head>
+<body>
+<script>
+$.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca", 
+        function(data){      
+        	  //alert("JSON Data: " + data.term[0].accession ); 
+        });
+
+</script>
+
+
+
+<div id="header"></div>
+  
+	<div id="main">
+    	<div id="search_box">
+            <td><label class="label" for="tokenize">Terms</label></td>
+
+	    	<input type="text" class="value" id="tokenize" name="Input1" autocomplete="off" value="aa"/> <br/><br/>
+			<input value="Search" type="button" id="submit_term"  name="submit_term"/>
+	    <p>
+			<label>Single term (contains):</label>
+			<input type="text" id="suggest14" />
+			<input type="button" value="Get Value" />
+		</p>
+	  
+		</div> 
+	</div>
+	
+
+	  <div id="footer">
+       <div id="json_results">   </div> 
+	  <br/>	  
+       <div id="json_results2">   </div> 
+	  </div> 
+
+</body>
+</html>
