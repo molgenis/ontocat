@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.junit.BeforeClass;
 
-import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
@@ -14,9 +13,7 @@ public class CompositeOntologyServiceTest extends OntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		final OntologyService osBP = new BioportalOntologyService(
-				"ontocat-svn@lists.sourceforge.net",
-				new EFOIDTranslator());
+		final OntologyService osBP = new BioportalOntologyService();
 		final OntologyService osOLS = new OlsOntologyService();
 		os = new CompositeOntologyService(new ArrayList<OntologyService>() {
 			{

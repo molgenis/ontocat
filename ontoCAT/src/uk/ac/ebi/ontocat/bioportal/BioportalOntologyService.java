@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.AbstractOntologyService;
 import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
@@ -59,8 +58,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	/** The query url. */
 	private URL queryURL;
 
-	/** The Constant _log. */
-	private static final Logger _log = Logger
+	/** The Constant log. */
+	private static final Logger log = Logger
 			.getLogger(BioportalOntologyService.class.getName());
 
 	/** The sw xml. */
@@ -102,21 +101,27 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
 
-	private final OntologyIdTranslator termResolver;
-
 	/**
 	 * Instantiates a new bioportal service.
 	 * 
 	 * @param email
 	 *            the email
 	 */
-	public BioportalOntologyService(String email,
-			OntologyIdTranslator resolver) {
+	public BioportalOntologyService(String email) {
 		// Now map the xml to the java beans
 		// FIXME level?
 		urlAddOn = "?includeproperties=1&email=" + email + "&level=1";
-		termResolver = resolver;
 		configureXstream();
+	}
+
+	/**
+	 * Shorthand that uses ontocat-svn email to instantiate the service
+	 * 
+	 * @param email
+	 *            the email
+	 */
+	public BioportalOntologyService() {
+		this("ontocat-svn@lists.sourceforge.net");
 	}
 
 	private void configureXstream() {
@@ -185,19 +190,19 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	/**
 	 * Process search url.
 	 * 
-	 * @param ontologyID
+	 * @param ontologyAccession
 	 *            the ontology id
-	 * @param term
+	 * @param keyword
 	 *            the term
 	 * 
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private void processSearchUrl(String ontologyID, String term)
+	private void processSearchUrl(String ontologyAccession, String keyword)
 			throws OntologyServiceException {
 		try {
-			this.queryURL = new URL(urlBASE + "search/" + term + "/" + urlAddOn
-					+ "&ontologyids=" + ontologyID);
+			this.queryURL = new URL(urlBASE + "search/" + keyword + "/"
+					+ urlAddOn + "&ontologyids=" + ontologyAccession);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -208,15 +213,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	/**
 	 * Process ontology url.
 	 * 
-	 * @param ontologyID
+	 * @param ontologyAccession
 	 *            the ontology id
 	 * 
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private void processOntologyUrl(String ontologyID)
+	private void processOntologyUrl(String ontologyAccession)
 			throws OntologyServiceException {
-		processServiceURL("virtual/ontology/", ontologyID, "");
+		processServiceURL("virtual/ontology/", ontologyAccession, "");
 	}
 
 	private void processOntologyUrl() throws OntologyServiceException {
@@ -230,25 +235,23 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	/**
-	 * Search concept id through label.
+	 * Search concept id through attributes. If termAccession was not found,
+	 * BioPortal might be mapping a different id instead so try resolving it and
+	 * search for this id in attributes of the ontology.
 	 * 
-	 * @param ontologyID
+	 * @param ontologyAccession
 	 *            the ontology id
-	 * @param extID
+	 * @param secondaryTermAccession
 	 *            the ext id
 	 * 
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private void searchConceptIDThroughLabel(String ontologyID, String extID)
-			throws OntologyServiceException {
-		// If concept id was not found in source ontology bioportal might be
-		// mapping label as id instead so try resolving it
-		// and search for this id in attributes of the ontology
-		processSearchUrl(ontologyID, termResolver
-				.getTermAccessionFromConcept(extID));
-		// bioportal id for the concept found
-		processConceptUrl(ontologyID, this.getSearchResults().get(0)
+	private void searchConceptIDThroughLabel(String ontologyAccession,
+			String secondaryTermAccession) throws OntologyServiceException {
+		processSearchUrl(ontologyAccession, secondaryTermAccession);
+		// bioportal id for the concept found or exception thrown already
+		processConceptUrl(ontologyAccession, this.getSearchResults().get(0)
 				.getAccession());
 	}
 
@@ -336,7 +339,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			try {
 				return new BufferedInputStream(queryURL.openStream());
 			} catch (ConnectException e) {
-				_log
+				log
 						.warn("Bioportal is timing out on us. Sleep for 5s and repeat");
 				try {
 					Thread.sleep(5000);
@@ -514,15 +517,12 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		return ot;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see plugin.OntologyBrowser.OntologyService#getTerm(java.lang.String)
-	 */
+	@Override
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
-		return getTerm(termResolver
-				.getOntologyAccessionFromConcept(termAccession), termAccession);
+		OntologyTerm term = searchOntology(null, termAccession).get(0);
+		return getTerm(term.getOntologyAccession(), term.getAccession());
+		// throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	/*
@@ -534,7 +534,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 */
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return ((ConceptBean)getTerm(ontologyAccession, termAccession)).getAnnotations();
+		return ((ConceptBean) getTerm(ontologyAccession, termAccession))
+				.getAnnotations();
 	}
 
 	/*
@@ -595,9 +596,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		// GET TERMS FROM ACCESSIONS
 		List<OntologyTerm> path = new ArrayList<OntologyTerm>();
 		// include searched acc in path
-		path.add(this.getTerm(termAccession));
+		path.add(this.getTerm(ontologyAccession, termAccession));
 		for (String tAcc : Accessions) {
-			path.add(this.getTerm(tAcc));
+			path.add(this.getTerm(ontologyAccession, tAcc));
 		}
 		Collections.reverse(path);
 		return path;
@@ -611,18 +612,28 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public String makeLookupHyperlink(String termAccession) {
-		return this.getQueryURL().toString();
+		try {
+			getTerm(termAccession);
+			return this.getQueryURL().toString();
+		} catch (OntologyServiceException e) {
+			log.error("Making lookup hyperlink failed for " + termAccession);
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-	public List<String> getSynonyms(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
-		return ((ConceptBean)getTerm(ontologyAccession, termAccession)).getSynonyms();
+	public List<String> getSynonyms(String ontologyAccession,
+			String termAccession) throws OntologyServiceException {
+		return ((ConceptBean) getTerm(ontologyAccession, termAccession))
+				.getSynonyms();
 	}
 
 	@Override
 	public List<String> getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return ((ConceptBean)getTerm(ontologyAccession,termAccession)).getDefinitions();
+		return ((ConceptBean) getTerm(ontologyAccession, termAccession))
+				.getDefinitions();
 	}
+
 }

@@ -6,8 +6,8 @@ package uk.ac.ebi.efo.bioportal;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyIdMapping;
+import uk.ac.ebi.ontocat.OntologyIdTranslator;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 
 /**
@@ -18,7 +18,7 @@ import uk.ac.ebi.ontocat.OntologyServiceException;
  */
 public class EFOIDTranslator implements OntologyIdTranslator {
 	/** The Constant mappings. */
-	private static final ArrayList<BioportalMapping> mappings = initialiseMappings();
+	private static final ArrayList<OntologyIdMapping> mappings = initialiseMappings();
 
 	/*
 	 * (non-Javadoc)
@@ -26,20 +26,22 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 	 * @see uk.ac.ebi.efo.bioportal.OntologyIdTranslator#getMappings()
 	 */
 	@Override
-	public ArrayList<BioportalMapping> getMappings() {
+	public ArrayList<OntologyIdMapping> getMappings() {
 		return mappings;
 	}
 
 	/**
 	 * @return
 	 */
-	private static ArrayList<BioportalMapping> initialiseMappings() {
-		ArrayList<BioportalMapping> temp = new ArrayList<BioportalMapping>();
+	private static ArrayList<OntologyIdMapping> initialiseMappings() {
+		ArrayList<OntologyIdMapping> temp = new ArrayList<OntologyIdMapping>();
+		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d+)", "1351",
+				"MSH:D012512"));
 		temp.add(new BioportalMapping("^NCBITaxon:", "(NCBITaxon:.*)", "1132",
 				"NCBITaxon:2"));
-		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d+)", "1351", "MSH:D012512"));
 		temp.add(new BioportalMapping("^MO_", "(MO_.*)", "1131", "MO_565"));
-		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)", "1101", "ICD9CM_1988:04.03"));
+		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)",
+				"1101", "ICD9CM_1988:04.03"));
 		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
 		temp.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
 		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
@@ -64,31 +66,38 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 		return temp;
 	}
 
+
 	@Override
-	public String getOntologyAccessionFromConcept(String termID) throws OntologyServiceException {
+	public String getTranslatedTermAccession(String termAccession)
+			throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (OntologyIdMapping BPmap : mappings) {
-			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
-				return BPmap.getOntologyAccession();
+		for (OntologyIdMapping mapping : mappings) {
+			if (mapping.getConfirmMatchPattern().matcher(termAccession).find()) {
+				// Extract proper ID according to extratct pattern
+				Matcher matcher = mapping.getExtractIDPattern().matcher(
+						termAccession);
+				if (matcher.find()) {
+					return matcher.group(1);
+				} else {
+					return termAccession; // ok no number found just get the
+											// whole id
+				}
 			}
 		}
 		throw new OntologyServiceException(new Exception("TERM NOT MAPPABLE"));
 	}
 
+	// this is a bit of a hack, no interest in mapping ontology accessions
+	// directly though
 	@Override
-	public String getTermAccessionFromConcept(String termID) throws OntologyServiceException {
+	public String getTranslatedOntologyAccession(String termAccession)
+			throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed
-		for (OntologyIdMapping BPmap : mappings) {
-			if (BPmap.getConfirmMatchPattern().matcher(termID).find()) {
-				// Extract proper ID according to extratct pattern
-				Matcher matcher = BPmap.getExtractIDPattern().matcher(termID);
-				if (matcher.find()) {
-					return matcher.group(1);
-				} else {
-					return termID; // ok no number found just get the whole id
-				}
+		for (OntologyIdMapping mapping : mappings) {
+			if (mapping.getConfirmMatchPattern().matcher(termAccession).find()) {
+				return mapping.getExternalOntologyAccession();
 			}
 		}
 		throw new OntologyServiceException(new Exception("TERM NOT MAPPABLE"));

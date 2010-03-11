@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
  * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
@@ -35,7 +34,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 
 	/** The Constant log. */
 	private static final Logger log = Logger
-			.getLogger(BioportalOntologyService.class.getName());
+			.getLogger(SortedSubsetDecorator.class);
 
 	/**
 	 * Instantiates a new sorted subset decorator.

@@ -31,11 +31,18 @@ public interface OntologyIdMapping extends Serializable {
 	public Pattern getExtractIDPattern();
 
 	/**
-	 * Stores the ontology accession corresponding to the mapping.
+	 * Gets the external ontology accession
 	 * 
 	 * @return the ont id
 	 */
-	public String getOntologyAccession();
+	public String getExternalOntologyAccession();
+
+	/**
+	 * Gets the local ontology accession
+	 * 
+	 * @return the ont id
+	 */
+	public String getLocalOntologyAccession();
 
 	/**
 	 * Testing ontology term code used to confirm that the service can resolve

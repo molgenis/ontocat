@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -16,15 +15,19 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
- * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
- * capabilities to an OntologyService. Implemented using Java reflection dynamic
- * proxy pattern See the following link for more details {@link http
+ * The Class CachedServiceDecorator. Decorator adding two caching layers to any
+ * requests coming through the OntologyService Layer. All requests are first
+ * checked against the first cache with 24h expiry, otherwise the request is
+ * passed through to the original provider. If the original provider query
+ * fails, the results are returned from the eternal cache if available.
+ * <p>
+ * Implemented using Java reflection dynamic proxy pattern See the following
+ * link for more details {@link http
  * ://www.webreference.com/internet/reflection/3.html}
  * 
- * @author Tomasz Adamusiak
+ * @author Tomasz Adamusiak, Niran Abeygunawardena
  */
 @SuppressWarnings("unchecked")
 public class CachedServiceDecorator implements InvocationHandler {
@@ -33,12 +36,9 @@ public class CachedServiceDecorator implements InvocationHandler {
 	/** The target. */
 	private Object target;
 
-	/** The sort order. */
-	private List sortOrder;
-
 	/** The Constant log. */
 	private static final Logger log = Logger
-			.getLogger(BioportalOntologyService.class.getName());
+			.getLogger(CachedServiceDecorator.class);
 
 	private static Cache ServiceCache;
 	private static Cache EternalCache;

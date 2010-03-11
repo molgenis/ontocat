@@ -5,7 +5,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.virtual.CachedServiceDecorator;
 
@@ -16,8 +15,7 @@ public class CachedDecoratorTest extends OntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		os = CachedServiceDecorator.getService(new BioportalOntologyService(
-				"ontocat-svn@lists.sourceforge.net", new EFOIDTranslator()));
+		os = CachedServiceDecorator.getService(new BioportalOntologyService());
 		ONTOLOGY_ACCESSION1 = "1029";
 		ONTOLOGY_ACCESSION2 = "1070";
 	}

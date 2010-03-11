@@ -22,32 +22,32 @@ public class BioportalMapping implements OntologyIdMapping {
 	/** Extracts bioportal compatible id from matched string. */
 	private final Pattern pExtractID;
 	/** Ontology id corresponding to confirmed pattern. */
-	private final String ontologyID;
+	private final String externalOntologyAccession;
 	/** Testing id for this particular ontology/pattern. */
+
 	private final String testingCode;
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getConfirmMatchPattern()
-	 */
 	public Pattern getConfirmMatchPattern() {
 		return pConfirmMatch;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getExtractIDPattern()
-	 */
 	public Pattern getExtractIDPattern() {
 		return pExtractID;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getOntologyID()
-	 */
-	public String getOntologyAccession() {
-		return ontologyID;
+	@Override
+	public String getLocalOntologyAccession() {
+		throw new UnsupportedOperationException("Not implemented. Unnecessary.");
 	}
 
-	/* (non-Javadoc)
+	@Override
+	public String getExternalOntologyAccession() {
+		return externalOntologyAccession;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uk.ac.ebi.efo.bioportal.OntologyMapping#getTestCode()
 	 */
 	public String getTestCode() {
@@ -58,10 +58,11 @@ public class BioportalMapping implements OntologyIdMapping {
 	 * Instantiates a new bioportal mapping.
 	 * 
 	 */
-	public BioportalMapping(String sMatchingPattern, String sExtractPattern, String sOntologyID, String sTestingCode) {
+	public BioportalMapping(String sMatchingPattern, String sExtractPattern,
+			String externalOntologyAccession, String sTestingCode) {
 		pConfirmMatch = Pattern.compile(sMatchingPattern);
 		pExtractID = Pattern.compile(sExtractPattern);
-		ontologyID = sOntologyID;
+		this.externalOntologyAccession = externalOntologyAccession;
 		testingCode = sTestingCode;
 	}
 
@@ -70,10 +71,12 @@ public class BioportalMapping implements OntologyIdMapping {
 	 * only numbers.
 	 * 
 	 */
-	public BioportalMapping(String sMatchingPattern, String sOntologyID, String sTestingCode) {
+	public BioportalMapping(String sMatchingPattern,
+			String externalOntologyAccession, String sTestingCode) {
 		pConfirmMatch = Pattern.compile(sMatchingPattern);
 		pExtractID = Pattern.compile(": *(\\d+)");
-		ontologyID = sOntologyID;
+		this.externalOntologyAccession = externalOntologyAccession;
 		testingCode = sTestingCode;
 	}
+
 }

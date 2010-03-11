@@ -25,7 +25,8 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		for (OntologyService os : ontoServices) {
-			Map<String, List<String>> result =  os.getAnnotations(ontologyAccession, termAccession);
+			Map<String, List<String>> result = os.getAnnotations(
+					ontologyAccession, termAccession);
 			if (result.size() != 0)
 				return result;
 		}
@@ -117,11 +118,6 @@ public class CompositeOntologyService extends AbstractOntologyService {
 		return null;
 	}
 
-	// TODO: Skip services not containing the ontology before searching
-	// could be quicker, but also clashes with sortedsubset decorator
-	// what if an ontology exists in both places??
-	// probably have to turn it off on searchOntology if it's not contained
-	// in the constructor subset list
 	@Override
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keywords) throws OntologyServiceException {
@@ -157,7 +153,6 @@ public class CompositeOntologyService extends AbstractOntologyService {
 		return result;
 	}
 
-
 	// /////////////////////////////////////
 	// All other patterns
 	// /////////////////////////////////////
@@ -167,15 +162,13 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	@Override
 	public Ontology getOntology(String ontologyAccession)
 			throws OntologyServiceException {
-	for (OntologyService os : ontoServices) {
-		Ontology result = os.getOntology(ontologyAccession);
-		if (result != null)
-			return result;
+		for (OntologyService os : ontoServices) {
+			Ontology result = os.getOntology(ontologyAccession);
+			if (result != null)
+				return result;
+		}
+		return null;
 	}
-	return null;
-	}
-
-
 
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
@@ -189,19 +182,6 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	}
 
 	@Override
-	public OntologyTerm getTerm(String termAccession)
-			throws OntologyServiceException {
-		for (OntologyService os : ontoServices) {
-			OntologyTerm result = os.getTerm(termAccession);
-			if (result != null)
-				return result;
-		}
-		return null;
-	}
-
-
-
-	@Override
 	public String makeLookupHyperlink(String termAccession) {
 		for (OntologyService os : ontoServices) {
 			String result = os.makeLookupHyperlink(termAccession);
@@ -209,6 +189,17 @@ public class CompositeOntologyService extends AbstractOntologyService {
 				return result;
 		}
 		return null;
+	}
+
+	@Override
+	public OntologyTerm getTerm(String termAccession)
+			throws OntologyServiceException {
+	for (OntologyService os : ontoServices) {
+		OntologyTerm result = os.getTerm( termAccession);
+		if (result != null)
+			return result;
+	}
+	return null;
 	}
 
 }

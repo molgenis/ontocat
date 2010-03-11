@@ -4,13 +4,11 @@
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
@@ -129,7 +127,8 @@ public class ConceptBean extends OntologyTerm {
 			for (EntryBean e : relations) {
 				if (e.getLabel().toLowerCase().startsWith("def") && !e.getLabel().equalsIgnoreCase("definition source")
 						&& !e.getLabel().equalsIgnoreCase("definition editor")) {
-					log.warn("BP returned empty definitions list though there is some");
+					log
+							.debug("BP returned empty definitions list though there is some");
 					return e.getList();
 				}
 			}

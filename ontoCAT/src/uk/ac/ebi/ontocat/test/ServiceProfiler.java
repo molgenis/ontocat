@@ -7,7 +7,6 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -37,8 +36,7 @@ public class ServiceProfiler {
 		long t1;
 		long t2;
 		OntologyService osOLS = new OlsOntologyService();
-		OntologyService osBP = new BioportalOntologyService(
-				"ontocat-svn@lists.sourceforge.net", new EFOIDTranslator());
+		OntologyService osBP = new BioportalOntologyService();
 		OntologyService osOWL = new FileOntologyService(new URI(
 				"http://www.ebi.ac.uk/efo"), new FieldDescriptor(
 				"alternative_term", "definition", "label"));
