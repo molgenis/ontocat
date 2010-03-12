@@ -25,7 +25,8 @@ public class ServiceProfiler {
 	 */
 	public static void main(String[] args) throws OntologyServiceException,
 			URISyntaxException {
-
+		System.out.println("OS current temporary directory is "
+				+ System.getProperty("java.io.tmpdir"));
 		ArrayList<String> randomStrings = new ArrayList<String>();
 		for (int i = 0; i < 1000; i++) {
 			Random r = new Random();
