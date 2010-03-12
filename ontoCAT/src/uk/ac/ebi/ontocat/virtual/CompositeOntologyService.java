@@ -192,6 +192,18 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	}
 
 	@Override
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession) {
+		for (OntologyService os : ontoServices) {
+			String result = os.makeLookupHyperlink(ontologyAccession,
+					termAccession);
+			if (result != null)
+				return result;
+		}
+		return null;
+	}
+
+	@Override
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
 	for (OntologyService os : ontoServices) {
@@ -201,5 +213,7 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	}
 	return null;
 	}
+
+
 
 }

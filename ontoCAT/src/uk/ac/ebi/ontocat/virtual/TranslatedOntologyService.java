@@ -136,21 +136,57 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 	}
 
 	@Override
+	// not calling the respective underlying method, but
+	// rather trying to derive ontologyAccession from termAccession
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
-		return os.getTerm(translator.getTranslatedTermAccession(termAccession));
+		return os.getTerm(translator.getOntologyAccFromTermAcc(termAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
+	// not calling the respective underlying method, but
+	// rather trying to derive ontologyAccession from termAccession
 	public String makeLookupHyperlink(String termAccession) {
 		try {
 			return os.makeLookupHyperlink(translator
+					.getOntologyAccFromTermAcc(termAccession), translator
 					.getTranslatedTermAccession(termAccession));
 		} catch (OntologyServiceException e) {
 			e.printStackTrace();
 			log.error("Making lookup hyperlink failed for " + termAccession);
 			return null;
 		}
+	}
+
+	@Override
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession) {
+		try {
+			return os.makeLookupHyperlink(translator
+					.getTranslatedOntologyAccession(ontologyAccession),
+					translator.getTranslatedTermAccession(termAccession));
+		} catch (OntologyServiceException e) {
+			e.printStackTrace();
+			log.error("Making lookup hyperlink failed for " + termAccession);
+			return null;
+		}
+	}
+
+	// helper method
+	public List<String> getSynonyms(String termAccession)
+			throws OntologyServiceException {
+		return os.getSynonyms(translator
+				.getOntologyAccFromTermAcc(termAccession), translator
+				.getTranslatedTermAccession(termAccession));
+	}
+
+	// helper method
+	public List<String> getDefinitions(String termAccession)
+			throws OntologyServiceException {
+		return os.getDefinitions(translator
+				.getOntologyAccFromTermAcc(termAccession), translator
+				.getTranslatedTermAccession(termAccession));
 	}
 
 }

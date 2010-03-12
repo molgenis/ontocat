@@ -187,6 +187,15 @@ public interface OntologyService
 	public String makeLookupHyperlink(String termAccession);
 
 	/**
+	 * Generate a hyperlink to drill down to ontology source
+	 * 
+	 * @param termAccession
+	 * @return
+	 */
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession);
+
+	/**
 	 * Load an ontology from the service.
 	 * 
 	 * @param ontologyAccession

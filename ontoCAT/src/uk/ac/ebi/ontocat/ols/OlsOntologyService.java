@@ -213,6 +213,12 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		return lookupURI + termAccession;
 	}
 
+	@Override
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession) {
+		return makeLookupHyperlink(termAccession);
+	}
+
 	// helper methods
 	protected List<OntologyTerm> convert(Map<String, String> terms) throws OntologyServiceException
 	{

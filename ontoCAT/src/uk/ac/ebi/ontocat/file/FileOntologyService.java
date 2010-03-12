@@ -148,19 +148,8 @@ public final class FileOntologyService extends AbstractOntologyService implement
 	@Override
 	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException
 	{
-		OWLClass theClass = cache.get(termAccession);
-
-		if (theClass == null)
-			for (OWLClass cls : ontology.getReferencedClasses())
-			{
-				if (cls.getURI().toString().endsWith(termAccession))
-				{
-					cache.put(termAccession, cls);
-					return new FileOntologyTerm(this, cls, ontology, slots);
-				}
-			}
-
-		throw new OntologyServiceException(termAccession + " was not found in the ontology");
+		OWLClass cls = getOwlClass(termAccession);
+		return new FileOntologyTerm(this, cls, ontology, slots);
 	}
 
 	/*
@@ -246,7 +235,26 @@ public final class FileOntologyService extends AbstractOntologyService implement
 	{
 		try
 		{
-			return getTerm(termAccession) + termAccession;
+			return getOwlClass(termAccession).getURI().toString();
+		}
+		catch (OntologyServiceException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.ontocat.OntologyService#makeLookupHyperlink(java.lang.String)
+	 */
+	@Override
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession) {
+		try {
+			return getOwlClass(termAccession).getURI().toString();
 		}
 		catch (OntologyServiceException e)
 		{

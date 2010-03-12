@@ -623,6 +623,19 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
+	public String makeLookupHyperlink(String ontologyAccession,
+			String termAccession) {
+		try {
+			getTerm(ontologyAccession, termAccession);
+			return this.getQueryURL().toString();
+		} catch (OntologyServiceException e) {
+			log.error("Making lookup hyperlink failed for " + termAccession);
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
 	public List<String> getSynonyms(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		return ((ConceptBean) getTerm(ontologyAccession, termAccession))
@@ -635,5 +648,4 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		return ((ConceptBean) getTerm(ontologyAccession, termAccession))
 				.getDefinitions();
 	}
-
 }

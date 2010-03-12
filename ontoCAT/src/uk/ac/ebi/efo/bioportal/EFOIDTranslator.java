@@ -42,12 +42,14 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 		temp.add(new BioportalMapping("^MO_", "(MO_.*)", "1131", "MO_565"));
 		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)",
 				"1101", "ICD9CM_1988:04.03"));
-		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
+		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)",
+				"1032", "NCI C3235"));
 		temp.add(new BioportalMapping("^PATO:", "1107", "PATO:0001323"));
-		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
+		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123",
+				"OBI_0400105"));
 		temp.add(new BioportalMapping("^IDOMAL:", "1311", "IDOMAL:0000322"));
-		temp.add(new BioportalMapping("^NIFSTD:|^sao|^nlx|^birnlex|^nifext", "((sao|nlx|birnlex|nifext).*)", "1084",
-				"NIFSTD:birnlex_266"));
+		temp.add(new BioportalMapping("^NIFSTD:|^sao|^nlx|^birnlex|^nifext",
+				"((sao|nlx|birnlex|nifext).*)", "1084", "NIFSTD:birnlex_266"));
 		temp.add(new BioportalMapping("^BTO:", "1005", "BTO:0001658"));
 		temp.add(new BioportalMapping("^DOID:", "1009", "DOID:9778"));
 		temp.add(new BioportalMapping("^FMA(ID)?:", "1053", "FMAID:9607"));
@@ -57,15 +59,18 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 		temp.add(new BioportalMapping("^ZFS:", "1051", "ZFS:0000008"));
 		temp.add(new BioportalMapping("^TGMA:", "1030", "TGMA:0000720"));
 		temp.add(new BioportalMapping("^UO:", "1112", "UO:0000044"));
-		temp.add(new BioportalMapping("^SNOMEDCT", "1353", "SNOMEDCT_2005_01_31:196743006"));
+		temp.add(new BioportalMapping("^SNOMEDCT", "1353",
+				"SNOMEDCT_2005_01_31:196743006"));
 		temp.add(new BioportalMapping("^CL:", "1006", "CL:0000127"));
 		temp.add(new BioportalMapping("^CHEBI:", "1007", "CHEBI:2365"));
-		temp.add(new BioportalMapping("^GO:", "(GO:\\d+)", "1070", "GO:0009318"));
-		// Can't resolve PO at the moment as it has been 'unloaded' -> see remote site
-		//temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
+		temp
+				.add(new BioportalMapping("^GO:", "(GO:\\d+)", "1070",
+						"GO:0009318"));
+		// Can't resolve PO at the moment as it has been 'unloaded' -> see
+		// remote site
+		// temp.add(new BioportalMapping("^PO:", "1108", "PO:0020097"));
 		return temp;
 	}
-
 
 	@Override
 	public String getTranslatedTermAccession(String termAccession)
@@ -81,7 +86,7 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 					return matcher.group(1);
 				} else {
 					return termAccession; // ok no number found just get the
-											// whole id
+					// whole id
 				}
 			}
 		}
@@ -91,7 +96,13 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 	// this is a bit of a hack, no interest in mapping ontology accessions
 	// directly though
 	@Override
-	public String getTranslatedOntologyAccession(String termAccession)
+	public String getTranslatedOntologyAccession(String ontologyAccession)
+			throws OntologyServiceException {
+		return getOntologyAccFromTermAcc(ontologyAccession);
+	}
+
+	@Override
+	public String getOntologyAccFromTermAcc(String termAccession)
 			throws OntologyServiceException {
 		// Search through all the mappings
 		// TODO: implement as a lookup table for speed

@@ -2,12 +2,13 @@ package uk.ac.ebi.ontocat.test;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
 import uk.ac.ebi.ontocat.OntologyIdMapping;
-import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -20,7 +21,7 @@ import uk.ac.ebi.ontocat.virtual.TranslatedOntologyService;
  */
 
 public class TranslatedOntologyServiceTest {
-	private static final OntologyService os = new TranslatedOntologyService(
+	private static final TranslatedOntologyService os = new TranslatedOntologyService(
 			new BioportalOntologyService(), new EFOIDTranslator());
 
 	@BeforeClass
@@ -31,8 +32,7 @@ public class TranslatedOntologyServiceTest {
 	public void testMappings() {
 		for (OntologyIdMapping BPmap : new EFOIDTranslator().getMappings()) {
 			try {
-				printResults(os.getTerm(BPmap.getTestCode()), BPmap
-						.getTestCode());
+				printResults(BPmap.getTestCode());
 			} catch (OntologyServiceException e) {
 				fail(BPmap.getTestCode() + " NOT FOUND");
 			}
@@ -60,24 +60,23 @@ public class TranslatedOntologyServiceTest {
 
 	}
 
-	private void printResults(OntologyTerm term, String testCode)
+	private void printResults(String testCode)
 			throws OntologyServiceException {
-		System.out.println("ID " + term.getAccession());
-		System.out.println("LABEL " + term.getLabel());
-		System.out.print("SYNONYMS ");
+		OntologyTerm extTerm = os.getTerm(testCode);
+		System.out.println("ID " + extTerm.getAccession());
+		System.out.println("LABEL " + extTerm.getLabel());
+		System.out.println("SYNONYMS ");
 
-		if (os.getSynonyms(testCode, testCode) != null) {
-			for (String syn : os.getSynonyms(testCode, testCode)) {
-				System.out.println(syn);
-			}
+		for (String syn : (os.getSynonyms(testCode) == null) ? new ArrayList<String>()
+				: os.getSynonyms(testCode)) {
+			System.out.println(syn);
 		}
-
 		System.out.print("DEFINITON ");
-		if (os.getDefinitions(testCode, testCode) != null) {
-			for (String def : os.getDefinitions(testCode, testCode)) {
-				System.out.println(def);
-			}
+		for (String def : (os.getDefinitions(testCode) == null) ? new ArrayList<String>()
+				: os.getDefinitions(testCode)) {
+			System.out.println(def);
 		}
+
 		System.out.println("SourceUrl " + os.makeLookupHyperlink(testCode));
 		System.out.println();
 	}

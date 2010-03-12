@@ -21,4 +21,7 @@ public interface OntologyIdTranslator extends Serializable {
 
 	public String getTranslatedTermAccession(String termAccession)
 			throws OntologyServiceException;
+
+	public String getOntologyAccFromTermAcc(String termAccession)
+			throws OntologyServiceException;
 }
