@@ -11,7 +11,7 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 /**
  * Example 1
  * 
- * Shows how to list all the available ontologies in OLS
+ * Shows how to list all ontologies available through OLS
  * 
  */
 public class Example1 {

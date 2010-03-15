@@ -12,7 +12,19 @@ import java.util.regex.Pattern;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyIdMapping extends Serializable {
+public class OntologyIdMapping implements Serializable {
+	/** Confirms match to this particular ontology. */
+	protected Pattern pConfirmMatch;
+	/** Extracts bioportal compatible id from matched string. */
+	protected Pattern pExtractID;
+
+	protected String externalOntologyAccession;
+	protected String localOntologyAccession;
+
+	protected String testingCode;
+
+	public OntologyIdMapping() {
+	}
 
 	/**
 	 * A regular expression pattern which confirms that a particular concept
@@ -20,7 +32,9 @@ public interface OntologyIdMapping extends Serializable {
 	 * 
 	 * @return pattern
 	 */
-	public Pattern getConfirmMatchPattern();
+	public Pattern getConfirmMatchPattern(){
+		return pConfirmMatch;
+	}
 
 	/**
 	 * A regular expression pattern which can convert a concept string confirmed
@@ -28,21 +42,35 @@ public interface OntologyIdMapping extends Serializable {
 	 * 
 	 * @return pattern
 	 */
-	public Pattern getExtractIDPattern();
+	public Pattern getExtractIDPattern() {
+		return pExtractID;
+	}
 
 	/**
 	 * Gets the external ontology accession
 	 * 
 	 * @return the ont id
 	 */
-	public String getExternalOntologyAccession();
+	public String getExternalOntologyAccession(){
+		return externalOntologyAccession;
+	}
+
+	public void setExternalOntologyAccession(String value) {
+		externalOntologyAccession = value;
+	}
 
 	/**
 	 * Gets the local ontology accession
 	 * 
 	 * @return the ont id
 	 */
-	public String getLocalOntologyAccession();
+	public String getLocalOntologyAccession(){
+		return localOntologyAccession;
+	}
+
+	public void setLocalOntologyAccession(String value) {
+		localOntologyAccession = value;
+	}
 
 	/**
 	 * Testing ontology term code used to confirm that the service can resolve
@@ -50,6 +78,8 @@ public interface OntologyIdMapping extends Serializable {
 	 * 
 	 * @return the test code
 	 */
-	public String getTestCode();
+	public String getTestCode(){
+		return testingCode;
+	}
 
 }

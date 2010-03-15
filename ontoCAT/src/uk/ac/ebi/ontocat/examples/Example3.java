@@ -13,7 +13,7 @@ import uk.ac.ebi.ontocat.file.FieldDescriptor;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 
 /**
- * Example 1
+ * Example 3
  * 
  * Shows how to search an OWL Ontology
  * 

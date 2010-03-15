@@ -8,11 +8,10 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
-// TODO: Auto-generated Javadoc
 /**
- * Example 1
+ * Example 2
  * 
- * Shows how to list all the available ontologies in OLS.
+ * Shows how to list all ontologies available through NCBO BioPortal
  */
 public class Example2 {
 

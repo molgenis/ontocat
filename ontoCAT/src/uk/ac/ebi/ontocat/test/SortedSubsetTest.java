@@ -18,8 +18,8 @@ public class SortedSubsetTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
-		OntologyService osBP = new OlsOntologyService();
-		os = SortedSubsetDecorator.getService(osBP, new ArrayList<String>() {
+		os = SortedSubsetDecorator.getService(new OlsOntologyService(),
+				new ArrayList<String>() {
 			{
 				add("HP");
 				add("EMAP");
