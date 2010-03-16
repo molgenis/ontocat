@@ -112,7 +112,8 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		try
 		{
 			logger.debug("searchAll(" + keywords + ")");
-			return convert(qs.getPrefixedTermsByName(keywords, false));
+			return convert(qs.getTermsByName(keywords, null, false));
+
 		}
 		catch (RemoteException e)
 		{
