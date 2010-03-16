@@ -3,6 +3,7 @@ package uk.ac.ebi.ontocat.test;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import uk.ac.ebi.ontocat.Ontology;
@@ -16,6 +17,8 @@ public abstract class OntologyServiceTest {
 	protected static String ONTOLOGY_ACCESSION2;
 	protected static String TERM_ACCESSION1 = "GO:0005623";
 	protected static String TERM_ACCESSION2 = "GO:0005575";
+	protected static final Logger log = Logger
+			.getLogger(OntologyServiceTest.class);
 
 	@Test
 	public final void testGetOntologies() throws OntologyServiceException {
@@ -44,14 +47,16 @@ public abstract class OntologyServiceTest {
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION1, "thymus"))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
+					+ ot.getLabel());
 	}
 
 	@Test
 	public final void testSearchAll() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.searchAll("thymus"))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
+					+ ot.getLabel());
 	}
 
 	@Test
@@ -59,7 +64,8 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION2);
 		for (OntologyTerm ot : results)
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
+					+ ot.getLabel());
 	}
 
 	@Test
@@ -75,7 +81,8 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION1))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
+					+ ot.getLabel());
 	}
 
 	@Test
@@ -83,14 +90,15 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getParents(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION1))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " " + ot.getLabel());
+			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
+					+ ot.getLabel());
 	}
 
 	@Test
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
-		for (Entry<String, List<String>> e : os.getAnnotations(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1).entrySet()) {
+		for (Entry<String, List<String>> e : os.getAnnotations(
+				ONTOLOGY_ACCESSION2, TERM_ACCESSION1).entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
 				println("\t" + s);
@@ -109,7 +117,8 @@ public abstract class OntologyServiceTest {
 	private void printCurrentTest() {
 		println();
 		println("**************************");
-		println(Thread.currentThread().getStackTrace()[2].getMethodName().substring(4));
+		println(Thread.currentThread().getStackTrace()[2].getMethodName()
+				.substring(4));
 		println("*************************");
 		println();
 	}
