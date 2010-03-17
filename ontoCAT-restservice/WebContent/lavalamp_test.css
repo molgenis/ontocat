@@ -43,7 +43,7 @@
                             border: none;
                         }                    
 
-        .lavaLampBottomStyle {
+        .BottomStyle {
             position: relative;
             height: 29px;
             width: 421px;
@@ -53,18 +53,18 @@
             overflow: hidden;
             border: 1px solid gray;
         }
-                .lavaLampBottomStyle li {
+                .BottomStyle li {
                     float: left;
                     list-style: none;
                 }
-                    .lavaLampBottomStyle li.back {
+                    .BottomStyle li.back {
                         border-bottom: 5px solid blue;
                         width: 9px;
                         height: 30px;
                         z-index: 8;
                         position: absolute;
                     }
-                    .lavaLampBottomStyle li a {
+                    .BottomStyle li a {
                         font: bold 14px arial;
                         text-decoration: none;
                         color: #000;
@@ -81,6 +81,6 @@
                         overflow: hidden;
                         margin: auto 10px;
                     }   
-                        .lavaLampBottomStyle li a:hover, .lavaLampBottomStyle li a:active, .lavaLampBottomStyle li a:visited {
+                        .BottomStyle li a:hover, .BottomStyle li a:active, .BottomStyle li a:visited {
                             border: none;
                         }                     
