@@ -111,11 +111,11 @@ $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",  function(js
 			})();
 
 			 
-			/*j$("<div id='json_results2'><p>From Second getJson call").appendTo("body");
+			j$("<div id='json_results2'><p>From Second getJson call").appendTo("body");
 			j$(jJSON.getValues("label",null)).appendTo("body");
 			j$("<br/>").appendTo("body");
 			j$(jJSON.getValues("accession",null)).appendTo("body");
-			j$("<br/></div>").appendTo("body");*/
+			j$("<br/></div>").appendTo("body");
 
 	});
 
@@ -157,7 +157,7 @@ $.ajax({
    success: function (data) { //is called if the request succeeds. It is passed the returned data, a string containing the success code, and the XMLHttpRequest object.	
    },
    complete: function(){  // Handle the complete event  complete is called when the request finishes, whether in failure or success. It is passed the XMLHttpRequest object, as well as a string containing the success or error code.
-	   // var submitted_terms1 = $("#tokenize").val(); 
+	    var submitted_terms1 = $("#tokenize").val(); 
 	
 		//alert("Input:");
 		//alert(submitted_terms1); 

@@ -5,9 +5,16 @@ $(document).ready(function() {
 	$("#help1").hide();
 	$("#help").hide();
 
-	$("#suggest14").autocomplete(cities, {
+	$("#singleSuggest").autocomplete("http://localhost:8080/ontocat/rest/json/searchAll/brca", {
 		matchContains: true,
 		minChars: 0
+	});
+	
+
+	$("#multipleSuggest").autocomplete(cities, {
+		multiple: true,
+		mustMatch: true,
+		autoFill: true
 	});
 
 });

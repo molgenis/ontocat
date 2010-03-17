@@ -6,23 +6,9 @@
 
 <script language="JavaScript" type="text/javascript" src="SemOntoCat.js"></script>
 
+
+
 <link rel="stylesheet" href="SemOntoCatCSS.css" type="text/css"/>
-
-    <link rel="stylesheet" href="lavalamp_test.css" type="text/css" media="screen">
-    <script type="text/javascript" src="jquery.easing.min.js"></script>
-    <script type="text/javascript" src="jquery.lavalamp.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            j$("#1, #2, #3").lavaLamp({
-                fx: "backout",
-                speed: 700,
-                click: function(event, menuItem) {
-                    return false;
-                }
-            });
-        });
-    </script>
-
 
 </head>
 <body>
@@ -35,20 +21,18 @@ $.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca",
 </script>
 
 
-
-<div id="header">
-    <ul class="MenuJQuery" id="2">
-    <li class="current"><a href="#">Home</a></li>
-    <li><a href="#">Upload a File</a></li>
-    <li><a href="#">Enter your notes</a></li>
-    <li><a href="#">T.M.</a></li>
-</ul>
-<br><br><br>
-</div>
+<div id="header"></div>
   
 	<div id="main">
+		<div class="ui-widget">
+			<label for="tags">Tags: </label>
+			<input id="tags">
+		</div>
+	
     	<div id="search_box">
             <td><label class="label" for="tokenize">Terms</label></td>
+	    	
+	    	<input type="text" class="value" id="tokenize2" name="Input1" autocomplete="off" value="aa"/> <br/><br/>
 
 	    	<input type="text" class="value" id="tokenize" name="Input1" autocomplete="off" value="aa"/> <br/><br/>
 			<input value="Search" type="button" id="submit_term"  name="submit_term"/>

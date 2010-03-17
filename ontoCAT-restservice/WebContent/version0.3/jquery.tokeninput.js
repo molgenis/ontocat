@@ -254,7 +254,9 @@ $.TokenList = function (input, settings) {
         li_data = settings.prePopulate;
         if(li_data && li_data.length) {
             for(var i in li_data) {
-                var this_token = $("<li><p>"+li_data[i].name+"</p> </li>")
+
+            	//var this_token = $("<li><p>"+li_data[i].name+"</p> </li>")
+            	var this_token = $("<li><p>"+li_data[i].label+"</p> </li>")
                     .addClass(settings.classes.token)
                     .insertBefore(input_token);
 
@@ -266,9 +268,10 @@ $.TokenList = function (input, settings) {
                         return false;
                     });
 
-                $.data(this_token.get(0), "tokeninput", {"id": li_data[i].id, "name": li_data[i].name});
-
-                // Clear input box and make sure it keeps focus
+               // $.data(this_token.get(0), "tokeninput", {"id": li_data[i].id, "name": li_data[i].name});
+               $.data(this_token.get(0), "tokeninput", {"accession": li_data[i].accession, "label": li_data[i].label});
+               
+               // Clear input box and make sure it keeps focus
                 input_box
                     .val("")
                     .focus();
@@ -277,7 +280,8 @@ $.TokenList = function (input, settings) {
                 hide_dropdown();
 
                 // Save this token id
-                var id_string = li_data[i].id + ","
+                //var id_string = li_data[i].id + ","
+                var id_string = li_data[i].accession + ","
                 hidden_input.val(hidden_input.val() + id_string);
             }
         }
@@ -310,7 +314,8 @@ $.TokenList = function (input, settings) {
     }
 
     // Inner function to a token to the list
-    function insert_token(id, value) {
+    //function insert_token(id, value) {
+    function insert_token(accession, value) {
       var this_token = $("<li><p>"+ value +"</p> </li>")
       .addClass(settings.classes.token)
       .insertBefore(input_token);
@@ -324,15 +329,17 @@ $.TokenList = function (input, settings) {
               return false;
           });
 
-      $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
-
+      //$.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
+      alert("test");
+      $.data(this_token.get(0), "tokeninput", {"accession": accession, "label": value});
       return this_token;
     }
 
     // Add a token to the token list based on user input
     function add_token (item) {
         var li_data = $.data(item.get(0), "tokeninput");
-        var this_token = insert_token(li_data.id, li_data.name);
+//        var this_token = insert_token(li_data.id, li_data.name);
+        var this_token = insert_token(li_data.accession, li_data.label);
 
         // Clear input box and make sure it keeps focus
         input_box
@@ -471,7 +478,8 @@ $.TokenList = function (input, settings) {
 
             for(var i in results) {
                 if (results.hasOwnProperty(i)) {
-                    var this_li = $("<li>"+highlight_term(results[i].name, query)+"</li>")
+                   // var this_li = $("<li>"+highlight_term(results[i].name, query)+"</li>")
+                	var this_li = $("<li>"+highlight_term(results[i].label, query)+"</li>")
                                       .appendTo(dropdown_ul);
 
                     if(i%2) {
@@ -484,7 +492,9 @@ $.TokenList = function (input, settings) {
                         select_dropdown_item(this_li);
                     }
 
-                    $.data(this_li.get(0), "tokeninput", {"id": results[i].id, "name": results[i].name});
+                    //$.data(this_li.get(0), "tokeninput", {"id": results[i].id, "name": results[i].name});
+                    $.data(this_li.get(0), "tokeninput", {"accession": results[i].accession, "label": results[i].label});
+
                 }
             }
 

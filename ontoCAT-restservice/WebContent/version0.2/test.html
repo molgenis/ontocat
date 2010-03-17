@@ -1,0 +1,72 @@
+<html>
+<head>
+
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type='text/javascript' src='lib/jquery.bgiframe.min.js'></script>
+<script type='text/javascript' src='lib/jquery.ajaxQueue.js'></script>
+<script type='text/javascript' src='lib/thickbox-compressed.js'></script>
+<script language="JavaScript" type="text/javascript" src="jquery-1.4.2.js"></script>
+<script language="JavaScript" type="text/javascript" src='jquery.autocomplete.js'></script>
+<script language="JavaScript" type="text/javascript" src='localdata.js'></script>
+
+<script language="JavaScript" type="text/javascript" src="JSemOntoCat.js"></script>
+
+<link rel="stylesheet" type="text/css" href="jquery.autocomplete.css" />
+<link rel="stylesheet" href="JSemOntoCatCSS.css" type="text/css"/>
+
+</head>
+<body>
+<script>
+$.getJSON("http://localhost:8080/ontocat/rest/json/searchAll/brca", 
+        function(data){      
+        	  //alert("JSON Data: " + data.term[0].accession ); 
+        });
+
+</script>
+
+
+
+<div id="header"></div>
+  
+	<div id="main">
+    	<div id="search_box">
+            <td><label class="label" for="tokenize">Terms</label></td>
+
+	    	
+	    <p>
+			<label>Single term (contains):</label>
+			<input type="text" id="singleSuggest" />
+			<input type="button" value="Get Value" />
+		</p>
+	  
+	  <p>
+			<label>Multiple Terms (local):</label>
+			<textarea id='multipleSuggest' cols='40' rows='3'></textarea>
+			<input type="button" value="Get Value" />
+		</p>
+	  
+		</div> 
+	</div>
+	
+	<br/><br/><br/><br/>
+	 <div id="misc">
+		<div id="help">
+		    <h2> Help </h2>
+		    <div id="help_text" >	 Enter a term and pick a suggestion from the list. </div>  
+            </div> 
+	    <div id="help1"> <h2> Help </h2> 
+		    <div id="help1_text" > Enter a term and pick a suggestion from the list.Press the "search" button when the correct term have been inserted.
+	            </div>
+	    </div>
+     </div>	
+
+	  
+
+	  <div id="footer">
+       <div id="json_results">   </div> 
+	  <br/>	  
+       <div id="json_results2">   </div> 
+	  </div> 
+
+</body>
+</html>

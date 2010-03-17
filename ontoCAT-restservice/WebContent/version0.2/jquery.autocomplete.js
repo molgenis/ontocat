@@ -352,7 +352,7 @@ $.Autocompleter = function(input, options) {
 		} else if( (typeof options.url == "string") && (options.url.length > 0) ){
 			
 			var extraParams = {
-				timestamp: +new Date()
+				/*timestamp: +new Date() */
 			};
 			$.each(options.extraParams, function(key, param) {
 				extraParams[key] = typeof param == "function" ? param() : param;
@@ -366,8 +366,8 @@ $.Autocompleter = function(input, options) {
 				dataType: options.dataType,
 				url: options.url,
 				data: $.extend({
-					q: lastWord(term),
-					limit: options.max
+					/*q: lastWord(term), */
+					/*limit: options.max */
 				}, extraParams),
 				success: function(data) {
 					var parsed = options.parse && options.parse(data) || parse(data);
