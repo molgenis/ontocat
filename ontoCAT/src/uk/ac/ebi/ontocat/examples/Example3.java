@@ -6,10 +6,8 @@ package uk.ac.ebi.ontocat.examples;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.file.FieldDescriptor;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 
 /**
@@ -21,14 +19,14 @@ import uk.ac.ebi.ontocat.file.FileOntologyService;
 public class Example3 {
 	public static void main(String[] args) throws OntologyServiceException,
 			URISyntaxException {
-		// Instantiate Ontology Service
-		OntologyService os = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"),
-		// FieldDescriptor describes which annotations denote synonyms,
-				// definitions and preferred labels in the loaded ontology
-				new FieldDescriptor("alternative_term", "definition", "label"));
+		// Instantiate a FileOntologyService
+		FileOntologyService os = new FileOntologyService(new URI(
+				"http://www.ebi.ac.uk/efo"));
+		// Use a non-SKOS annotation for synonyms
+		os.setSynonymSlot("alternative_term");
+
 		// Find all terms containing string thymus
 		for (OntologyTerm ot : os.searchAll("thymus"))
-			System.out.println(ot.getAccession() + " " + ot.getLabel());
+			System.out.println(ot);
 	}
 }

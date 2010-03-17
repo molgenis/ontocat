@@ -140,7 +140,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 */
 	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result,
 			List sortOrder) throws OntologyServiceException {
-		// trim list	
+		// trim list
 		for (int i = result.size() - 1; i >= 0; i--) {
 			if (!sortOrder.contains(result.get(i).getOntologyAccession()))
 				result.remove(i);
@@ -149,7 +149,6 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		Collections.sort(result, new OntologyRankComparator(sortOrder));
 		return result;
 	}
-
 
 	/**
 	 * The Class OntologyRankComparator.
@@ -175,15 +174,11 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		 */
 		@Override
 		public int compare(OntologyTerm term0, OntologyTerm term1) {
-			try {
-				if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder
-						.indexOf(term1.getOntologyAccession())) {
-					return -1;
-				} else {
-					return 1;
-				}
-			} catch (OntologyServiceException e) {
-				return 0;
+			if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder
+					.indexOf(term1.getOntologyAccession())) {
+				return -1;
+			} else {
+				return 1;
 			}
 		}
 	}

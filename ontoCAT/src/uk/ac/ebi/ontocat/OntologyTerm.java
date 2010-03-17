@@ -6,103 +6,54 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.log4j.Logger;
+
 @XmlRootElement(name = "term")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class OntologyTerm implements Serializable
-{
+public class OntologyTerm implements Serializable {
 	private String accession;
 	private String label;
 	private String ontologyAccession;
+	private static final Logger log = Logger.getLogger(OntologyTerm.class);
 
-	public OntologyTerm() {
-	}
-
-	public OntologyTerm(String accession, String label, String ontologyAccession)
-	{
-		this.setAccession(accession);
+	public OntologyTerm(String ontologyAccession, String termAccession,
+			String label) {
+		this.setAccession(termAccession);
 		this.setLabel(label);
 		this.setOntologyAccession(ontologyAccession);
 	}
-	
-	/** Copy constructor 
-	 * @throws OntologyServiceException */
-	public OntologyTerm(OntologyTerm term) throws OntologyServiceException
-	{
-		this.setAccession(term.getAccession());
-		this.setLabel(term.getLabel());
-		this.setOntologyAccession(term.getOntologyAccession());
-	}
 
-	public String getAccession() throws OntologyServiceException
-	{
+	public String getAccession() {
 		return accession;
 	}
 
-	public void setAccession(String accession)
-	{
+	public void setAccession(String accession) {
 		this.accession = accession;
 	}
 
-	// public String[] getDefinitions() throws OntologyServiceException
-	// {
-	// return definitions;
-	// }
-	// public void setDefinitions(String[] definitions)
-	// {
-	// this.definitions = definitions;
-	// }
-	public String getLabel() throws OntologyServiceException
-	{
+	public String getLabel() {
 		return label;
 	}
 
-	public void setLabel(String label)
-	{
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
-	public String getOntologyAccession() throws OntologyServiceException
-	{
+	public String getOntologyAccession() {
 		return ontologyAccession;
 	}
 
-	public void setOntologyAccession(String ontologyAccession)
-	{
+	public void setOntologyAccession(String ontologyAccession) {
 		this.ontologyAccession = ontologyAccession;
 	}
 
-	// public String[] getSynonyms() throws OntologyServiceException
-	// {
-	// return synonyms;
-	// }
-	// public void setSynonyms(String[] synonyms)
-	// {
-	// this.synonyms = synonyms;
-	// }
-	// public Map<String, String[]> getAnnotations() throws
-	// OntologyServiceException
-	// {
-	// return annotations;
-	// }
-	// public void setAnnotations(Map<String, String[]> annotations)
-	// {
-	// this.annotations = annotations;
-	// }
-
 	@Override
-	public String toString()
-	{
-		try
-		{
-			return String.format("OntologyTerm(accession=%s, label=%s, ontologyAccession=%s)", getAccession(),
-					getLabel(), getOntologyAccession());
-		}
-		catch (OntologyServiceException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public String toString() {
+		return String
+				.format(
+						"OntologyTerm(ontologyAccession=%s, termAccession=%s, label=%s)",
+						getOntologyAccession(), getAccession(), getLabel());
+
 	}
 
 	/*
@@ -115,17 +66,22 @@ public class OntologyTerm implements Serializable
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((accession == null) ? 0 : accession.hashCode());
-		result = prime * result + ((label == null) ? 0 : label.hashCode());
+				+ ((getAccession() == null) ? 0 : getAccession().hashCode());
+		result = prime * result
+				+ ((getLabel() == null) ? 0 : getLabel().hashCode());
 		result = prime
 				* result
-				+ ((ontologyAccession == null) ? 0 : ontologyAccession
+				+ ((getOntologyAccession() == null) ? 0
+						: getOntologyAccession()
 						.hashCode());
 		return result;
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * Note using getters, as BioPortal beans are instantiated from XML, and
+	 * will not have default properties set.
+	 * 
+	 * Getters are overridden in BioPortal beans.
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -138,36 +94,22 @@ public class OntologyTerm implements Serializable
 		if (getClass() != obj.getClass())
 			return false;
 		OntologyTerm other = (OntologyTerm) obj;
-		if (accession == null) {
-			if (other.accession != null)
+		if (getAccession() == null) {
+			if (other.getAccession() != null)
 				return false;
-		} else if (!accession.equals(other.accession))
+		} else if (!getAccession().equals(other.getAccession()))
 			return false;
-		if (label == null) {
-			if (other.label != null)
+		if (getLabel() == null) {
+			if (other.getLabel() != null)
 				return false;
-		} else if (!label.equals(other.label))
+		} else if (!getLabel().equals(other.getLabel()))
 			return false;
-		if (ontologyAccession == null) {
-			if (other.ontologyAccession != null)
+		if (getOntologyAccession() == null) {
+			if (other.getOntologyAccession() != null)
 				return false;
-		} else if (!ontologyAccession.equals(other.ontologyAccession))
+		} else if (!getOntologyAccession().equals(other.getOntologyAccession()))
 			return false;
 		return true;
 	}
-
-//	private String toString(String[] array)
-//	{
-//		String result = null;
-//		if (array != null)
-//		{
-//			result = "";
-//			for (int i = 0; i < array.length; i++)
-//			{
-//				result += (i == 0 ? "" : ",") + array[i];
-//			}
-//		}
-//		return result;
-//	}
 
 }

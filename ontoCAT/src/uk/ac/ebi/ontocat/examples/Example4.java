@@ -37,8 +37,7 @@ public class Example4 {
 
 		// Test that results are only returned form HP and MP
 		for (OntologyTerm ot : os.searchAll("thymus")) {
-			System.out.println(ot.getAccession() + "\t"
-					+ ot.getOntologyAccession() + "\t" + ot.getLabel());
+			System.out.println(ot);
 		}
 		// But should be none for CHEBI
 		if (os.searchOntology("CHEBI", "nicotine") == null)

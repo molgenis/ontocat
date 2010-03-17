@@ -38,7 +38,6 @@ public class Example6 {
 
 		// Run a search across both of them
 		for (OntologyTerm ot : os.searchAll("thymus"))
-			System.out.println(ot.getOntologyAccession() + "\t"
-					+ ot.getAccession() + "\t" + ot.getLabel());
+			System.out.println(ot);
 	}
 }

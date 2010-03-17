@@ -4,16 +4,14 @@
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
  *c @author $Id: SearchBean.java 8993 2009-09-18 17:14:46Z tomasz $
  * 
  */
 public class SearchBean extends OntologyTerm {
-	//handle to the service
-	private BioportalOntologyService bioportal;
-	
+	private static final long serialVersionUID = -6977336688985745354L;
+
 	private String ontologyVersionId;
 	private String ontologyId;
 	private String ontologyDisplayLabel;
@@ -24,18 +22,45 @@ public class SearchBean extends OntologyTerm {
 	private String preferredName;
 	private String contents;
 
+	public SearchBean(String ontologyAccession, String termAccession,
+			String label) {
+		super(ontologyAccession, termAccession, label);
+	}
+
 	/**
 	 * @return the ontologyVersionId
 	 */
-	final public String getOntologyVersionId() {
+	public String getOntologyVersionId() {
 		return ontologyVersionId;
+	}
+
+	/**
+	 * @return the ontologyDisplayLabel
+	 */
+	public String getOntologyDisplayLabel() {
+		return ontologyDisplayLabel;
+	}
+
+	/**
+	 * @return the recordType
+	 */
+	public String getRecordType() {
+		return recordType;
+	}
+
+	/**
+	 * @return the contents
+	 */
+	public String getContents() {
+		return contents;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see plugin.OntologyBrowser.OntologyTerm#getAccession()
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getAccession()
 	 */
+	@Override
 	public String getAccession() {
 		return conceptIdShort;
 	}
@@ -43,8 +68,9 @@ public class SearchBean extends OntologyTerm {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see plugin.OntologyBrowser.OntologyTerm#getLabel()
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getLabel()
 	 */
+	@Override
 	public String getLabel() {
 		return preferredName;
 	}
@@ -52,55 +78,43 @@ public class SearchBean extends OntologyTerm {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * plugin.OntologyBrowser.OntologyTerm#getOntologyAccession()
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getOntologyAccession()
 	 */
+	@Override
 	public String getOntologyAccession() {
 		return ontologyId;
 	}
 
-	/**
-	 * @return the ontologyDisplayLabel
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#setAccession(java.lang.String)
 	 */
-	final public String getOntologyDisplayLabel() {
-		return ontologyDisplayLabel;
+	@Override
+	public void setAccession(String accession) {
+		conceptIdShort = accession;
 	}
 
-	/**
-	 * @return the recordType
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#setLabel(java.lang.String)
 	 */
-	final public String getRecordType() {
-		return recordType;
+	@Override
+	public void setLabel(String label) {
+		preferredName = label;
 	}
 
-	/**
-	 * @return the contents
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.ontocat.OntologyTerm#setOntologyAccession(java.lang.String)
 	 */
-	final public String getContents() {
-		return contents;
+	@Override
+	public void setOntologyAccession(String ontologyAccession) {
+		ontologyId = ontologyAccession;
 	}
+	
 
-//	@Override
-//	public String[] getDefinitions() throws OntologyServiceException
-//	{
-//		throw new OntologyServiceException("getDefinitions not implemented");
-//	}
-
-//	@Override
-//	public Map<String, String[]> getAnnotations() throws OntologyServiceException
-//	{
-//		return bioportal.getAnnotations(this.getOntologyAccession(), this.getAccession());
-//	}
-//
-//	@Override
-//	public String[] getSynonyms() throws OntologyServiceException
-//	{
-//		return bioportal.getSynonyms(this.getOntologyAccession(), this.getAccession());
-//	}
-//
-//	@Override
-//	public Map<String, String[]> getRelations() throws OntologyServiceException
-//	{
-//		return bioportal.getRelations(this.getOntologyAccession(), this.getAccession());
-//	}
 }

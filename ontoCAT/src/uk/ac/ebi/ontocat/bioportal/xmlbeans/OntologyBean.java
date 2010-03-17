@@ -46,12 +46,24 @@ public class OntologyBean extends Ontology {
 	private String codingScheme;
 	private String publication;
 	private String documentationSlot;
+	private String synonymSlot;
+	private String targetTerminologies;
+	private String preferredNameSlot;
+	private ArrayList categoryIds;
+	private ArrayList filenames;
+	private ArrayList<Integer> groupIds;
+	private String filePath;
+
+	public OntologyBean(String ontologyAccession) {
+		super(ontologyAccession);
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getSynonymSlot()
 	 */
+	@Override
 	public String getSynonymSlot() {
 		return synonymSlot;
 	}
@@ -70,19 +82,12 @@ public class OntologyBean extends Ontology {
 		return preferredNameSlot;
 	}
 
-	private String synonymSlot;
-	private String targetTerminologies;
-	private String preferredNameSlot;
-	private ArrayList categoryIds;
-	private ArrayList filenames;
-	private ArrayList<Integer> groupIds;
-	private String filePath;
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getVersionNumber()
 	 */
+	@Override
 	public String getVersionNumber() {
 		return versionNumber;
 	}
@@ -92,8 +97,9 @@ public class OntologyBean extends Ontology {
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getDateReleased()
 	 */
+	@Override
 	public String getDateReleased() {
-		return dateReleased.toString();
+		return dateReleased;
 	}
 
 	/*
@@ -101,6 +107,7 @@ public class OntologyBean extends Ontology {
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getDisplayLabel()
 	 */
+	@Override
 	public String getLabel() {
 		return displayLabel;
 	}
@@ -110,6 +117,7 @@ public class OntologyBean extends Ontology {
 	 * 
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getAbbreviation()
 	 */
+	@Override
 	public String getAbbreviation() {
 		return abbreviation;
 	}

@@ -24,13 +24,7 @@ public abstract class OntologyServiceTest {
 	public final void testGetOntologies() throws OntologyServiceException {
 		printCurrentTest();
 		for (Ontology oe : os.getOntologies()) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(oe.getAbbreviation());
-			sb.append("\t");
-			sb.append(oe.getLabel());
-			sb.append("\t");
-			sb.append(oe.getVersionNumber());
-			println(sb.toString());
+			println(oe);
 		}
 	}
 
@@ -38,25 +32,21 @@ public abstract class OntologyServiceTest {
 	public final void testGetOntology() throws OntologyServiceException {
 		printCurrentTest();
 		Ontology oe = os.getOntology(ONTOLOGY_ACCESSION1);
-		println(oe.getAbbreviation());
-		println(oe.getLabel());
-		println(oe.getVersionNumber());
+		println(oe);
 	}
 
 	@Test
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION1, "thymus"))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
-					+ ot.getLabel());
+			println(ot);
 	}
 
 	@Test
 	public final void testSearchAll() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.searchAll("thymus"))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
-					+ ot.getLabel());
+			println(ot);
 	}
 
 	@Test
@@ -64,8 +54,7 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION2);
 		for (OntologyTerm ot : results)
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
-					+ ot.getLabel());
+			println(ot);
 	}
 
 	@Test
@@ -73,16 +62,15 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION1))
-			println(ot.getAccession() + " " + ot.getLabel());
+			println(ot);
 	}
 
 	@Test
 	public final void testGetChildren() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
-					+ ot.getLabel());
+				TERM_ACCESSION2))
+			println(ot);
 	}
 
 	@Test
@@ -90,8 +78,7 @@ public abstract class OntologyServiceTest {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getParents(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION1))
-			println(ot.getOntologyAccession() + " " + ot.getAccession() + " "
-					+ ot.getLabel());
+			println(ot);
 	}
 
 	@Test
@@ -128,6 +115,14 @@ public abstract class OntologyServiceTest {
 	}
 
 	private static void println(String in) {
+		System.out.println(in);
+	}
+
+	private static void println(OntologyTerm in) {
+		System.out.println(in);
+	}
+
+	private static void println(Ontology in) {
 		System.out.println(in);
 	}
 }

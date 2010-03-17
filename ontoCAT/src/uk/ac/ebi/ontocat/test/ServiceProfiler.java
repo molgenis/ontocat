@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
-import uk.ac.ebi.ontocat.file.FieldDescriptor;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
@@ -39,8 +38,9 @@ public class ServiceProfiler {
 		OntologyService osOLS = new OlsOntologyService();
 		OntologyService osBP = new BioportalOntologyService();
 		OntologyService osOWL = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"), new FieldDescriptor(
-				"alternative_term", "definition", "label"));
+				"http://www.ebi.ac.uk/efo"));
+		// Use a non-SKOS annotation for synonyms
+		((FileOntologyService) osOWL).setSynonymSlot("alternative_term");
 
 		for (int i = 0; i < 100; i++) {
 			t1 = System.nanoTime();

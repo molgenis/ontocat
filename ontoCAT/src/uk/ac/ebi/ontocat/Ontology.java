@@ -17,10 +17,6 @@ public class Ontology implements Serializable {
 	private String synonymSlot;
 	private String versionNumber;
 
-	public Ontology() {
-
-	}
-
 	public Ontology(String ontologyAccession) {
 		this.ontologyAccession = ontologyAccession;
 	}
@@ -33,7 +29,7 @@ public class Ontology implements Serializable {
 		this.abbreviation = abbreviation;
 	}
 
-	public String getDateReleased() throws OntologyServiceException {
+	public String getDateReleased() {
 		return dateReleased;
 	}
 
@@ -49,7 +45,7 @@ public class Ontology implements Serializable {
 		this.description = description;
 	}
 
-	public String getLabel() throws OntologyServiceException {
+	public String getLabel() {
 		return label;
 	}
 
@@ -73,7 +69,7 @@ public class Ontology implements Serializable {
 		this.synonymSlot = synonymSlot;
 	}
 
-	public String getVersionNumber() throws OntologyServiceException {
+	public String getVersionNumber() {
 		return versionNumber;
 	}
 
@@ -82,17 +78,55 @@ public class Ontology implements Serializable {
 	}
 
 	public String toString() {
-		try {
-			return String
-					.format(
-							"Ontology(abbreviation=%s, label=%s, ontologyAccession=%s,  dateReleased=%s, synonymSlot=%s, versionNumber=%s, description=%s)",
-							getAbbreviation(), getLabel(),
-							getOntologyAccession(), getDateReleased(),
-							getSynonymSlot(), getVersionNumber(),
-							getDescription());
-		} catch (OntologyServiceException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return String.format(
+				"Ontology(abbreviation=%s, label=%s, ontologyAccession=%s)",
+				getAbbreviation(), getLabel(), getOntologyAccession());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((getLabel() == null) ? 0 : getLabel().hashCode());
+		result = prime
+				* result
+				+ ((getOntologyAccession() == null) ? 0
+						: getOntologyAccession()
+						.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ontology other = (Ontology) obj;
+		if (getLabel() == null) {
+			if (other.getLabel() != null)
+				return false;
+		} else if (!getLabel().equals(other.getLabel()))
+			return false;
+		if (getOntologyAccession() == null) {
+			if (other.getOntologyAccession() != null)
+				return false;
+		} else if (!getOntologyAccession().equals(other.getOntologyAccession()))
+			return false;
+		return true;
+	}
+
 }

@@ -2,6 +2,7 @@ package uk.ac.ebi.ontocat.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 import uk.ac.ebi.ontocat.virtual.CompositeOntologyService;
 
@@ -23,10 +25,15 @@ public class CompositeOntologyServiceTest extends OntologyServiceTest {
 	public static void setUpBeforeClass() throws Exception {
 		final OntologyService osBP = new BioportalOntologyService();
 		final OntologyService osOLS = new OlsOntologyService();
+		final FileOntologyService osFile = new FileOntologyService(new URI(
+				"http://www.ebi.ac.uk/efo"));
+		osFile.setSynonymSlot("alternative_term");
+
 		os = new CompositeOntologyService(new ArrayList<OntologyService>() {
 			{
 				add(osOLS);
 				add(osBP);
+				add(osFile);
 			}
 		});
 		ONTOLOGY_ACCESSION1 = "1029";
@@ -40,5 +47,7 @@ public class CompositeOntologyServiceTest extends OntologyServiceTest {
 		Set<OntologyTerm> h = new HashSet<OntologyTerm>(l);
 		log.info("Hash size " + h.size());
 		assertEquals(l.size(), h.size());
+		for (OntologyTerm o : l)
+			log.info(o);
 	}
 }

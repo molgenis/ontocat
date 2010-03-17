@@ -548,7 +548,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		processChildrenUrl(ontologyAccession, termAccession);
-		return insertOntologyAccession((List<?>) getBeanFromQuery(),
+		return fetchFullTerms((List<OntologyTerm>) getBeanFromQuery(),
 				ontologyAccession);
 	}
 
@@ -561,18 +561,18 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		processParentsUrl(ontologyAccession, termAccession);
-		return insertOntologyAccession((List<?>) getBeanFromQuery(),
+		return fetchFullTerms((List<OntologyTerm>) getBeanFromQuery(),
 				ontologyAccession);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<OntologyTerm> insertOntologyAccession(List<?> list,
-			String OntologyAccession) {
-		for (ConceptBean ot : (List<ConceptBean>) list) {
-			ot.setBioportalService(this);
-			ot.setOntologyAccession(OntologyAccession);
+	private List<OntologyTerm> fetchFullTerms(List<OntologyTerm> list,
+			String ontologyAccession) throws OntologyServiceException {
+		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
+		for (OntologyTerm ot : list) {
+			result.add(getTerm(ot.getAccession(), ontologyAccession));
 		}
-		return (List<OntologyTerm>) list;
+		return result;
 	}
 
 	/*

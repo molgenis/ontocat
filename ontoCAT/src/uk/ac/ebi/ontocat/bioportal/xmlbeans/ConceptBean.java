@@ -10,7 +10,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 /**
  * Wraps the Concept representation of BioPortal and maps it to the OntologyTerm
@@ -19,8 +18,12 @@ import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
  * @author $Id: ConceptBean.java 9019 2009-09-22 12:39:01Z tomasz $
  */
 public class ConceptBean extends OntologyTerm {
-	/** The service that produced it */
-	BioportalOntologyService bioportal;
+
+	public ConceptBean(String ontologyAccession, String termAccession,
+			String label) {
+		super(ontologyAccession, termAccession, label);
+	}
+
 	private static final Logger log = Logger.getLogger(ConceptBean.class.getName());
 
 	/** The label. */
@@ -43,16 +46,11 @@ public class ConceptBean extends OntologyTerm {
 	/** The relations. */
 	private EntryBean[] relations;
 
+	private String[] instances;
+
 	private String type;
 
-	/**
-	 * Gets the label.
-	 * 
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
+
 
 	/**
 	 * Gets the full id.
@@ -63,14 +61,7 @@ public class ConceptBean extends OntologyTerm {
 		return fullId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see plugin.OntologyBrowser.OntologyTermExt#getAccession()
-	 */
-	public String getAccession() {
-		return id;
-	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -136,35 +127,65 @@ public class ConceptBean extends OntologyTerm {
 		return null;
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see plugin.OntologyBrowser.OntologyTerm#getOntologyAccession()
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getAccession()
 	 */
+	@Override
+	public String getAccession() {
+		return this.id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getLabel()
+	 */
+	@Override
+	public String getLabel() {
+		return this.label;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getOntologyAccession()
+	 */
+	@Override
 	public String getOntologyAccession() {
-		return ontAccession;
+		return this.ontAccession;
 	}
 
-	/**
-	 * @param ontAccession
-	 *            the ontAccession to set
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#setAccession(java.lang.String)
 	 */
-	public void setOntologyAccession(String ontAccession) {
-		this.ontAccession = ontAccession;
+	@Override
+	public void setAccession(String accession) {
+		this.id = accession;
 	}
 
-//	@Override
-//	public Map<String, String[]> getRelations() throws OntologyServiceException {
-//		Map<String, String[]> result = new LinkedHashMap<String, String[]>();
-//		for (EntryBean e : this.relations) {
-//			result.put(e.getLabel(), e.getList());
-//		}
-//		return result;
-//	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#setLabel(java.lang.String)
+	 */
+	@Override
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-	// helper function
-	public void setBioportalService(BioportalOntologyService bioportal) {
-		// used for lazy loading
-		this.bioportal = bioportal;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.ontocat.OntologyTerm#setOntologyAccession(java.lang.String)
+	 */
+	@Override
+	public void setOntologyAccession(String ontologyAccession) {
+		ontAccession = ontologyAccession;
 	}
 }

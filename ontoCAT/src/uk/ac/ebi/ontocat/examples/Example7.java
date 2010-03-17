@@ -36,8 +36,7 @@ public class Example7 {
 
 		// Print results
 		for (OntologyTerm ot : results)
-			System.out.println(ot.getOntologyAccession() + "\t"
-					+ ot.getAccession() + "\t" + ot.getLabel());
+			System.out.println(ot);
 	}
 
 	private class OLS2BPtranslator implements OntologyIdTranslator {
