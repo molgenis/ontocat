@@ -13,10 +13,17 @@
 
 
 Upload a file
-<div id="header">
-
-</div>
+<div id="header"></div>
   
+  <hr> 
+<h2>Please fill in the file-upload form below</h2> 
+ 
+<form method='POST' enctype='multipart/form-data' action='upload_complete.html'> 
+File to upload: <input type=file name=upfile><br> 
+Notes about the file: <input type=text name=note><br> 
+<br> 
+<input type=submit value=Press> to upload the file!
+</form> 
 	
 </body>
 </html>
