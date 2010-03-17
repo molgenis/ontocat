@@ -4,7 +4,7 @@ $(document).ready(function() {
 	j$("div").addClass("a");
 	
 	
-	addHelpVisualization();
+	//addHelpVisualization();
 	
 //	j$("#submit_term").click(function() {
 //		var submitted_terms1 = j$("#tokenize").val(); 
