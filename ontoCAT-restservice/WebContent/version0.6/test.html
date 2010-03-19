@@ -1,0 +1,59 @@
+<html>
+<head>
+<script type="text/javascript" src="jsr_class.js"></script> 
+
+<script language="JavaScript" type="text/javascript" src="SemOntoCat.js"></script>
+<script language="javascript" type="text/javascript" src="autocomplete.js"></script>
+
+<link rel="stylesheet" href="SemOntoCatCSS.css" type="text/css"/>
+
+<style>
+  #suggestBoxElement {border: 1px solid #8FABFF; visibility:hidden; text-align: left;  white-space: nowrap; background-color: #eeeeee;}
+  .suggestions { font-size: 14;background-color: #eeeeee;  }
+  .suggestionMouseOver { font-size: 14;background: #3333ff; color: white;  }
+</style>
+
+
+
+
+</head>
+
+
+<body>
+
+
+
+<br><br><br>
+ 
+ <input type="text" size="40" autoComplete="mygroup1" /> 
+<script language="javascript" type="text/javascript"> 
+    autoComplete.Set("mygroup1", new Array("two", "three", "twenty", "tweak", "tool", 
+    "two hundred", "testing", "two-thirds", "terran", "tomato", "tower", "twin", "task", 
+    "toolbar", "test")); 
+</script>
+ 
+ <br><br><br>
+ 
+   	<input id="termLabelInput" name="TermLabel" onblur="TermLabelLookup();" size="10" type="text">
+ <input type="text" size="40" autoComplete="mygroup4" />    	
+   	<span style="position: relative; z-index: 24;">
+
+	 <input id="termLabelSuggest"  name="place" size="90" onfocus="displayJsonTerms();" type="text">
+  	<span style="position: absolute; top: 20px; left: 0px; z-index:25;visibility: hidden;" id="TermSuggestBoxElement"></span>
+   </span>
+   
+   <input type="hidden" value="0" id="theValue" />
+   <div id="myDiv"> </div>
+   	
+ 
+
+	<br/><br/><br/><br/>
+	 
+	  <div id="footer">
+       <div id="json_results">   </div> 
+	  <br/>	  
+       <div id="json_results2">   </div> 
+	  </div> 
+
+</body>
+</html>
