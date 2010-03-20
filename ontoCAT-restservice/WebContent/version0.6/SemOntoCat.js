@@ -35,7 +35,7 @@ function RunSparql() {
 	//		  {failure: onFailure, success: function(json) { for (var x in json.head.vars) { ... } ...}}
 	//		);
 
-	query.query  ("SELECT DISTINCT ?name	WHERE {?x rdf:type foaf:Person .  ?x foaf:name ?name }	LIMIT 10");
+	query.query  ("SELECT DISTINCT ?name WHERE {?x rdf:type foaf:Person .  ?x foaf:name ?name }	LIMIT 10");
 	
 	// passes boolean value to success callback
 	/*query.ask(
