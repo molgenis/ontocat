@@ -1,8 +1,13 @@
 <html>
 <head>
-<script type="text/javascript" src="jsr_class.js"></script> 
+<script language="JavaScript" type="text/javascript" src="sparql.js"></script>
 
 <script language="JavaScript" type="text/javascript" src="SemOntoCat.js"></script>
+
+<script type="text/javascript" src="jsr_class.js"></script> 
+
+
+
 <script language="javascript" type="text/javascript" src="autocomplete.js"></script>
 
 <link rel="stylesheet" href="SemOntoCatCSS.css" type="text/css"/>
@@ -13,20 +18,11 @@
   .suggestionMouseOver { font-size: 14;background: #3333ff; color: white;  }
 </style>
 
-
-
-
 </head>
-
-
 <body>
-
-
-
 <br><br><br>
  
-  
-   	<input id="termLabelInput" name="TermLabel" onblur="TermLabelLookup();" size="10" type="text">
+  <input id="termLabelInput" name="TermLabel" onblur="TermLabelLookup();" size="10" type="text">
  <input type="text" size="40" autoComplete="mygroup4" />    	
    	<span style="position: relative; z-index: 24;">
 
@@ -36,8 +32,10 @@
    
    <input type="hidden" value="0" id="theValue" />
    <div id="myDiv"> </div>
-   	
- 
+   
+  <br/><br/>
+  <input id="sparqlBegin"  name="sparqlBegin" onClick="RunSparql()" type=Button value="attempt sparql">
+       <input type=BUTTON value="Submit" name="mySubmit" onClick="setText()">
 
 	<br/><br/><br/><br/>
 	 
