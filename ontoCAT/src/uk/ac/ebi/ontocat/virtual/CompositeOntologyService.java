@@ -1,8 +1,14 @@
 package uk.ac.ebi.ontocat.virtual;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 
@@ -224,52 +230,52 @@ public class CompositeOntologyService extends AbstractOntologyService {
 	 * 
 	 * @see uk.ac.ebi.ontocat.OntologyService#searchAll(java.lang.String)
 	 */
-	List<OntologyTerm> result = new ArrayList<OntologyTerm>();
-
 	@Override
 	public List<OntologyTerm> searchAll(String keywords)
 			throws OntologyServiceException {
+		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
+		ExecutorService ec = Executors.newCachedThreadPool();
 
-		List<SearchThread> threads = new ArrayList<SearchThread>();
+		// Create tasks
+		Collection<SearchTask> tasks = new ArrayList<SearchTask>();
 		for (OntologyService os : ontoServices) {
-			SearchThread st = new SearchThread(keywords, os);
-			threads.add(st);
-			st.start();
+			SearchTask st = new SearchTask(keywords, os);
+			tasks.add(st);
 		}
-		// Wait for the threads to finish
-		for (SearchThread st : threads) {
-			try {
-				st.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		try {
+			List<Future<List<OntologyTerm>>> futures = ec.invokeAll(tasks);
+
+			for (Future<List<OntologyTerm>> f : futures) {
+				result.addAll(f.get());
 			}
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			throw new OntologyServiceException(e);
+		} catch (ExecutionException e) {
+			throw new OntologyServiceException(e);
 		}
 
+		ec.shutdown();
 		return result;
 	}
 
-	private class SearchThread extends Thread {
+	private class SearchTask implements Callable<List<OntologyTerm>> {
 		private String keywords;
 		private OntologyService os;
 
 		/**
-		 * @param result
 		 * @param keywords
 		 * @param os
 		 */
-		public SearchThread(String keywords, OntologyService os) {
+		public SearchTask(String keywords, OntologyService os) {
 			this.keywords = keywords;
 			this.os = os;
 		}
 
-		public void run() {
-			try {
-				synchronized (result) {
-					result.addAll(os.searchAll(keywords));
-				}
-			} catch (OntologyServiceException e) {
-				e.printStackTrace();
-			}
+		@Override
+		public List<OntologyTerm> call() throws OntologyServiceException {
+			return os.searchAll(keywords);
 		}
 	}
 
