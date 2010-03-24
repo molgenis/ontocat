@@ -73,10 +73,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			obj.getClass().getMethod("searchAll", String.class);
 			obj.getClass().getMethod("searchOntology",
 					new Class[] { String.class, String.class });
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			throw new OntologyServiceException(e);
-		} catch (NoSuchMethodException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new OntologyServiceException(e);
 		}

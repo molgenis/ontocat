@@ -10,7 +10,7 @@ import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
-import uk.ac.ebi.ontocat.virtual.CompositeOntologyService;
+import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
 
 /**
  * Example 6
@@ -34,7 +34,7 @@ public class Example6 {
 		};
 		
 		// Instantiate a composite service encompassing the two
-		OntologyService os = new CompositeOntologyService(ontologies);
+		OntologyService os = CompositeDecorator.getService(ontologies);
 
 		// Run a search across both of them
 		for (OntologyTerm ot : os.searchAll("thymus"))
