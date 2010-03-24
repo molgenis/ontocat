@@ -473,7 +473,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			throws OntologyServiceException {
 		// warning this uses and undocumented feature!
 		ConceptBean cb = (ConceptBean) getTerm(ontologyAccession, "root");
-		return cb.getChildren();
+		return fetchFullTerms(cb.getChildren(), ontologyAccession);
 	}
 
 	/*
@@ -570,7 +570,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			String ontologyAccession) throws OntologyServiceException {
 		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 		for (OntologyTerm ot : list) {
-			result.add(getTerm(ot.getAccession(), ontologyAccession));
+			result.add(getTerm(ontologyAccession, ot.getAccession()));
 		}
 		return result;
 	}
