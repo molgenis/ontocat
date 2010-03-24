@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,11 +35,12 @@ public final class FileOntologyService extends AbstractOntologyService
 		implements OntologyService {
 	/** The Constant log. */
 	private static final Logger log = Logger
-			.getLogger(FileOntologyService.class
-			.getName());
+			.getLogger(FileOntologyService.class.getName());
 
 	/** The ontology. */
 	private final OWLOntology ontology;
+
+	private Set<String> ontoAccessions = new HashSet<String>();
 
 	/** The slots. */
 	/** The skos:synonym slot. */
@@ -79,6 +81,13 @@ public final class FileOntologyService extends AbstractOntologyService
 	 */
 	public FileOntologyService(URI uriOntology) {
 		ontology = new OntologyLoader(uriOntology).getOntology();
+		for (OWLClass cls : ontology.getReferencedClasses()) {
+			try {
+				ontoAccessions.add(getOntologyAccession(cls));
+			} catch (OntologyServiceException e) {
+				log.error(e.getMessage());
+			}
+		}
 	}
 
 	/*
@@ -88,8 +97,11 @@ public final class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public List<Ontology> getOntologies() throws OntologyServiceException {
-		throw new UnsupportedOperationException(
-				"Not implemented. Only one ontology available");
+		return new ArrayList<Ontology>() {
+			{
+				add(new Ontology(ontology.getURI().toString()));
+			}
+		};
 	}
 
 	/*
@@ -100,7 +112,9 @@ public final class FileOntologyService extends AbstractOntologyService
 	@Override
 	public Ontology getOntology(String ontologyAccession)
 			throws OntologyServiceException {
-		throw new UnsupportedOperationException("Not implemented.");
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
+		return getOntologies().get(0);
 	}
 
 	/*
@@ -123,6 +137,8 @@ public final class FileOntologyService extends AbstractOntologyService
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
 			throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		List<OntologyTerm> rootTerms = new ArrayList<OntologyTerm>();
 		for (OWLClass cls : ontology.getReferencedClasses()) {
 			// class without parents, looks like root
@@ -135,6 +151,18 @@ public final class FileOntologyService extends AbstractOntologyService
 		return rootTerms;
 	}
 
+	private boolean isCurrentOntology(String ontologyAccession) {
+		if (!ontoAccessions.contains(ontologyAccession)) {
+			log.warn("Method failed in FileOntologyService."
+					+ Thread.currentThread().getStackTrace()[2].getMethodName()
+					+ "() - incorrect accession " + ontologyAccession);
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -144,8 +172,15 @@ public final class FileOntologyService extends AbstractOntologyService
 	@Override
 	public List<String> getSynonyms(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get(
-synonymSlot);
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
+		List<String> result = getAnnotations(ontologyAccession, termAccession)
+				.get(synonymSlot);
+		if (result.size() == 0) {
+			return null;
+		} else {
+			return result;
+		}
 	}
 
 	/*
@@ -157,8 +192,10 @@ synonymSlot);
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		// termLabel
-		String label = getLabel(termAccession);
+		String label = getLabel(ontologyAccession, termAccession);
 
 		return new OntologyTerm(ontologyAccession, termAccession, label);
 	}
@@ -173,16 +210,20 @@ synonymSlot);
 			throws OntologyServiceException {
 		OWLClass cls = getOwlClass(termAccession);
 		// ontologyAccession
-		String ontologyAccession;
+		String ontologyAccession = getOntologyAccession(cls);
+		return getTerm(ontologyAccession, termAccession);
+	}
+
+	private String getOntologyAccession(OWLClass cls)
+			throws OntologyServiceException {
 		Pattern pattern = Pattern.compile("^.*[//#]{1}");
 		Matcher matcher = pattern.matcher(cls.getURI().toString());
 		if (matcher.find()) {
-			ontologyAccession = matcher.group();
+			return matcher.group();
 		} else {
 			throw new OntologyServiceException(
-					"Could not create ontologyAccession for " + termAccession);
+					"Could not create ontologyAccession for " + cls);
 		}
-		return getTerm(ontologyAccession, termAccession);
 	}
 
 	private OntologyTerm getTerm(OWLClass cls) throws OntologyServiceException {
@@ -198,7 +239,8 @@ synonymSlot);
 	@Override
 	public List<OntologyTerm> getTermPath(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		ArrayList<OntologyTerm> termPath = new ArrayList<OntologyTerm>();
 		int iteration = 0;
 		// seed the list with this term
@@ -226,6 +268,8 @@ synonymSlot);
 
 	public List<OntologyTerm> getChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		ArrayList<OntologyTerm> list = new ArrayList<OntologyTerm>();
 		for (OWLDescription desc : getOwlClass(termAccession).getSubClasses(
 				ontology)) {
@@ -245,6 +289,8 @@ synonymSlot);
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		ArrayList<OntologyTerm> list = new ArrayList<OntologyTerm>();
 		for (OWLDescription desc : getOwlClass(termAccession).getSuperClasses(
 				ontology)) {
@@ -280,6 +326,8 @@ synonymSlot);
 	@Override
 	public String makeLookupHyperlink(String ontologyAccession,
 			String termAccession) {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		try {
 			return getOwlClass(termAccession).getURI().toString();
 		} catch (OntologyServiceException e) {
@@ -301,22 +349,17 @@ synonymSlot);
 		// iterate through all classes annotations
 		// TODO: lucene index?
 		for (OWLClass cls : ontology.getReferencedClasses()) {
-			// for standard fragments, e.g. www.obo.org/go#heart
-			if (cls.getURI().getFragment() != null
-					&& cls.getURI().getFragment().contains(keyword)) {
-				terms.add(getTerm(cls));
-				// for non-standard fragments, e.g.
-				// http://www.ebi.ac.uk/chebi/searchId.do;?chebiId=heart
-			} else if (cls.getURI().toString().contains(keyword)) {
+			// if label is only in the fragment
+			if (getFragment(cls.getURI()).contains(keyword)) {
 				terms.add(getTerm(cls));
 			}
 
-			for (OWLAnnotation annot : cls.getAnnotations(ontology)) {
-				if (annot.getAnnotationValueAsConstant().getLiteral().contains(
-						keyword)) {
-					terms.add(getTerm(cls));
+			for (List<String> annots : getAnnotations(getTerm(cls)).values()) {
+				for (String annot : annots) {
+					if (annot.contains(keyword)) {
+						terms.add(getTerm(cls));
+					}
 				}
-
 			}
 		}
 
@@ -332,8 +375,9 @@ synonymSlot);
 	@Override
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keyword) throws OntologyServiceException {
-		throw new UnsupportedOperationException(
-				"Not implemented. Only one ontology available. Use searchAll instead.");
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
+		return searchAll(keyword);
 	}
 
 	/*
@@ -344,18 +388,28 @@ synonymSlot);
 	@Override
 	public List<String> getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get(
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
+		List<String> result = getAnnotations(ontologyAccession, termAccession)
+				.get(
 				definitionSlot);
+		if (result.size() == 0) {
+			return null;
+		} else {
+			return result;
+		}
 	}
 
 	// helper function to manage the cache
+	// TODO: this is potentially unsafe, and should
+	// TODO: take into account ontology uri + accession, i.e. full URI
 	private OWLClass getOwlClass(String termAccession)
 			throws OntologyServiceException {
 		OWLClass theClass = cache.get(termAccession);
 
 		if (theClass == null) {
 			for (OWLClass cls : ontology.getReferencedClasses()) {
-				if (cls.getURI().toString().endsWith(termAccession)) {
+				if (getFragment(cls.getURI()).equalsIgnoreCase(termAccession)) {
 					cache.put(termAccession, cls);
 					return cls;
 				}
@@ -375,6 +429,8 @@ synonymSlot);
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
 		for (OWLAnnotation annot : getOwlClass(termAccession).getAnnotations(
 				ontology)) {
@@ -390,6 +446,8 @@ synonymSlot);
 			// and convert it back to String[] before putting back in map
 			metadata.put(key, arr);
 		}
+		if (metadata.size() == 0)
+			return null;
 		return metadata;
 	}
 
@@ -414,16 +472,20 @@ synonymSlot);
 	/**
 	 * Helper method. Extracts the the label
 	 * 
+	 * @param termAccession2
+	 * 
 	 * @param uri
 	 *            the uri
 	 * 
 	 * @return the fragment
 	 * @throws OntologyServiceException
 	 */
-	private String getLabel(String termAccession)
+	private String getLabel(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
+		if (!isCurrentOntology(ontologyAccession))
+			return null;
 		// Try the slot label (SKOS or custom)
-		List<String> labels = getAnnotations(null, termAccession)
+		List<String> labels = getAnnotations(ontologyAccession, termAccession)
 				.get(labelSlot);
 
 		if (labels != null && labels.size() > 0) {
@@ -431,9 +493,9 @@ synonymSlot);
 				log.warn("Multple labels found on " + termAccession);
 			return labels.get(0);
 			// Try the rdfs:label if no results from slotLabel
-		} else if (!labelSlot.equalsIgnoreCase("label"))
-		{
-			labels = getAnnotations(null, termAccession).get("label");
+		} else if (!labelSlot.equalsIgnoreCase("label")) {
+			labels = getAnnotations(ontologyAccession, termAccession).get(
+					"label");
 			if (labels != null && labels.size() != 1)
 				log.warn("Multple labels found on " + termAccession);
 			return labels.get(0);

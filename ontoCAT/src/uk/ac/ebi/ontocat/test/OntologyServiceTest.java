@@ -15,8 +15,8 @@ public abstract class OntologyServiceTest {
 	protected static OntologyService os;
 	protected static String ONTOLOGY_ACCESSION1;
 	protected static String ONTOLOGY_ACCESSION2;
-	protected static String TERM_ACCESSION1 = "GO:0005623";
-	protected static String TERM_ACCESSION2 = "GO:0005575";
+	protected static String TERM_ACCESSION = "GO:0044421";
+	// GO:0005623 not working for getChildren() as subclasses are partOf
 	protected static final Logger log = Logger
 			.getLogger(OntologyServiceTest.class);
 
@@ -61,7 +61,7 @@ public abstract class OntologyServiceTest {
 	public final void testGetTermPath() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1))
+				TERM_ACCESSION))
 			println(ot);
 	}
 
@@ -69,7 +69,7 @@ public abstract class OntologyServiceTest {
 	public final void testGetChildren() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION2))
+				TERM_ACCESSION))
 			println(ot);
 	}
 
@@ -77,7 +77,7 @@ public abstract class OntologyServiceTest {
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getParents(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1))
+				TERM_ACCESSION))
 			println(ot);
 	}
 
@@ -85,7 +85,7 @@ public abstract class OntologyServiceTest {
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
 		for (Entry<String, List<String>> e : os.getAnnotations(
-				ONTOLOGY_ACCESSION2, TERM_ACCESSION1).entrySet()) {
+				ONTOLOGY_ACCESSION2, TERM_ACCESSION).entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
 				println("\t" + s);
@@ -96,9 +96,9 @@ public abstract class OntologyServiceTest {
 	@Test
 	public final void testGetDefinitions() throws OntologyServiceException {
 		printCurrentTest();
-		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION1);
+		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION);
 		System.out.println(os.getDefinitions(ONTOLOGY_ACCESSION2,
-				TERM_ACCESSION1).get(0));
+				TERM_ACCESSION).get(0));
 	}
 
 	private void printCurrentTest() {

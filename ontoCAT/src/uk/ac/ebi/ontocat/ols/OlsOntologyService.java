@@ -108,8 +108,12 @@ public class OlsOntologyService extends AbstractOntologyService implements
 			throws OntologyServiceException {
 		Ontology o = new Ontology(ontologyAccession);
 		try {
+			String label = (String) qs.getOntologyNames()
+					.get(ontologyAccession);
+			if (label == null)
+				throw new OntologyServiceException("Ontology not found");
+			o.setLabel(label);
 			o.setDateReleased(qs.getOntologyLoadDate(ontologyAccession));
-			o.setLabel((String) qs.getOntologyNames().get(ontologyAccession));
 			o.setVersionNumber(qs.getVersion());
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
@@ -172,6 +176,9 @@ public class OlsOntologyService extends AbstractOntologyService implements
 			try {
 				Map result = qs.getTermMetadata(termAccession,
 						ontologyAccession);
+				// need a null result if set was empty
+				if (result.size() == 0)
+					return null;
 				// clean out the String from String[]
 				for (Object metadataKey : result.keySet()) {
 					// logger.debug("getting annotation "+metadataKey);
@@ -216,6 +223,9 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	// helper methods
 	protected List<OntologyTerm> fetchFullTerms(Map<String, String> terms)
 			throws OntologyServiceException {
+		// need a null result if set was empty
+		if (terms.size() == 0)
+			return null;
 		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 		for (String termAccession : terms.keySet()) {
 			OntologyTerm o = getTerm(termAccession);

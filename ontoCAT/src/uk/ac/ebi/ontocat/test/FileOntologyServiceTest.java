@@ -14,7 +14,9 @@ public class FileOntologyServiceTest extends OntologyServiceTest {
 		// Use a non-SKOS annotation for synonyms
 		((FileOntologyService) os).setSynonymSlot("alternative_term");
 
-		TERM_ACCESSION1 = "EFO_0000318";
-		TERM_ACCESSION2 = "EFO_0002343";
+		TERM_ACCESSION = "EFO_0000318";
+		ONTOLOGY_ACCESSION1 = "http://www.ebi.ac.uk/efo/";
+		ONTOLOGY_ACCESSION2 = "http://www.ebi.ac.uk/efo/";
+		// TERM_ACCESSION2 = "EFO_0002343";
 	}
 }
