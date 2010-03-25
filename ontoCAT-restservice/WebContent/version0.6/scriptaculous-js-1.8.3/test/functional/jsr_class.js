@@ -1,5 +1,5 @@
 var the_object = {};  // the terms as returned from ontocat rest service, will live here after JSON.parse 
-					  //in JSONscriptRequest.prototype.buildScriptTag = function () {
+					  // in JSONscriptRequest.prototype.buildScriptTag = function () {
 
 //Static script ID counter
 JSONscriptRequest.scriptCounter = 1;
@@ -12,30 +12,38 @@ function getTerms(jData) {
 }
 // save place array in 'the_object' to make it accessible from mouse event handlers
 
+//this function will be called by our JSON callback
+//the parameter jData will contain an array with Term objects
+function getLocation(jData) {
+	if (jData == null) {
+	 // There was a problem parsing search results
+	 return;
+	}
 
-////////////////////////////////////////////////////////////////////////////////
-if ((the_object.term)) {
-	
-	if (the_object.term.length > 1) {
-
-	document.getElementById('suggestBoxElement').style.visibility = 'visible';
-    var suggestBoxHTML  = '';
-    // iterate over places and build suggest box content
-    for (i=0; i<the_object.term.length-1; i++) {
-      // for every Term record we create a html div   // each div gets an id using the array index for later retrieval        // define mouse event handlers to highlight places on mouseover     // and to select a place on click     // all events receive the postalcode array index as input parameter
-      suggestBoxHTML += "<div class='suggestions' id=pcId" + i + " onmousedown='suggestBoxMouseDown(" + i +")' onmouseover='suggestBoxMouseOver(" +  i +")' onmouseout='suggestBoxMouseOut(" + i +")'> " + the_object.term[i].label + ' ' + the_object.term[0].accession  +'</div>';
-    }
-    // display suggest box
-    document.getElementById('suggestBoxElement').innerHTML = suggestBoxHTML;
-  
-    if (the_object.term.length == 1) {
-      // exactly one place for term
-      // directly fill the form, no suggest box required 
-      var placeInput = document.getElementById("placeInput");
-      placeInput.value = the_object.term[0].label;
-    }
-    closeSuggestBox();
-  }
+	// save place array in 'postalcodes' to make it accessible from mouse event handlers
+	//postalcodes = jData.postalcodes;
+	if ((the_object.term)) {
+		if (the_object.term.length > 1) {
+			// we got several places for the terms // make suggest box visible
+			document.getElementById('suggestBoxElement').style.visibility = 'visible';
+			var suggestBoxHTML  = '';
+			// iterate over places and build suggest box content
+			for (i=0; i<the_object.term.length-1; i++) {
+					// for every Term record we create a html div   // each div gets an id using the array index for later retrieval        // define mouse event handlers to highlight places on mouseover     // and to select a place on click     // all events receive the postalcode array index as input parameter
+					suggestBoxHTML += "<div class='suggestions' id=pcId" + i + " onmousedown='suggestBoxMouseDown(" + i +")' onmouseover='suggestBoxMouseOver(" +  i +")' onmouseout='suggestBoxMouseOut(" + i +")'> " + the_object.term[i].label + ' ' + the_object.term[0].accession  +'</div>';
+			}
+			// display suggest box
+			document.getElementById('suggestBoxElement').innerHTML = suggestBoxHTML;
+		} else {
+		    if (the_object.term.length == 1) {
+			    // exactly one place for term
+			    // directly fill the form, no suggest box required 
+			    var placeInput = document.getElementById("placeInput");
+			    placeInput.value = the_object.term[0].label;
+		    }
+		    closeSuggestBox();
+		}
+	}
 }
 
 
