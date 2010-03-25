@@ -42,7 +42,7 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 	}
 
 	@Test
-	@Ignore
+	@Ignore("Tested equals() on OntologyTerm, fixed now")
 	public void testHashCollapse() throws OntologyServiceException {
 		List<OntologyTerm> l = os.searchAll("thymus");
 		log.info("List size " + l.size());

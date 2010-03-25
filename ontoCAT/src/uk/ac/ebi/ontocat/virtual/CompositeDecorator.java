@@ -35,7 +35,19 @@ public class CompositeDecorator implements InvocationHandler {
 	/** The sort order. */
 	private List sortOrder;
 
+	/** Underlying services */
 	private List<OntologyService> ontoServices;
+
+	/** Number of threads to run concurrently */
+	private int nThreads = 5;
+
+	public void setNumberOfThreads(int val) {
+		nThreads = val;
+	}
+
+	public int getNumberOfThreads() {
+		return nThreads;
+	}
 
 	/** The Constant log. */
 	private static final Logger log = Logger
@@ -101,7 +113,7 @@ public class CompositeDecorator implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 		Object result;
-		ExecutorService ec = Executors.newCachedThreadPool();
+		ExecutorService ec = Executors.newFixedThreadPool(nThreads);
 
 		// Create tasks
 		Collection<InvokeTask> tasks = new ArrayList<InvokeTask>();

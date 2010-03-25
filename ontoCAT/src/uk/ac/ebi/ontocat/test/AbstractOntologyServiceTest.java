@@ -89,8 +89,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os
-				.getParents(ONTOLOGY_ACCESSION,
-				TERM_ACCESSION))
+				.getParents(ONTOLOGY_ACCESSION, TERM_ACCESSION))
 			println(ot);
 	}
 
@@ -109,18 +108,15 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetDefinitions() throws OntologyServiceException {
 		printCurrentTest();
-		System.out.println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
-		System.out.println(os
-				.getDefinitions(ONTOLOGY_ACCESSION,
-				TERM_ACCESSION).get(0));
+		println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
+		println(os.getDefinitions(ONTOLOGY_ACCESSION, TERM_ACCESSION).get(0));
 	}
 
 	@Test
 	public final void testGetSynonyms() throws OntologyServiceException {
 		printCurrentTest();
-		System.out.println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
-		System.out.println(os.getSynonyms(ONTOLOGY_ACCESSION, TERM_ACCESSION)
-				.get(0));
+		println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
+		println(os.getSynonyms(ONTOLOGY_ACCESSION, TERM_ACCESSION).get(0));
 	}
 
 	private void printCurrentTest() {

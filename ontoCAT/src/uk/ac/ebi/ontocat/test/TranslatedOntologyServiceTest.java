@@ -2,8 +2,6 @@ package uk.ac.ebi.ontocat.test;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,15 +27,12 @@ public class TranslatedOntologyServiceTest {
 	}
 
 	@Test
-	public void testMappings() {
+	public void testMappings() throws OntologyServiceException {
 		for (OntologyIdMapping BPmap : new EFOIDTranslator().getMappings()) {
-			try {
 				printResults(BPmap.getTestCode());
-			} catch (OntologyServiceException e) {
-				fail(BPmap.getTestCode() + " NOT FOUND");
-			}
 		}
 	}
+
 
 	@Test
 	public void listResolvableOntologies() throws OntologyServiceException {
@@ -63,21 +58,19 @@ public class TranslatedOntologyServiceTest {
 	private void printResults(String testCode)
 			throws OntologyServiceException {
 		OntologyTerm extTerm = os.getTerm(testCode);
-		System.out.println("ID " + extTerm.getAccession());
-		System.out.println("LABEL " + extTerm.getLabel());
-		System.out.println("SYNONYMS ");
-
-		for (String syn : (os.getSynonyms(testCode) == null) ? new ArrayList<String>()
-				: os.getSynonyms(testCode)) {
-			System.out.println(syn);
-		}
-		System.out.print("DEFINITON ");
-		for (String def : (os.getDefinitions(testCode) == null) ? new ArrayList<String>()
-				: os.getDefinitions(testCode)) {
-			System.out.println(def);
-		}
-
-		System.out.println("SourceUrl " + os.makeLookupHyperlink(testCode));
+		System.out.println(testCode + " => " + extTerm);
+		/*
+		 * System.out.println("SYNONYMS ");
+		 * 
+		 * for (String syn : (os.getSynonyms(testCode) == null) ? new
+		 * ArrayList<String>() : os.getSynonyms(testCode)) {
+		 * System.out.println(syn); } System.out.print("DEFINITON "); for
+		 * (String def : (os.getDefinitions(testCode) == null) ? new
+		 * ArrayList<String>() : os.getDefinitions(testCode)) {
+		 * System.out.println(def); }
+		 * 
+		 * System.out.println("SourceUrl " + os.makeLookupHyperlink(testCode));
+		 */
 		System.out.println();
 	}
 

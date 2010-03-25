@@ -31,17 +31,15 @@ public class SortedSubsetTest {
 	@Test
 	public void testRankedSearch() throws OntologyServiceException {
 		for (OntologyTerm ot : os.searchAll("thymus")) {
-			System.out.println(ot.getAccession() + "\t"
-					+ ot.getOntologyAccession() + "\t" + ot.getLabel());
+			System.out.println(ot);
 		}
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testOutsideScopeSearchOntologyTest()
 			throws OntologyServiceException {
 		for (OntologyTerm ot : os.searchOntology("CHEBI", "nicotine")) {
-			System.out.println(ot.getAccession() + "\t"
-					+ ot.getOntologyAccession() + "\t" + ot.getLabel());
+			System.out.println(ot);
 		}
 	}
 }
