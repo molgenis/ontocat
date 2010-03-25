@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.virtual.CachedServiceDecorator;
 
-public class CachedDecoratorTest extends OntologyServiceTest {
+public class CachedDecoratorTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

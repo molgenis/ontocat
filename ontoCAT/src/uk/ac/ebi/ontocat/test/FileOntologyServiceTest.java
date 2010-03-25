@@ -6,7 +6,7 @@ import org.junit.BeforeClass;
 
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 
-public class FileOntologyServiceTest extends OntologyServiceTest {
+public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

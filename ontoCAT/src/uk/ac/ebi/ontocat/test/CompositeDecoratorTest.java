@@ -20,7 +20,7 @@ import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
 
-public class CompositeDecoratorTest extends OntologyServiceTest {
+public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

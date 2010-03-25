@@ -11,14 +11,14 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 
-public abstract class OntologyServiceTest {
+public abstract class AbstractOntologyServiceTest {
 	protected static OntologyService os;
 	protected static String ONTOLOGY_ACCESSION1;
 	protected static String ONTOLOGY_ACCESSION2;
 	protected static String TERM_ACCESSION = "GO:0044421";
 	// GO:0005623 not working for getChildren() as subclasses are partOf
 	protected static final Logger log = Logger
-			.getLogger(OntologyServiceTest.class);
+			.getLogger(AbstractOntologyServiceTest.class);
 
 	@Test
 	public final void testGetOntologies() throws OntologyServiceException {
