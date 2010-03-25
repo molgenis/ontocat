@@ -27,7 +27,7 @@ import uk.ac.ebi.ook.web.services.QueryServiceLocator;
  * Using ols-client.jar from
  * http://www.ebi.ac.uk/ontology-lookup/implementationOverview.do
  * 
- * @author Morris Swertz
+ * @author Morris Swertz, Tomasz Adamusiak
  * 
  *         Dependencies:
  *         <ul>
@@ -42,6 +42,7 @@ import uk.ac.ebi.ook.web.services.QueryServiceLocator;
  *         </ul>
  * 
  */
+
 public class OlsOntologyService extends AbstractOntologyService implements
 		OntologyService {
 	Logger logger = Logger.getLogger(OlsOntologyService.class);
@@ -84,8 +85,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keywords) throws OntologyServiceException {
 		try {
-			return fetchFullTerms(qs
-					.getTermsByName(keywords, ontologyAccession, false));
+			return fetchFullTerms(qs.getTermsByName(keywords,
+					ontologyAccession, false));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -140,8 +141,7 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
 
-		return getTerm(getOntologyAccFromTerm(termAccession),
-				termAccession);
+		return getTerm(getOntologyAccFromTerm(termAccession), termAccession);
 	}
 
 	private String getOntologyAccFromTerm(String termAccession) {
@@ -245,8 +245,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		try {
-			return fetchFullTerms(qs.getTermChildren(termAccession, ontologyAccession,
-					1, null));
+			return fetchFullTerms(qs.getTermChildren(termAccession,
+					ontologyAccession, 1, null));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -256,7 +256,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		try {
-			return fetchFullTerms(qs.getTermParents(termAccession, ontologyAccession));
+			return fetchFullTerms(qs.getTermParents(termAccession,
+					ontologyAccession));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -267,43 +268,25 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getTermPath(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		List<OntologyTerm> path = new ArrayList<OntologyTerm>();
-
+		// seed the list with this term
 		OntologyTerm current = this.getTerm(ontologyAccession, termAccession);
 		path.add(current);
 
-		boolean done = false;
 		int iteration = 0;
-		boolean parentFound = true;
-		while (parentFound) {
-			List<OntologyTerm> possibleParents = getParents(ontologyAccession,
-					termAccession);
+		// get its parents and iterate over first parent
+		List<OntologyTerm> parents = getParents(ontologyAccession,
+				termAccession);
+		while (parents != null) {
+			current = parents.get(0);
+			path.add(current);
+			parents = getParents(current.getOntologyAccession(), current
+					.getAccession());
 
-			if (possibleParents.size() == 1) {
-				path.add(possibleParents.get(0));
-				termAccession = possibleParents.get(0).getAccession();
-			} else {
-				parentFound = false;
-				for (OntologyTerm tryParent : possibleParents) {
-					List<OntologyTerm> possibleChildren = getChildren(
-							ontologyAccession, tryParent.getAccession());
-					for (OntologyTerm tryChild : possibleChildren) {
-						if (parentFound == false
-								&& tryChild.getAccession()
-										.equals(termAccession)) {
-							path.add(tryParent);
-							termAccession = tryParent.getAccession();
-							parentFound = true;
-						}
-					}
-				}
-			}
-
-			// safety break for circluar relations
-			iteration++;
-			if (iteration > 100) {
+			// safety break for circular relations
+			if (iteration++ > 100) {
 				logger.error("findSearchTermPath(): TOO MANY ITERATIONS ("
 						+ iteration + "x)");
-				done = true;
+				break;
 			}
 		}
 

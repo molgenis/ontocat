@@ -244,10 +244,10 @@ public final class FileOntologyService extends AbstractOntologyService
 		// seed the list with this term
 		OntologyTerm term = getTerm(ontologyAccession, termAccession);
 		termPath.add(term);
-		// iterate its first parents recursively
+		// get its parents and iterate over first parent
 		List<OntologyTerm> parents = getParents(ontologyAccession,
 				termAccession);
-		while (parents.size() != 0) {
+		while (parents != null) {
 			term = parents.get(0);
 			termPath.add(term);
 			parents = getParents(term.getOntologyAccession(), term
@@ -275,6 +275,8 @@ public final class FileOntologyService extends AbstractOntologyService
 				list.add(getTerm(desc.asOWLClass()));
 			}
 		}
+		if (list.size() == 0)
+			return null;
 		return list;
 	}
 
@@ -296,6 +298,8 @@ public final class FileOntologyService extends AbstractOntologyService
 				list.add(getTerm(desc.asOWLClass()));
 			}
 		}
+		if (list.size() == 0)
+			return null;
 		return list;
 	}
 
