@@ -58,6 +58,19 @@ public abstract class AbstractOntologyServiceTest {
 	}
 
 	@Test
+	public final void testGetTerm() throws OntologyServiceException {
+		printCurrentTest();
+		println(os.getTerm(ONTOLOGY_ACCESSION2, TERM_ACCESSION));
+	}
+
+	@Test
+	public final void testGetTermByAccessionOnly()
+			throws OntologyServiceException {
+		printCurrentTest();
+		println(os.getTerm(TERM_ACCESSION));
+	}
+
+	@Test
 	public final void testGetTermPath() throws OntologyServiceException {
 		printCurrentTest();
 		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION2,
@@ -99,6 +112,14 @@ public abstract class AbstractOntologyServiceTest {
 		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION);
 		System.out.println(os.getDefinitions(ONTOLOGY_ACCESSION2,
 				TERM_ACCESSION).get(0));
+	}
+
+	@Test
+	public final void testGetSynonyms() throws OntologyServiceException {
+		printCurrentTest();
+		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION);
+		System.out.println(os.getSynonyms(ONTOLOGY_ACCESSION2, TERM_ACCESSION)
+				.get(0));
 	}
 
 	private void printCurrentTest() {
