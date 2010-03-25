@@ -1,4 +1,12 @@
-Onto CAT Release Notes
+Onto CAT Java API Release Notes
+
+Version 0.9, 25/03/2010
+	Updates to recent BioPortal web services signature
+	Includes a number of improvements:
+		-caching
+		-ranking
+		-namespace translation
+		-multithreaded composite service
 
 Version 0.8, 10/02/2010
 	First public release.
