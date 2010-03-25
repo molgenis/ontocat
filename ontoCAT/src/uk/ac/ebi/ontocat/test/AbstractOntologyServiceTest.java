@@ -13,9 +13,8 @@ import uk.ac.ebi.ontocat.OntologyTerm;
 
 public abstract class AbstractOntologyServiceTest {
 	protected static OntologyService os;
-	protected static String ONTOLOGY_ACCESSION1;
-	protected static String ONTOLOGY_ACCESSION2;
-	protected static String TERM_ACCESSION = "GO:0044421";
+	protected static String ONTOLOGY_ACCESSION;
+	protected static String TERM_ACCESSION = "GO:0043227";
 	// GO:0005623 not working for getChildren() as subclasses are partOf
 	protected static final Logger log = Logger
 			.getLogger(AbstractOntologyServiceTest.class);
@@ -31,14 +30,14 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetOntology() throws OntologyServiceException {
 		printCurrentTest();
-		Ontology oe = os.getOntology(ONTOLOGY_ACCESSION1);
+		Ontology oe = os.getOntology(ONTOLOGY_ACCESSION);
 		println(oe);
 	}
 
 	@Test
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION1, "thymus"))
+		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION, "thymus"))
 			println(ot);
 	}
 
@@ -52,7 +51,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetRootTerms() throws OntologyServiceException {
 		printCurrentTest();
-		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION2);
+		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION);
 		for (OntologyTerm ot : results)
 			println(ot);
 	}
@@ -60,7 +59,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetTerm() throws OntologyServiceException {
 		printCurrentTest();
-		println(os.getTerm(ONTOLOGY_ACCESSION2, TERM_ACCESSION));
+		println(os.getTerm(ONTOLOGY_ACCESSION, TERM_ACCESSION));
 	}
 
 	@Test
@@ -73,7 +72,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetTermPath() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION2,
+		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION,
 				TERM_ACCESSION))
 			println(ot);
 	}
@@ -81,7 +80,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetChildren() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION2,
+		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION,
 				TERM_ACCESSION))
 			println(ot);
 	}
@@ -89,7 +88,8 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getParents(ONTOLOGY_ACCESSION2,
+		for (OntologyTerm ot : os
+				.getParents(ONTOLOGY_ACCESSION,
 				TERM_ACCESSION))
 			println(ot);
 	}
@@ -98,7 +98,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
 		for (Entry<String, List<String>> e : os.getAnnotations(
-				ONTOLOGY_ACCESSION2, TERM_ACCESSION).entrySet()) {
+				ONTOLOGY_ACCESSION, TERM_ACCESSION).entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
 				println("\t" + s);
@@ -109,16 +109,17 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetDefinitions() throws OntologyServiceException {
 		printCurrentTest();
-		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION);
-		System.out.println(os.getDefinitions(ONTOLOGY_ACCESSION2,
+		System.out.println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
+		System.out.println(os
+				.getDefinitions(ONTOLOGY_ACCESSION,
 				TERM_ACCESSION).get(0));
 	}
 
 	@Test
 	public final void testGetSynonyms() throws OntologyServiceException {
 		printCurrentTest();
-		System.out.println(ONTOLOGY_ACCESSION2 + " " + TERM_ACCESSION);
-		System.out.println(os.getSynonyms(ONTOLOGY_ACCESSION2, TERM_ACCESSION)
+		System.out.println(ONTOLOGY_ACCESSION + " " + TERM_ACCESSION);
+		System.out.println(os.getSynonyms(ONTOLOGY_ACCESSION, TERM_ACCESSION)
 				.get(0));
 	}
 

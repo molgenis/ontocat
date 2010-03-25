@@ -9,7 +9,7 @@ public class BioportalServiceTest extends AbstractOntologyServiceTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		os = new BioportalOntologyService();
-		ONTOLOGY_ACCESSION1 = "1029";
-		ONTOLOGY_ACCESSION2 = "1070";
+		// GO accession
+		ONTOLOGY_ACCESSION = "1070";
 	}
 }

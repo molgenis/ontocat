@@ -37,8 +37,8 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 				add(osFile);
 			}
 		});
-		ONTOLOGY_ACCESSION1 = "1029";
-		ONTOLOGY_ACCESSION2 = "1070";
+		// GO accession
+		ONTOLOGY_ACCESSION = "1070";
 	}
 
 	@Test

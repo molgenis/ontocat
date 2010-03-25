@@ -15,8 +15,7 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 		((FileOntologyService) os).setSynonymSlot("alternative_term");
 
 		TERM_ACCESSION = "EFO_0000318";
-		ONTOLOGY_ACCESSION1 = "http://www.ebi.ac.uk/efo/";
-		ONTOLOGY_ACCESSION2 = "http://www.ebi.ac.uk/efo/";
+		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
 		// TERM_ACCESSION2 = "EFO_0002343";
 	}
 }
