@@ -81,6 +81,7 @@ public final class FileOntologyService extends AbstractOntologyService
 	 */
 	public FileOntologyService(URI uriOntology) {
 		ontology = new OntologyLoader(uriOntology).getOntology();
+		// get all possible URIs in onotlogy
 		for (OWLClass cls : ontology.getReferencedClasses()) {
 			try {
 				ontoAccessions.add(getOntologyAccession(cls));
@@ -194,10 +195,7 @@ public final class FileOntologyService extends AbstractOntologyService
 			throws OntologyServiceException {
 		if (!isCurrentOntology(ontologyAccession))
 			return null;
-		// termLabel
-		String label = getLabel(ontologyAccession, termAccession);
-
-		return new OntologyTerm(ontologyAccession, termAccession, label);
+		return getTerm(termAccession);
 	}
 
 	/*
@@ -208,10 +206,14 @@ public final class FileOntologyService extends AbstractOntologyService
 	@Override
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
-		OWLClass cls = getOwlClass(termAccession);
-		// ontologyAccession
+		return getTerm(getOwlClass(termAccession));
+	}
+
+	private OntologyTerm getTerm(OWLClass cls) throws OntologyServiceException {
 		String ontologyAccession = getOntologyAccession(cls);
-		return getTerm(ontologyAccession, termAccession);
+		String termAccession = getFragment(cls);
+		String label = getLabel(cls);
+		return new OntologyTerm(ontologyAccession, termAccession, label);
 	}
 
 	private String getOntologyAccession(OWLClass cls)
@@ -224,10 +226,6 @@ public final class FileOntologyService extends AbstractOntologyService
 			throw new OntologyServiceException(
 					"Could not create ontologyAccession for " + cls);
 		}
-	}
-
-	private OntologyTerm getTerm(OWLClass cls) throws OntologyServiceException {
-		return getTerm(getFragment(cls.getURI()));
 	}
 
 	/*
@@ -350,11 +348,11 @@ public final class FileOntologyService extends AbstractOntologyService
 		// TODO: lucene index?
 		for (OWLClass cls : ontology.getReferencedClasses()) {
 			// if label is only in the fragment
-			if (getFragment(cls.getURI()).contains(keyword)) {
+			if (getFragment(cls).contains(keyword)) {
 				terms.add(getTerm(cls));
 			}
 
-			for (List<String> annots : getAnnotations(getTerm(cls)).values()) {
+			for (List<String> annots : getAnnotations(cls).values()) {
 				for (String annot : annots) {
 					if (annot.contains(keyword)) {
 						terms.add(getTerm(cls));
@@ -391,8 +389,7 @@ public final class FileOntologyService extends AbstractOntologyService
 		if (!isCurrentOntology(ontologyAccession))
 			return null;
 		List<String> result = getAnnotations(ontologyAccession, termAccession)
-				.get(
-				definitionSlot);
+				.get(definitionSlot);
 		if (result.size() == 0) {
 			return null;
 		} else {
@@ -409,7 +406,7 @@ public final class FileOntologyService extends AbstractOntologyService
 
 		if (theClass == null) {
 			for (OWLClass cls : ontology.getReferencedClasses()) {
-				if (getFragment(cls.getURI()).equalsIgnoreCase(termAccession)) {
+				if (getFragment(cls).equalsIgnoreCase(termAccession)) {
 					cache.put(termAccession, cls);
 					return cls;
 				}
@@ -431,9 +428,12 @@ public final class FileOntologyService extends AbstractOntologyService
 			String termAccession) throws OntologyServiceException {
 		if (!isCurrentOntology(ontologyAccession))
 			return null;
+		return getAnnotations(getOwlClass(termAccession));
+	}
+
+	private Map<String, List<String>> getAnnotations(OWLClass cls) {
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
-		for (OWLAnnotation annot : getOwlClass(termAccession).getAnnotations(
-				ontology)) {
+		for (OWLAnnotation annot : cls.getAnnotations(ontology)) {
 			String key = getFragment(annot.getAnnotationURI());
 			List<String> value = null;
 			if (metadata.containsKey(key))
@@ -453,12 +453,17 @@ public final class FileOntologyService extends AbstractOntologyService
 
 	/**
 	 * Helper method. Extracts the fragment uri from non-standard OWL uris.
+	 * Cannot use URI.getFragment() as it's not always delimited with # (see EFO
 	 * 
-	 * @param uri
-	 *            the uri
+	 * @param cls
+	 *            the OWLClass
 	 * 
 	 * @return the fragment
 	 */
+	private String getFragment(OWLClass cls) {
+		return getFragment(cls.getURI());
+	}
+
 	private String getFragment(URI uri) {
 		// can't use URI.getFragment() as it's not always delimited with # (see
 		// EFO)
@@ -480,27 +485,23 @@ public final class FileOntologyService extends AbstractOntologyService
 	 * @return the fragment
 	 * @throws OntologyServiceException
 	 */
-	private String getLabel(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
-		if (!isCurrentOntology(ontologyAccession))
-			return null;
+	private String getLabel(OWLClass cls) throws OntologyServiceException {
 		// Try the slot label (SKOS or custom)
-		List<String> labels = getAnnotations(ontologyAccession, termAccession)
-				.get(labelSlot);
+		Map<String, List<String>> clsAnnotations = getAnnotations(cls);
+		List<String> labels = clsAnnotations.get(labelSlot);
 
 		if (labels != null && labels.size() > 0) {
 			if (labels.size() != 1)
-				log.warn("Multple labels found on " + termAccession);
+				log.warn("Multple labels found on " + cls);
 			return labels.get(0);
 			// Try the rdfs:label if no results from slotLabel
 		} else if (!labelSlot.equalsIgnoreCase("label")) {
-			labels = getAnnotations(ontologyAccession, termAccession).get(
-					"label");
+			labels = clsAnnotations.get("label");
 			if (labels != null && labels.size() != 1)
-				log.warn("Multple labels found on " + termAccession);
+				log.warn("Multple labels found on " + cls);
 			return labels.get(0);
 		}
-		throw new OntologyServiceException("No label found on " + termAccession);
+		throw new OntologyServiceException("No label found on " + cls);
 	}
 
 }
