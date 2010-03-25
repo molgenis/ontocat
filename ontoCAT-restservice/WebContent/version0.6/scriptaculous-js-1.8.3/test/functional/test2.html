@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../../lib/prototype.js" type="text/javascript"></script>
+  <script src="../../src/scriptaculous.js" type="text/javascript"></script>
+  <script src="../../src/unittest.js" type="text/javascript"></script>
+  <script src="jsr_class.js" type="text/javascript"></script>
+  
+  
+  <style type="text/css" media="screen">
+    .selected { background-color: #888; }
+  </style>
+</head>
+<body>
+
+<span style="position: relative; z-index: 24;">
+  <input id="placeInput"  name="place" size="30" onblur="closeSuggestBox();" type="text">
+  <span style="position: absolute; top: 20px; left: 0px; z-index:25;visibility: hidden;" id="suggestBoxElement"></span>
+</span>
+
+
+
+Enter a term.
+
+
+
+<textarea rows=5 cols=40 id="ac4"  onfocus="TermLabelLookup();" autocomplete="off"></textarea>
+<div id="ac4update" style="display:none;border:1px solid black;background-color:white;"></div>
+
+<script type="text/javascript" language="javascript" charset="utf-8">
+// <![CDATA[
+          
+  var Termtokens=new Array();
+            
+  new Autocompleter.Local('ac4','ac4update',
+  new Array("brca", "glioblastoma", "B0010859", "BRCA2_HUMAN-Phosphoserine683", "B0001649"),
+  /*new Array(
+		  function () {
+      		for (i=0; i<the_object.term.length-1; i++) {
+      			tok = the_object.term[i].label + the_object.term[0].accession;
+      			return  tok;
+      			 
+    	   };}
+		    ),*/
+  { tokens: new Array(',','\n'), fullSearch: true, partialSearch: true });
+// ]]>
+</script>
+<br/><br/>
+
+
+<br /><br /><br />
+<br /><br /><br />
+<div id="debug" style="font-size:11px;"></div>
+
+</body>
+</html>

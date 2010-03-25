@@ -13,7 +13,7 @@ function addElement(the_object) {
 	  var divIdName = 'my'+num+'Div';
 	  newdiv.setAttribute('id',divIdName);
 	  
-	  newdiv.innerHTML = "<ul><li> " + the_object.term.length +  the_object.term[0].label + "</li>";
+	  newdiv.innerHTML = "<ul><li> " + the_object.term.length + "Results" + "</li>";
 	  for (i=0; i<the_object.term.length; i++) {
 		  newdiv.innerHTML +=  "<li>" + the_object.term[i].label + "</li>";
 	  }
@@ -63,13 +63,15 @@ JSONscriptRequest.prototype.buildScriptTag = function () {
 	            // as long as you get the data .."open" the dropdown box 
 	            addElement( the_object);
 	            
+	            var tok;
 	            autoComplete.Set("mygroup4", new Array( 
 	            	function () {
-	            		for (i=0; i<the_object.term.length; i++) {
-	            			return the_object.term[i].label ;
+	            		for (i=0; i<the_object.term.length-1; i++) {
+	            			tok = the_object.term[i].label + the_object.term[0].accession;
+	            			return  tok;
+	            			 
 	          	   };},
-	            		the_object.term[0].label, 
-	            		the_object.term[1].label, the_object.term[0].accession,
+	            		
 	            		"twenty", "tweak", "tool", 
 	            	    "two hundred", "testing", "two-thirds", "terran", "tomato", "tower", "twin", "task", 
 	            	    "toolbar", "test")); 
