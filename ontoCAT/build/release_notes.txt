@@ -1,5 +1,9 @@
 Onto CAT Java API Release Notes
 
+Version 0.9.1, 8/04/2010
+	Re-implemented searchAll() in OLSOntologyService as it suddenly stopped working
+	Consistent exceptions throwing for incorrect accessions
+
 Version 0.9, 25/03/2010
 	Updates to recent BioPortal web services signature
 	Includes a number of improvements:

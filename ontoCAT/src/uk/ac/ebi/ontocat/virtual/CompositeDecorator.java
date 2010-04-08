@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -112,7 +113,7 @@ public class CompositeDecorator implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		Object result;
+		Object result = null;
 		ExecutorService ec = Executors.newFixedThreadPool(nThreads);
 
 		// Create tasks
@@ -132,7 +133,11 @@ public class CompositeDecorator implements InvocationHandler {
 			}
 		} else {
 			// Any valid results will do, don't wait for the others
-			result = ec.invokeAny(tasks);
+			try {
+				result = ec.invokeAny(tasks);
+			} catch (ExecutionException e) {
+				throw new OntologyServiceException("Nothing found");
+			}
 		}
 		ec.shutdown();
 		return result;
@@ -152,6 +157,7 @@ public class CompositeDecorator implements InvocationHandler {
 		@Override
 		public Object call() throws Exception {
 			Object result = method.invoke(proxy, args);
+			// Throw exception here, so invokeAny skips this result
 			if (result == null)
 				throw new OntologyServiceException("No results from "
 						+ method.getName());

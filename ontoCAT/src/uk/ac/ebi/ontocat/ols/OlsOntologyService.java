@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -84,6 +85,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keywords) throws OntologyServiceException {
+		// Make sure the ontology exists
+		getOntology(ontologyAccession);
 		try {
 			return fetchFullTerms(qs.getTermsByName(keywords,
 					ontologyAccession, false));
@@ -92,13 +95,24 @@ public class OlsOntologyService extends AbstractOntologyService implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<OntologyTerm> searchAll(String keywords)
 			throws OntologyServiceException {
 		try {
-			logger.debug("searchAll(" + keywords + ")");
-			return fetchFullTerms(qs.getTermsByName(keywords, null, false));
-
+			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(keywords, false)
+					.entrySet();
+			if (sTerms.size() == 0)
+				return null;
+			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
+			for (Map.Entry<String, String> entry : sTerms) {
+				// splitting e.g. 228975=NEWT:Thymus magnus
+				String termAccession = entry.getKey();
+				String ontologyAccession = entry.getValue().split(":")[0];
+				String label = entry.getValue().split(":")[1];
+				result.add(new OntologyTerm(ontologyAccession, termAccession, label));
+			}
+			return result;
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -129,6 +143,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 		String label = null;
 		try {
 			label = qs.getTermById(termAccession, ontologyAccession);
+			if (label.equals(termAccession))
+				throw new OntologyServiceException("Term not found");
 		} catch (RemoteException e) {
 			logger.error("Problem retrieving label for " + termAccession
 					+ e.getMessage());
@@ -158,6 +174,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
 			throws OntologyServiceException {
+		// Make sure the ontology exists
+		getOntology(ontologyAccession);
 		try {
 			return fetchFullTerms(qs.getRootTerms(ontologyAccession));
 		} catch (RemoteException e) {
@@ -170,8 +188,9 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		// Make sure the term exists
+		getTerm(ontologyAccession, termAccession);
 		String key = ontologyAccession + ":" + termAccession;
-
 		if (!annotationCache.containsKey(key)) {
 			try {
 				Map result = qs.getTermMetadata(termAccession,
@@ -244,6 +263,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		// Make sure the term exists
+		getTerm(ontologyAccession, termAccession);
 		try {
 			return fetchFullTerms(qs.getTermChildren(termAccession,
 					ontologyAccession, 1, null));
@@ -255,6 +276,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
+		// Make sure the term exists
+		getTerm(ontologyAccession,termAccession);
 		try {
 			return fetchFullTerms(qs.getTermParents(termAccession,
 					ontologyAccession));
@@ -298,7 +321,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	@Override
 	public Map<String, List<String>> getRelations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-
+		// Make sure the term exists
+		getTerm(ontologyAccession, termAccession);
 		Map<String, List<String>> temp = new LinkedHashMap<String, List<String>>();
 		try {
 			// xrefs
@@ -325,11 +349,6 @@ public class OlsOntologyService extends AbstractOntologyService implements
 			// TODO Auto-generated catch block
 			throw new OntologyServiceException(e1);
 		}
-		// Map<String, String[]> result = new LinkedHashMap<String, String[]>();
-		// for (String key : temp.keySet())
-		// result.put(key, temp.get(key).toArray(new
-		// String[temp.get(key).size()]));
-
 		return temp;
 	}
 

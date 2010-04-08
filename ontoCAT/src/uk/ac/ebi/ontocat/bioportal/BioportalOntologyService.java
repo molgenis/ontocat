@@ -354,7 +354,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			} catch (IOException e) {
 				// no stack trace as this is expected behaviour for concept not
 				// found
-				throw new OntologyServiceException(e);
+				throw new OntologyServiceException("Term not found");
 			}
 		}
 		throw new OntologyServiceException(new Exception(
@@ -373,7 +373,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		try {
 			return xstream.fromXML(swXML.toString());
 		} catch (StreamException e) {
-			throw new OntologyServiceException(e);
+			throw new OntologyServiceException("Term not found");
 		} catch (ConversionException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -459,7 +459,11 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	@Override
 	public Ontology getOntology(String ontologyAccession)
 			throws OntologyServiceException {
-		processOntologyUrl(ontologyAccession);
+		try {
+			processOntologyUrl(ontologyAccession);
+		} catch (Exception e) {
+			throw new OntologyServiceException("Ontology not found");
+		}
 		return this.getOntologyBean();
 	}
 
@@ -485,6 +489,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 */
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String keyword) throws OntologyServiceException {
+		// confirm the ontology exists
+		getOntology(ontologyAccession);
+		// search it
 		processSearchUrl(ontologyAccession, keyword);
 		return getSearchResults();
 	}
@@ -496,7 +503,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 */
 	public List<OntologyTerm> searchAll(String keyword)
 			throws OntologyServiceException {
-		return searchOntology(null, keyword);
+		processSearchUrl(null, keyword);
+		return getSearchResults();
 	}
 
 	/*
@@ -520,9 +528,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	@Override
 	public OntologyTerm getTerm(String termAccession)
 			throws OntologyServiceException {
-		OntologyTerm term = searchOntology(null, termAccession).get(0);
+		OntologyTerm term = searchAll(termAccession).get(0);
 		return getTerm(term.getOntologyAccession(), term.getAccession());
-		// throw new UnsupportedOperationException("Not implemented.");
+
 	}
 
 	/*

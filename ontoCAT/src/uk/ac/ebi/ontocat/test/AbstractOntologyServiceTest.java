@@ -1,6 +1,7 @@
 package uk.ac.ebi.ontocat.test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -22,7 +23,12 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetOntologies() throws OntologyServiceException {
 		printCurrentTest();
-		for (Ontology oe : os.getOntologies()) {
+		List<Ontology> list = os.getOntologies();
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (Ontology oe : list) {
 			println(oe);
 		}
 	}
@@ -37,6 +43,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
+
 		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION, "thymus"))
 			println(ot);
 	}
@@ -44,15 +51,24 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testSearchAll() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.searchAll("thymus"))
+		List<OntologyTerm> list = os.searchAll("thymus");
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
 			println(ot);
 	}
 
 	@Test
 	public final void testGetRootTerms() throws OntologyServiceException {
 		printCurrentTest();
-		List<OntologyTerm> results = os.getRootTerms(ONTOLOGY_ACCESSION);
-		for (OntologyTerm ot : results)
+		List<OntologyTerm> list = os.getRootTerms(ONTOLOGY_ACCESSION);
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
 			println(ot);
 	}
 
@@ -72,32 +88,48 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetTermPath() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getTermPath(ONTOLOGY_ACCESSION,
-				TERM_ACCESSION))
+		List<OntologyTerm> list = os.getTermPath(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
 			println(ot);
 	}
 
 	@Test
 	public final void testGetChildren() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os.getChildren(ONTOLOGY_ACCESSION,
-				TERM_ACCESSION))
+		List<OntologyTerm> list = os.getChildren(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
 			println(ot);
 	}
 
 	@Test
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
-		for (OntologyTerm ot : os
-				.getParents(ONTOLOGY_ACCESSION, TERM_ACCESSION))
+		List<OntologyTerm> list = os.getParents(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
 			println(ot);
 	}
 
 	@Test
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
-		for (Entry<String, List<String>> e : os.getAnnotations(
-				ONTOLOGY_ACCESSION, TERM_ACCESSION).entrySet()) {
+		Map<String, List<String>> maps = os.getAnnotations(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		if (maps == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (Entry<String, List<String>> e : maps.entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
 				println("\t" + s);
