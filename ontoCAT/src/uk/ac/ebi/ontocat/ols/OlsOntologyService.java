@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ook.web.model.DataHolder;
 import uk.ac.ebi.ook.web.services.Query;
 import uk.ac.ebi.ook.web.services.QueryService;
 import uk.ac.ebi.ook.web.services.QueryServiceLocator;
@@ -44,8 +46,7 @@ import uk.ac.ebi.ook.web.services.QueryServiceLocator;
  * 
  */
 
-public class OlsOntologyService extends AbstractOntologyService implements
-		OntologyService {
+public class OlsOntologyService extends AbstractOntologyService implements OntologyService {
 	Logger logger = Logger.getLogger(OlsOntologyService.class);
 	// Webservice API
 	QueryService locator;
@@ -83,13 +84,41 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public List<OntologyTerm> searchOntology(String ontologyAccession,
-			String keywords) throws OntologyServiceException {
+	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
+			SearchOptions... options) throws OntologyServiceException {
 		// Make sure the ontology exists
 		getOntology(ontologyAccession);
+		List<SearchOptions> ops = new ArrayList<SearchOptions>(Arrays.asList(options));
 		try {
-			return fetchFullTerms(qs.getTermsByName(keywords,
-					ontologyAccession, false));
+			Map<String, String> terms = new HashMap<String, String>();
+			if (ops.contains(SearchOptions.EXACT)) {
+				terms = qs.getTermsByExactName(query, ontologyAccession);
+			} else {
+				terms = qs.getTermsByName(query, ontologyAccession, false);
+			}
+			if (ops.contains(SearchOptions.INCLUDE_PROPERTIES)) {
+				logger.warn("OLS does not support searching properties");
+				// params for getTermsByAnnotationData()
+				// ontologyName - - the name of the ontology to limit the term
+				// search on (mandatory)
+				// annotationType - - the type of annotation to limit the search
+				// strValue - - the string value of annotations to limit search
+				// fromDblValue - - lower numeric value of annotations to limit
+				// toDblValue - - higher numeric value of annotations to limit
+				// FIXME: This is always returns NULL!
+				DataHolder[] dhs = qs
+						.getTermsByAnnotationData(ontologyAccession, null, query, 0, 0);
+				if (dhs != null) {
+					for (DataHolder dh : dhs) {
+						// filter out non-exact terms if necessary
+						if (ops.contains(SearchOptions.EXACT)
+								&& dh.getAnnotationStringValue().equalsIgnoreCase(query))
+							continue;
+						terms.put(dh.getTermId(), dh.getTermName());
+					}
+				}
+			}
+			return fetchFullTerms(terms);
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -97,10 +126,13 @@ public class OlsOntologyService extends AbstractOntologyService implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<OntologyTerm> searchAll(String keywords)
+	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
 			throws OntologyServiceException {
+		List<SearchOptions> ops = new ArrayList<SearchOptions>(Arrays.asList(options));
+		if (ops.contains(SearchOptions.INCLUDE_PROPERTIES))
+			logger.warn("OLS does not support searching properties");
 		try {
-			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(keywords, false)
+			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(query, false)
 					.entrySet();
 			if (sTerms.size() == 0)
 				return null;
@@ -110,6 +142,9 @@ public class OlsOntologyService extends AbstractOntologyService implements
 				String termAccession = entry.getKey();
 				String ontologyAccession = entry.getValue().split(":")[0];
 				String label = entry.getValue().split(":")[1];
+				// filter out non-exact terms if necessary
+				if (ops.contains(SearchOptions.EXACT) && !label.equalsIgnoreCase(query))
+					continue;
 				result.add(new OntologyTerm(ontologyAccession, termAccession, label));
 			}
 			return result;
@@ -119,12 +154,10 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public Ontology getOntology(String ontologyAccession)
-			throws OntologyServiceException {
+	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException {
 		Ontology o = new Ontology(ontologyAccession);
 		try {
-			String label = (String) qs.getOntologyNames()
-					.get(ontologyAccession);
+			String label = (String) qs.getOntologyNames().get(ontologyAccession);
 			if (label == null)
 				throw new OntologyServiceException("Ontology not found");
 			o.setLabel(label);
@@ -146,16 +179,14 @@ public class OlsOntologyService extends AbstractOntologyService implements
 			if (label.equals(termAccession))
 				throw new OntologyServiceException("Term not found");
 		} catch (RemoteException e) {
-			logger.error("Problem retrieving label for " + termAccession
-					+ e.getMessage());
+			logger.error("Problem retrieving label for " + termAccession + e.getMessage());
 			throw new OntologyServiceException(e);
 		}
 		return new OntologyTerm(ontologyAccession, termAccession, label);
 	}
 
 	@Override
-	public OntologyTerm getTerm(String termAccession)
-			throws OntologyServiceException {
+	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException {
 
 		return getTerm(getOntologyAccFromTerm(termAccession), termAccession);
 	}
@@ -165,8 +196,7 @@ public class OlsOntologyService extends AbstractOntologyService implements
 		if (termAccession.contains(":") || termAccession.contains("_")) {
 			return termAccession.split("[:_]")[0];
 		} else {
-			logger.warn("No ontologyAccession in OLS term <" + termAccession
-					+ "> assumming NEWT");
+			logger.warn("No ontologyAccession in OLS term <" + termAccession + "> assumming NEWT");
 			return "NEWT";
 		}
 	}
@@ -186,15 +216,14 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public Map<String, List<String>> getAnnotations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
+	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
 		// Make sure the term exists
 		getTerm(ontologyAccession, termAccession);
 		String key = ontologyAccession + ":" + termAccession;
 		if (!annotationCache.containsKey(key)) {
 			try {
-				Map result = qs.getTermMetadata(termAccession,
-						ontologyAccession);
+				Map result = qs.getTermMetadata(termAccession, ontologyAccession);
 				// need a null result if set was empty
 				if (result.size() == 0)
 					return null;
@@ -202,15 +231,12 @@ public class OlsOntologyService extends AbstractOntologyService implements
 				for (Object metadataKey : result.keySet()) {
 					// logger.debug("getting annotation "+metadataKey);
 					if (result.get(metadataKey) instanceof String) {
-						result.put(metadataKey, Arrays
-								.asList(new String[] { (String) result
-										.get(metadataKey) }));
+						result.put(metadataKey, Arrays.asList(new String[] { (String) result
+								.get(metadataKey) }));
 					} else if (result.get(metadataKey) instanceof String[]) {
-						result.put(metadataKey, Arrays.asList((String[]) result
-								.get(metadataKey)));
+						result.put(metadataKey, Arrays.asList((String[]) result.get(metadataKey)));
 					} else {
-						throw new OntologyServiceException("annotation error: "
-								+ metadataKey);
+						throw new OntologyServiceException("annotation error: " + metadataKey);
 					}
 				}
 				annotationCache.put(key, result);
@@ -222,10 +248,9 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public List<String> getSynonyms(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get(
-				"exact_synonym");
+	public List<String> getSynonyms(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return getAnnotations(ontologyAccession, termAccession).get("exact_synonym");
 	}
 
 	@Override
@@ -234,8 +259,7 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public String makeLookupHyperlink(String ontologyAccession,
-			String termAccession) {
+	public String makeLookupHyperlink(String ontologyAccession, String termAccession) {
 		return makeLookupHyperlink(termAccession);
 	}
 
@@ -254,33 +278,30 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public List<String> getDefinitions(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get(
-				"definition");
+	public List<String> getDefinitions(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return getAnnotations(ontologyAccession, termAccession).get("definition");
 	}
 
 	@Override
-	public List<OntologyTerm> getChildren(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
+	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
 		// Make sure the term exists
 		getTerm(ontologyAccession, termAccession);
 		try {
-			return fetchFullTerms(qs.getTermChildren(termAccession,
-					ontologyAccession, 1, null));
+			return fetchFullTerms(qs.getTermChildren(termAccession, ontologyAccession, 1, null));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
 	}
 
 	@Override
-	public List<OntologyTerm> getParents(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
+	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
 		// Make sure the term exists
-		getTerm(ontologyAccession,termAccession);
+		getTerm(ontologyAccession, termAccession);
 		try {
-			return fetchFullTerms(qs.getTermParents(termAccession,
-					ontologyAccession));
+			return fetchFullTerms(qs.getTermParents(termAccession, ontologyAccession));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -288,8 +309,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public List<OntologyTerm> getTermPath(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
+	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
 		List<OntologyTerm> path = new ArrayList<OntologyTerm>();
 		// seed the list with this term
 		OntologyTerm current = this.getTerm(ontologyAccession, termAccession);
@@ -297,18 +318,15 @@ public class OlsOntologyService extends AbstractOntologyService implements
 
 		int iteration = 0;
 		// get its parents and iterate over first parent
-		List<OntologyTerm> parents = getParents(ontologyAccession,
-				termAccession);
+		List<OntologyTerm> parents = getParents(ontologyAccession, termAccession);
 		while (parents != null) {
 			current = parents.get(0);
 			path.add(current);
-			parents = getParents(current.getOntologyAccession(), current
-					.getAccession());
+			parents = getParents(current.getOntologyAccession(), current.getAccession());
 
 			// safety break for circular relations
 			if (iteration++ > 100) {
-				logger.error("findSearchTermPath(): TOO MANY ITERATIONS ("
-						+ iteration + "x)");
+				logger.error("findSearchTermPath(): TOO MANY ITERATIONS (" + iteration + "x)");
 				break;
 			}
 		}
@@ -319,15 +337,14 @@ public class OlsOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
+	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
 		// Make sure the term exists
 		getTerm(ontologyAccession, termAccession);
 		Map<String, List<String>> temp = new LinkedHashMap<String, List<String>>();
 		try {
 			// xrefs
-			Map<String, String> xrefs = qs.getTermXrefs(termAccession,
-					ontologyAccession);
+			Map<String, String> xrefs = qs.getTermXrefs(termAccession, ontologyAccession);
 			logger.debug(xrefs.size());
 
 			for (Entry e : xrefs.entrySet()) {
@@ -337,8 +354,8 @@ public class OlsOntologyService extends AbstractOntologyService implements
 			}
 
 			// relations
-			List<OntologyTerm> relations = fetchFullTerms(qs.getTermRelations(
-					termAccession, ontologyAccession));
+			List<OntologyTerm> relations = fetchFullTerms(qs.getTermRelations(termAccession,
+					ontologyAccession));
 			for (OntologyTerm r : relations) {
 				if (temp.get(r.getLabel()) == null)
 					temp.put(r.getLabel(), new ArrayList<String>());

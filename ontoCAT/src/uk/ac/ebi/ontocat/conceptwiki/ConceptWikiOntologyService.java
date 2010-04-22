@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +46,6 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 	
 
 	
-	@Override
-	public List<OntologyTerm> searchOntology(String ontologyAccession, String keywords) throws OntologyServiceException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
@@ -184,14 +175,6 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 	}
 
 
-
-	@Override
-	public List<OntologyTerm> searchAll(String keywords) throws OntologyServiceException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	private MediaWikiResult getFromUri(String url) throws OntologyServiceException
 	{
 		try
@@ -234,6 +217,20 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 		}
 		return ot_result;
 
+	}
+
+	@Override
+	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
+			throws OntologyServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
+			SearchOptions... options) throws OntologyServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

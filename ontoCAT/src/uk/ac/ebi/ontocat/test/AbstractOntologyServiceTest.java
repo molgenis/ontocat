@@ -11,14 +11,14 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 public abstract class AbstractOntologyServiceTest {
 	protected static OntologyService os;
 	protected static String ONTOLOGY_ACCESSION;
 	protected static String TERM_ACCESSION = "GO:0043227";
 	// GO:0005623 not working for getChildren() as subclasses are partOf
-	protected static final Logger log = Logger
-			.getLogger(AbstractOntologyServiceTest.class);
+	protected static final Logger log = Logger.getLogger(AbstractOntologyServiceTest.class);
 
 	@Test
 	public final void testGetOntologies() throws OntologyServiceException {
@@ -43,21 +43,27 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
-
-		for (OntologyTerm ot : os.searchOntology(ONTOLOGY_ACCESSION, "thymus"))
-			println(ot);
-	}
-
-	@Test
-	public final void testSearchAll() throws OntologyServiceException {
-		printCurrentTest();
-		List<OntologyTerm> list = os.searchAll("thymus");
+		List<OntologyTerm> list = os.searchOntology(ONTOLOGY_ACCESSION, "death");
 		if (list == null) {
 			log.info("NULL RETURNED");
 			return;
 		}
 		for (OntologyTerm ot : list)
 			println(ot);
+		log.info(list.size());
+	}
+
+	@Test
+	public final void testSearchAll() throws OntologyServiceException {
+		printCurrentTest();
+		List<OntologyTerm> list = os.searchAll("nephroblastoma", SearchOptions.EXACT);
+		if (list == null) {
+			log.info("NULL RETURNED");
+			return;
+		}
+		for (OntologyTerm ot : list)
+			println(ot);
+		log.info(list.size());
 	}
 
 	@Test
@@ -79,8 +85,7 @@ public abstract class AbstractOntologyServiceTest {
 	}
 
 	@Test
-	public final void testGetTermByAccessionOnly()
-			throws OntologyServiceException {
+	public final void testGetTermByAccessionOnly() throws OntologyServiceException {
 		printCurrentTest();
 		println(os.getTerm(TERM_ACCESSION));
 	}
@@ -154,8 +159,7 @@ public abstract class AbstractOntologyServiceTest {
 	private void printCurrentTest() {
 		println();
 		println("**************************");
-		println(Thread.currentThread().getStackTrace()[2].getMethodName()
-				.substring(4));
+		println(Thread.currentThread().getStackTrace()[2].getMethodName().substring(4));
 		println("*************************");
 		println();
 	}

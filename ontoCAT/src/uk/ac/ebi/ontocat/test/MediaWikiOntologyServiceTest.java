@@ -8,7 +8,7 @@ import org.junit.Test;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.mediawiki.MediaWikiOntologyService;
+import uk.ac.ebi.ontocat.conceptwiki.ConceptWikiOntologyService;
 
 public class MediaWikiOntologyServiceTest {
 
@@ -18,7 +18,7 @@ public class MediaWikiOntologyServiceTest {
 	public void firstTest() throws OntologyServiceException
 	{
 		logger.info("testing searchAll");
-		OntologyService mediawiki = new MediaWikiOntologyService("http://en.wikipedia.org");
+		OntologyService mediawiki = new ConceptWikiOntologyService("http://en.wikipedia.org");
 		List<OntologyTerm> result = mediawiki.searchAll("Flavono");
 		
 		for(OntologyTerm t: result)

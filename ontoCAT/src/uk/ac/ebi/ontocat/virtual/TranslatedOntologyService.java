@@ -26,41 +26,36 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 	private OntologyService os;
 	private OntologyIdTranslator translator;
 	/** The Constant log. */
-	private static final Logger log = Logger
-			.getLogger(TranslatedOntologyService.class);
+	private static final Logger log = Logger.getLogger(TranslatedOntologyService.class);
 
 	/**
 	 * @param os
 	 * @param translator
 	 */
-	public TranslatedOntologyService(OntologyService os,
-			OntologyIdTranslator translator) {
+	public TranslatedOntologyService(OntologyService os, OntologyIdTranslator translator) {
 		this.os = os;
 		this.translator = translator;
 	}
 
 	@Override
-	public Map<String, List<String>> getAnnotations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getAnnotations(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
+	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return os.getAnnotations(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
-	public List<OntologyTerm> getChildren(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getChildren(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
+	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return os.getChildren(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
-	public List<String> getDefinitions(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getDefinitions(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
+	public List<String> getDefinitions(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return os.getDefinitions(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
@@ -69,79 +64,70 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 	}
 
 	@Override
-	public Ontology getOntology(String ontologyAccession)
+	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException {
+		return os.getOntology(translator.getTranslatedOntologyAccession(ontologyAccession));
+	}
+
+	@Override
+	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return os.getOntology(translator
-				.getTranslatedOntologyAccession(ontologyAccession));
+		return os.getParents(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
-	public List<OntologyTerm> getParents(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getParents(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
-	}
-
-	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getRelations(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
+	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return os.getRelations(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
 			throws OntologyServiceException {
-		return os.getRootTerms(translator
-				.getTranslatedOntologyAccession(ontologyAccession));
+		return os.getRootTerms(translator.getTranslatedOntologyAccession(ontologyAccession));
 	}
 
 	@Override
-	public List<String> getSynonyms(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getSynonyms(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
+	public List<String> getSynonyms(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		return os.getSynonyms(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return os.getTerm(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
+		return os.getTerm(translator.getTranslatedOntologyAccession(ontologyAccession), translator
 				.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
-	public List<OntologyTerm> getTermPath(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		return os.getTermPath(translator
-				.getTranslatedOntologyAccession(ontologyAccession), translator
-				.getTranslatedTermAccession(termAccession));
-	}
-
-	@Override
-	public List<OntologyTerm> searchAll(String keywords)
+	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return os.searchAll(keywords);
+		return os.getTermPath(translator.getTranslatedOntologyAccession(ontologyAccession),
+				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
-	public List<OntologyTerm> searchOntology(String ontologyAccession,
-			String keywords) throws OntologyServiceException {
-		return os.searchOntology(translator
-				.getTranslatedOntologyAccession(ontologyAccession), keywords);
+	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
+			throws OntologyServiceException {
+		return os.searchAll(query, options);
+	}
+
+	@Override
+	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
+			SearchOptions... options) throws OntologyServiceException {
+		return os.searchOntology(translator.getTranslatedOntologyAccession(ontologyAccession),
+				query, options);
 	}
 
 	@Override
 	// not calling the respective underlying method, but
 	// rather trying to derive ontologyAccession from termAccession
-	public OntologyTerm getTerm(String termAccession)
-			throws OntologyServiceException {
-		return os.getTerm(translator.getOntologyAccFromTermAcc(termAccession),
-				translator.getTranslatedTermAccession(termAccession));
+	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException {
+		return os.getTerm(translator.getOntologyAccFromTermAcc(termAccession), translator
+				.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
@@ -149,22 +135,7 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 	// rather trying to derive ontologyAccession from termAccession
 	public String makeLookupHyperlink(String termAccession) {
 		try {
-			return os.makeLookupHyperlink(translator
-					.getOntologyAccFromTermAcc(termAccession), translator
-					.getTranslatedTermAccession(termAccession));
-		} catch (OntologyServiceException e) {
-			e.printStackTrace();
-			log.error("Making lookup hyperlink failed for " + termAccession);
-			return null;
-		}
-	}
-
-	@Override
-	public String makeLookupHyperlink(String ontologyAccession,
-			String termAccession) {
-		try {
-			return os.makeLookupHyperlink(translator
-					.getTranslatedOntologyAccession(ontologyAccession),
+			return os.makeLookupHyperlink(translator.getOntologyAccFromTermAcc(termAccession),
 					translator.getTranslatedTermAccession(termAccession));
 		} catch (OntologyServiceException e) {
 			e.printStackTrace();
@@ -173,19 +144,28 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 		}
 	}
 
+	@Override
+	public String makeLookupHyperlink(String ontologyAccession, String termAccession) {
+		try {
+			return os.makeLookupHyperlink(translator
+					.getTranslatedOntologyAccession(ontologyAccession), translator
+					.getTranslatedTermAccession(termAccession));
+		} catch (OntologyServiceException e) {
+			e.printStackTrace();
+			log.error("Making lookup hyperlink failed for " + termAccession);
+			return null;
+		}
+	}
+
 	// helper method
-	public List<String> getSynonyms(String termAccession)
-			throws OntologyServiceException {
-		return os.getSynonyms(translator
-				.getOntologyAccFromTermAcc(termAccession), translator
+	public List<String> getSynonyms(String termAccession) throws OntologyServiceException {
+		return os.getSynonyms(translator.getOntologyAccFromTermAcc(termAccession), translator
 				.getTranslatedTermAccession(termAccession));
 	}
 
 	// helper method
-	public List<String> getDefinitions(String termAccession)
-			throws OntologyServiceException {
-		return os.getDefinitions(translator
-				.getOntologyAccFromTermAcc(termAccession), translator
+	public List<String> getDefinitions(String termAccession) throws OntologyServiceException {
+		return os.getDefinitions(translator.getOntologyAccFromTermAcc(termAccession), translator
 				.getTranslatedTermAccession(termAccession));
 	}
 

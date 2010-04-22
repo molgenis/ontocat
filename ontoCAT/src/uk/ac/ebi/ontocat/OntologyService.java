@@ -9,8 +9,19 @@ import java.util.Map;
  * @author Tomasz Adamusiak, Morris Swertz
  * @version $Id$
  */
-public interface OntologyService
-{
+public interface OntologyService {
+	/**
+	 * Enumeration for search options in searchAll and searchOntology. Without
+	 * setting any options the search will be the most permissive, i.e. match
+	 * substrings and in all properties.
+	 * <p>
+	 * EXACT - only exact matching of query. EXCLUE_PROPERTIES excludes -
+	 * properties from search.
+	 */
+	public enum SearchOptions {
+		EXACT, INCLUDE_PROPERTIES
+	};
+
 	/**
 	 * Retrieve a term using its accession.
 	 * 
@@ -20,7 +31,8 @@ public interface OntologyService
 	 * @return term
 	 * @throws OntologyServiceException
 	 */
-	public OntologyTerm getTerm(String ontologyAccession, String termAccession) throws OntologyServiceException;
+	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
+			throws OntologyServiceException;
 
 	/**
 	 * Retrieve a term using only its accession. Here it is assumed that the
@@ -63,24 +75,41 @@ public interface OntologyService
 	public List<Ontology> getOntologies() throws OntologyServiceException;
 
 	/**
-	 * Find terms matching key word within a particular ontology accession. This
-	 * only returns a subset of information for each of the terms.
+	 * Find terms matching keyword within a particular ontology accession. This
+	 * only returns a subset of information for each of the terms. Without
+	 * setting any options the search will be the most permissive, i.e. match
+	 * substrings and in all properties.
 	 * 
-	 * @param keywords
 	 * @param ontologyAccession
+	 * @param query
+	 *            - query to be sent to the OntologyService, usually a keyword
+	 *            to be searched for
+	 * @param options
+	 *            - EXACT - only exact matching of query. EXCLUDE_PROPERTIES
+	 *            excludes - properties from search.
+	 * @param options
+	 *            - search options for the query
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-	public List<OntologyTerm> searchOntology(String ontologyAccession, String keywords) throws OntologyServiceException;
+	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
+			SearchOptions... options) throws OntologyServiceException;
 
 	/**
-	 * Find terms matching key word
+	 * Find terms matching key word. Without setting any options the search will
+	 * match substrings but will not include properties.
 	 * 
-	 * @param keywords
+	 * @param query
+	 *            - query to be sent to the OntologyService, usually a keyword
+	 *            to be searched for
+	 * @param options
+	 *            - EXACT - only exact matching of query. INCLUDE_PROPERTIES -
+	 *            includes properties in search.
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-	public List<OntologyTerm> searchAll(String keywords) throws OntologyServiceException;
+	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
+			throws OntologyServiceException;
 
 	/**
 	 * Find the root terms for this ontology
@@ -89,7 +118,8 @@ public interface OntologyService
 	 * @return terms
 	 * @throws OntologyServiceException
 	 */
-	public List<OntologyTerm> getRootTerms(String ontologyAccession) throws OntologyServiceException;
+	public List<OntologyTerm> getRootTerms(String ontologyAccession)
+			throws OntologyServiceException;
 
 	/**
 	 * Find the root terms for this ontology
@@ -156,7 +186,8 @@ public interface OntologyService
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, List<String>> getAnnotations(OntologyTerm term) throws OntologyServiceException;
+	public Map<String, List<String>> getAnnotations(OntologyTerm term)
+			throws OntologyServiceException;
 
 	/**
 	 * Find relations for this termAccession.
@@ -176,7 +207,8 @@ public interface OntologyService
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, List<String>> getRelations(OntologyTerm term) throws OntologyServiceException;
+	public Map<String, List<String>> getRelations(OntologyTerm term)
+			throws OntologyServiceException;
 
 	/**
 	 * Generate a hyperlink to drill down to ontology source
@@ -192,8 +224,7 @@ public interface OntologyService
 	 * @param termAccession
 	 * @return
 	 */
-	public String makeLookupHyperlink(String ontologyAccession,
-			String termAccession);
+	public String makeLookupHyperlink(String ontologyAccession, String termAccession);
 
 	/**
 	 * Load an ontology from the service.
@@ -211,7 +242,8 @@ public interface OntologyService
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public List<String> getSynonyms(String ontologyAccession, String termAccession) throws OntologyServiceException;
+	public List<String> getSynonyms(String ontologyAccession, String termAccession)
+			throws OntologyServiceException;
 
 	/**
 	 * Load synonyms for a term
@@ -230,7 +262,8 @@ public interface OntologyService
 	 * @return
 	 * @throws OntologyServiceException
 	 */
-	public List<String> getDefinitions(String ontologyAccession, String termAccession) throws OntologyServiceException;
+	public List<String> getDefinitions(String ontologyAccession, String termAccession)
+			throws OntologyServiceException;
 
 	/**
 	 * Load definitions for a term
