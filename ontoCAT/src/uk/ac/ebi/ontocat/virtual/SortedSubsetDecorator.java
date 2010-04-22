@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 /**
  * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
@@ -70,11 +71,11 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		// the <searchAll> and <searchOntology> strings below
 		// and in the invoke method
 		try {
-			obj.getClass().getMethod("searchAll", String.class);
-			obj.getClass().getMethod("searchOntology",
-					new Class[] { String.class, String.class });
+			obj.getClass().getMethod("searchAll", String.class, SearchOptions[].class);
+			obj.getClass().getMethod("searchOntology", String.class, String.class,
+					SearchOptions[].class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.fatal("Signature has changed in proxy pattern!");
 			throw new OntologyServiceException(e);
 		}
 		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj

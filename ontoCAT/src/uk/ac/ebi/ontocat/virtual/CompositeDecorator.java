@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 /**
@@ -51,8 +52,7 @@ public class CompositeDecorator implements InvocationHandler {
 	}
 
 	/** The Constant log. */
-	private static final Logger log = Logger
-			.getLogger(CompositeDecorator.class);
+	private static final Logger log = Logger.getLogger(CompositeDecorator.class);
 
 	/**
 	 * Instantiates a new sorted subset decorator.
@@ -77,30 +77,27 @@ public class CompositeDecorator implements InvocationHandler {
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj, List list)
-			throws OntologyServiceException {
+	private static Object createProxy(Object obj, List list) throws OntologyServiceException {
 		// If an exception if thrown here, the OntologyService
 		// interface must have changed and you have to modify
 		// the <searchAll> strings below and in the invoke method
 		try {
-			obj.getClass().getMethod("searchAll", new Class[] { String.class });
+			obj.getClass().getMethod("searchAll", String.class, SearchOptions[].class);
 			obj.getClass().getMethod("getOntologies");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.fatal("Signature has changed in proxy pattern!");
 			throw new OntologyServiceException(e);
 		}
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
-				.getClass().getInterfaces(), new CompositeDecorator(list));
+		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
+				.getInterfaces(), new CompositeDecorator(list));
 	}
 
-	public static OntologyService getService(List list)
-			throws OntologyServiceException {
+	public static OntologyService getService(List list) throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
-		return (OntologyService) CompositeDecorator.createProxy(
-				new OlsOntologyService(), list);
+		return (OntologyService) CompositeDecorator.createProxy(new OlsOntologyService(), list);
 	}
 
 	// here the magic happens
@@ -111,8 +108,7 @@ public class CompositeDecorator implements InvocationHandler {
 	 * java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		ExecutorService ec = Executors.newFixedThreadPool(nThreads);
 
@@ -159,8 +155,7 @@ public class CompositeDecorator implements InvocationHandler {
 			Object result = method.invoke(proxy, args);
 			// Throw exception here, so invokeAny skips this result
 			if (result == null)
-				throw new OntologyServiceException("No results from "
-						+ method.getName());
+				throw new OntologyServiceException("No results from " + method.getName());
 			return result;
 		}
 	}

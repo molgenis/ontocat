@@ -81,7 +81,10 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testGetTerm() throws OntologyServiceException {
 		printCurrentTest();
-		println(os.getTerm(ONTOLOGY_ACCESSION, TERM_ACCESSION));
+		OntologyTerm ot = os.getTerm(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		println(ot);
+		println(ot.getOntology());
+		println(ot.getServiceType().toString());
 	}
 
 	@Test

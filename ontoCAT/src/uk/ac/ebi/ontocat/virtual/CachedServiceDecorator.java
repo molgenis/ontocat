@@ -15,6 +15,7 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 /**
  * The Class CachedServiceDecorator. Decorator adding two caching layers to any
@@ -37,8 +38,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 	private Object target;
 
 	/** The Constant log. */
-	private static final Logger log = Logger
-			.getLogger(CachedServiceDecorator.class);
+	private static final Logger log = Logger.getLogger(CachedServiceDecorator.class);
 
 	private static Cache ServiceCache;
 	private static Cache EternalCache;
@@ -72,14 +72,12 @@ public class CachedServiceDecorator implements InvocationHandler {
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj)
-			throws OntologyServiceException {
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
-				.getClass().getInterfaces(), new CachedServiceDecorator(obj));
+	private static Object createProxy(Object obj) throws OntologyServiceException {
+		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
+				.getInterfaces(), new CachedServiceDecorator(obj));
 	}
 
-	public static OntologyService getService(OntologyService os)
-			throws OntologyServiceException {
+	public static OntologyService getService(OntologyService os) throws OntologyServiceException {
 		return (OntologyService) CachedServiceDecorator.createProxy(os);
 	}
 
@@ -91,16 +89,14 @@ public class CachedServiceDecorator implements InvocationHandler {
 	 * java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
 
 		try {
 			// add the result to cache if it's not there already
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
-				ServiceCache.put(new Element(cacheKey, method.invoke(target,
-						args)));
+				ServiceCache.put(new Element(cacheKey, method.invoke(target, args)));
 				Element el;
 
 				el = new Element(cacheKey, method.invoke(target, args));
@@ -132,9 +128,14 @@ public class CachedServiceDecorator implements InvocationHandler {
 				s += "|" + (String) arg;
 			} else if (arg instanceof OntologyTerm || arg instanceof Ontology) {
 				s += "|" + arg.toString();
+			} else if (arg instanceof SearchOptions[]) {
+				for (SearchOptions o : (SearchOptions[]) arg) {
+					s += "|" + o.toString();
+				}
 			} else {
+				log.fatal("Unrecognised parameter in cached call. Could not create key!");
 				throw new OntologyServiceException(new Exception(
-						"UNRECOGNISED PARAMETER IN CACHED CALL"));
+						"Unrecognised parameter in cached call."));
 			}
 		}
 		return s;
