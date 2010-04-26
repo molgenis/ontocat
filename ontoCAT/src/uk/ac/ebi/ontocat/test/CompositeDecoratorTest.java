@@ -5,9 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -54,24 +58,36 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 	}
 
 	@Test
-	public void testConcurrentOWLLoading() throws OntologyServiceException, URISyntaxException {
-		final FileOntologyService osFile1 = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"));
-		final FileOntologyService osFile2 = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"));
-		final FileOntologyService osFile3 = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"));
+	public void testConcurrentRequests() throws OntologyServiceException, URISyntaxException {
+		ExecutorService ec = Executors.newFixedThreadPool(50);
+		Collection<RequestTask> tasks = new ArrayList<RequestTask>();
+		// Create tasks
+		for (int i = 0; i < 50; i++) {
+			tasks.add(new RequestTask(os));
+		}
+		try {
+			ec.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-		OntologyService osC = CompositeDecorator.getService(new ArrayList<OntologyService>() {
-			{
-				add(osFile1);
-				add(osFile2);
-				add(osFile3);
+	private class RequestTask implements Callable<Object> {
+		private OntologyService os;
+		public RequestTask(OntologyService os) {
+			this.os = os;
+		}
+
+		@Override
+		public Object call() throws Exception {
+			try {
+				os.searchAll("thymus");
+			} catch (OntologyServiceException e) {
+				log.error(e);
 			}
-		});
+			return null;
+		}
 
-		log.info(osC.getOntologies().size());
-		log.info(osC.getOntologies().size());
-		log.info(osC.getOntologies().size());
 	}
 }
