@@ -341,6 +341,14 @@ public final class FileOntologyService extends AbstractOntologyService implement
 				}
 			}
 
+			// regular label
+			if (ops.contains(SearchOptions.EXACT) && getLabel(cls).equalsIgnoreCase(query)) {
+				terms.add(getTerm(cls));
+				// just add it if nonexact search
+			} else if (!ops.contains(SearchOptions.EXACT) && getLabel(cls).contains(query)) {
+				terms.add(getTerm(cls));
+			}
+
 			if (ops.contains(SearchOptions.INCLUDE_PROPERTIES)) {
 				for (List<String> annots : getAnnotations(cls).values()) {
 					for (String annot : annots) {
