@@ -53,6 +53,8 @@ public class OntologyBean extends Ontology {
 	private ArrayList filenames;
 	private ArrayList<Integer> groupIds;
 	private String filePath;
+	private String viewDefinition;
+	private String viewDefinitionLanguage;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);
