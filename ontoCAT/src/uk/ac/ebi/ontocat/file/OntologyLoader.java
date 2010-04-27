@@ -37,8 +37,10 @@ public final class OntologyLoader {
 			// Try to remove this ontology first
 			// For some reason obo ontologies are duplicated
 			// hogging memory, though documentation says otherwise
-			_manager.removeOntology(uriOntology);
-			_ontLoaded = _manager.loadOntologyFromPhysicalURI(uriOntology);
+      synchronized (_manager) {
+			  _manager.removeOntology(uriOntology);
+			  _ontLoaded = _manager.loadOntologyFromPhysicalURI(uriOntology);
+      }
 		} catch (OWLOntologyCreationException e) {
 			_log.fatal("The ontology could not be created: " + e.getMessage());
 			System.exit(1);
