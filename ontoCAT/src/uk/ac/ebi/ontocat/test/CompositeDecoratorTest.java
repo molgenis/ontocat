@@ -63,7 +63,7 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 		Collection<RequestTask> tasks = new ArrayList<RequestTask>();
 		// Create tasks
 		for (int i = 0; i < 50; i++) {
-			tasks.add(new RequestTask(os));
+			tasks.add(new RequestTask());
 		}
 		try {
 			ec.invokeAll(tasks);
@@ -75,17 +75,11 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 
 	private class RequestTask implements Callable<Object> {
 		private OntologyService os;
-		public RequestTask(OntologyService os) {
-			this.os = os;
-		}
 
 		@Override
 		public Object call() throws Exception {
-			try {
-				os.searchAll("thymus");
-			} catch (OntologyServiceException e) {
-				log.error(e);
-			}
+			new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"));
+
 			return null;
 		}
 

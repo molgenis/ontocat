@@ -17,30 +17,34 @@ import org.semanticweb.owl.model.OWLOntologyManager;
  * @author $Id: OntologyLoader.java 8454 2009-08-17 07:52:50Z Tomasz $
  */
 public final class OntologyLoader {
-	
+
 	/** The Constant _log. */
 	private static final Logger _log = Logger.getLogger(OntologyLoader.class.getName());
-	
+
 	/** The Constant _manager. */
 	private static final OWLOntologyManager _manager = OntologyManagerSingleton.INSTANCE;
-	
+
 	/** The _ont loaded. */
 	private OWLOntology _ontLoaded;
 
 	/**
 	 * The Constructor.
 	 * 
-	 * @param uriOntology ontology to be loaded
+	 * @param uriOntology
+	 *            ontology to be loaded
 	 */
 	public OntologyLoader(URI uriOntology) {
 		try {
-			// Try to remove this ontology first
-			// For some reason obo ontologies are duplicated
-			// hogging memory, though documentation says otherwise
-      synchronized (_manager) {
-			  _manager.removeOntology(uriOntology);
-			  _ontLoaded = _manager.loadOntologyFromPhysicalURI(uriOntology);
-      }
+			// Manager has to be synchronised otherwise parser will
+			// complain: Parsers should load imported ontologies using
+			// the makeImportLoadRequest method.
+			synchronized (_manager) {
+				// Try to remove this ontology first
+				// For some reason obo ontologies are duplicated
+				// hogging memory, though documentation says otherwise
+				_manager.removeOntology(uriOntology);
+				_ontLoaded = _manager.loadOntologyFromPhysicalURI(uriOntology);
+			}
 		} catch (OWLOntologyCreationException e) {
 			_log.fatal("The ontology could not be created: " + e.getMessage());
 			System.exit(1);
