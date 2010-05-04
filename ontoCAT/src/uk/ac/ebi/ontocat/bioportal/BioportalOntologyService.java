@@ -72,7 +72,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private final String urlAddOn;
 
 	/** The xstream. */
-	private static final XStream xstream = new XStream();
+	private final XStream xstream = new XStream();
 
 	// transformations that strip surrounding xml markup
 	/** The Constant xsltBEAN. */
@@ -312,7 +312,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private static String readInputStreamAsString(InputStream in) throws OntologyServiceException {
+	private String readInputStreamAsString(InputStream in) throws OntologyServiceException {
 		try {
 			StringBuffer fileData = new StringBuffer(1000);
 

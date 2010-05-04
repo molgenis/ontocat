@@ -54,9 +54,9 @@ public class CachedServiceDecorator implements InvocationHandler {
 	 */
 	private CachedServiceDecorator(Object obj) {
 		target = obj;
-		// Initialise the cache
+		// Initialise the cache singleton
 		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
-		manager = new CacheManager(getClass().getResource("ehcache.xml"));
+		manager = CacheManager.create(getClass().getResource("ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
 		EternalCache = manager.getCache("EternalServiceCache");
 	}
@@ -107,13 +107,11 @@ public class CachedServiceDecorator implements InvocationHandler {
 			result = ServiceCache.get(cacheKey).getValue();
 
 		} catch (InvocationTargetException e) {
-			log.error(method.getName() + " throws " + e.getCause());
-			if (EternalCache != null && EternalCache.get(cacheKey) == null) {
+			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
 				result = EternalCache.get(cacheKey).getValue();
 				log.warn("Accessing eternal cache for " + cacheKey);
 			} else {
-				throw new OntologyServiceException(
-						"Service unavailable. No results in cache neither.");
+				throw new OntologyServiceException(e);
 			}
 		}
 		return result;

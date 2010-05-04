@@ -140,19 +140,19 @@ public class CompositeDecorator implements InvocationHandler {
 	}
 
 	private class InvokeTask implements Callable<Object> {
-		private Object proxy;
+		private Object target;
 		private Method method;
 		private Object[] args;
 
-		public InvokeTask(Object proxy, Method method, Object[] args) {
-			this.proxy = proxy;
+		public InvokeTask(Object target, Method method, Object[] args) {
+			this.target = target;
 			this.method = method;
 			this.args = args;
 		}
 
 		@Override
 		public Object call() throws Exception {
-			Object result = method.invoke(proxy, args);
+			Object result = method.invoke(target, args);
 			// Throw exception here, so invokeAny skips this result
 			if (result == null)
 				throw new OntologyServiceException("No results from " + method.getName());
