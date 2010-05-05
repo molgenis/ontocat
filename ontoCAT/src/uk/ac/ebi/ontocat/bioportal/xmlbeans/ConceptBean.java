@@ -19,8 +19,7 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  */
 public class ConceptBean extends OntologyTerm {
 
-	public ConceptBean(String ontologyAccession, String termAccession,
-			String label) {
+	public ConceptBean(String ontologyAccession, String termAccession, String label) {
 		super(ontologyAccession, termAccession, label);
 	}
 
@@ -39,7 +38,7 @@ public class ConceptBean extends OntologyTerm {
 
 	private String ontologyVersionId;
 
-	private String[] synonyms;
+	private List<String> synonyms;
 	private List<String> definitions;
 	private String[] authors;
 
@@ -50,8 +49,6 @@ public class ConceptBean extends OntologyTerm {
 
 	private String type;
 
-
-
 	/**
 	 * Gets the full id.
 	 * 
@@ -60,8 +57,6 @@ public class ConceptBean extends OntologyTerm {
 	public String getFullId() {
 		return fullId;
 	}
-
-
 
 	/*
 	 * (non-Javadoc)
@@ -92,18 +87,20 @@ public class ConceptBean extends OntologyTerm {
 	 * @see plugin.OntologyBrowser.OntologyTerm#getSynonyms()
 	 */
 	public List<String> getSynonyms() {
-		for (EntryBean e : relations) {
-			if (e.getLabel().equalsIgnoreCase("exact synonym") || e.getLabel().equalsIgnoreCase("synonym")
-					|| e.getLabel().equalsIgnoreCase("FULL_SYN") || e.getLabel().equalsIgnoreCase("SYNONYM Full Form")) {
-				return e.getList();
+		if (synonyms != null) {
+			return synonyms;
+		} else {
+			for (EntryBean e : relations) {
+				if (e.getLabel().equalsIgnoreCase("exact synonym")
+						|| e.getLabel().equalsIgnoreCase("synonym")
+						|| e.getLabel().equalsIgnoreCase("FULL_SYN")
+						|| e.getLabel().equalsIgnoreCase("SYNONYM Full Form")) {
+					log.warn("BP returned empty synonym list though there is some");
+					return e.getList();
+				}
 			}
 		}
 		return null;
-	}
-
-	public String getPathString() {
-		// special case will only work if the bean was returned from path
-		return relations[0].getPath();
 	}
 
 	/*
@@ -116,10 +113,10 @@ public class ConceptBean extends OntologyTerm {
 			return definitions;
 		} else {
 			for (EntryBean e : relations) {
-				if (e.getLabel().toLowerCase().startsWith("def") && !e.getLabel().equalsIgnoreCase("definition source")
+				if (e.getLabel().toLowerCase().startsWith("def")
+						&& !e.getLabel().equalsIgnoreCase("definition source")
 						&& !e.getLabel().equalsIgnoreCase("definition editor")) {
-					log
-							.debug("BP returned empty definitions list though there is some");
+					log.warn("BP returned empty definitions list though there is some");
 					return e.getList();
 				}
 			}
@@ -127,6 +124,10 @@ public class ConceptBean extends OntologyTerm {
 		return null;
 	}
 
+	public String getPathString() {
+		// special case will only work if the bean was returned from path
+		return relations[0].getPath();
+	}
 
 	/*
 	 * (non-Javadoc)
