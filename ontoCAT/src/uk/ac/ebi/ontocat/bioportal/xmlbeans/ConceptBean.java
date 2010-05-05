@@ -95,7 +95,7 @@ public class ConceptBean extends OntologyTerm {
 						|| e.getLabel().equalsIgnoreCase("synonym")
 						|| e.getLabel().equalsIgnoreCase("FULL_SYN")
 						|| e.getLabel().equalsIgnoreCase("SYNONYM Full Form")) {
-					log.warn("BP returned empty synonym list though there is some");
+					log.debug("BP returned empty synonym list though there is some");
 					return e.getList();
 				}
 			}
@@ -116,7 +116,7 @@ public class ConceptBean extends OntologyTerm {
 				if (e.getLabel().toLowerCase().startsWith("def")
 						&& !e.getLabel().equalsIgnoreCase("definition source")
 						&& !e.getLabel().equalsIgnoreCase("definition editor")) {
-					log.warn("BP returned empty definitions list though there is some");
+					log.debug("BP returned empty definitions list though there is some");
 					return e.getList();
 				}
 			}
