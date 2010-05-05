@@ -197,8 +197,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 *             the ontology service exception
 	 */
 	private void processSearchUrl(String ontologyAccession, String keyword,
-			SearchOptions... options)
-			throws OntologyServiceException {
+			SearchOptions... options) throws OntologyServiceException {
 		try {
 			String sURL = urlBASE + "search/" + keyword + "/" + urlAddOn;
 
@@ -211,7 +210,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		}
 	}
 
-	private String processSearchOptions(SearchOptions[] options){
+	private String processSearchOptions(SearchOptions[] options) {
 		String val = "";
 		List<SearchOptions> al = new ArrayList<SearchOptions>(Arrays.asList(options));
 		if (al.contains(SearchOptions.INCLUDE_PROPERTIES)) {

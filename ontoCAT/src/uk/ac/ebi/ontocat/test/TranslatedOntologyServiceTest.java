@@ -33,6 +33,12 @@ public class TranslatedOntologyServiceTest {
 		}
 	}
 
+	@Test
+	// Fails on term accession being a uri:
+	// http://rest.bioontology.org/bioportal/virtual/ontology/1084/http://ontology.neuinfo.org/NIF/BiomaterialEntities/NIF-Molecule.owl#nifext_5168
+	public void testFailedImport() throws OntologyServiceException {
+		System.out.println(os.getTerm("NIFSTD:nifext_5168"));
+	}
 
 	@Test
 	public void listResolvableOntologies() throws OntologyServiceException {
