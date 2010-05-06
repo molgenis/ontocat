@@ -199,8 +199,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
-			String sURL = urlBASE + "search/" + keyword + "/" + urlAddOn;
-
 			this.queryURL = new URL(urlBASE + "search/" + keyword + "/" + urlAddOn
 					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession);
 			transformRESTXML();
