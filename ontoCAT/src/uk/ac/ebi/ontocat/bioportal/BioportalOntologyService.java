@@ -15,6 +15,8 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,7 +113,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public BioportalOntologyService(String email) {
 		// Now map the xml to the java beans
 		// FIXME level?
-		urlAddOn = "?email=" + email + "&level=1";
+		urlAddOn = "&email=" + email + "&level=1";
 		configureXstream();
 	}
 
@@ -173,13 +175,17 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		processServiceURL("virtual/rootpath/", ontologyAccession, termAccession);
 	}
 
-	private void processServiceURL(String signature, String ontologyID, String term)
+	private void processServiceURL(String signature, String ontologyID, String termAccession)
 			throws OntologyServiceException {
 		try {
-			this.queryURL = new URL(urlBASE + signature + ontologyID + "/" + term + urlAddOn);
+			if (!termAccession.equals(""))
+				termAccession = "conceptid=" + termAccession;
+			this.queryURL = new URI(urlBASE + signature + ontologyID + "/?" + termAccession
+					+ urlAddOn).toURL();
 			transformRESTXML();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			throw new OntologyServiceException(e);
+		} catch (URISyntaxException e) {
 			throw new OntologyServiceException(e);
 		}
 	}
@@ -199,11 +205,12 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
-			this.queryURL = new URL(urlBASE + "search/" + keyword + "/" + urlAddOn
-					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession);
+			this.queryURL = new URI(urlBASE + "search/" + keyword + "/" + urlAddOn
+					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession).toURL();
 			transformRESTXML();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			throw new OntologyServiceException(e);
+		} catch (URISyntaxException e) {
 			throw new OntologyServiceException(e);
 		}
 	}
@@ -238,11 +245,12 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	private void processOntologyUrl() throws OntologyServiceException {
 		try {
-			this.queryURL = new URL(urlBASE + "ontologies/" + urlAddOn);
+			this.queryURL = new URI(urlBASE + "ontologies/?" + urlAddOn).toURL();
 			transformRESTXML();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 			throw new OntologyServiceException(e);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 	}
 
