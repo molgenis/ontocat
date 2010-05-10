@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -179,14 +180,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			throws OntologyServiceException {
 		try {
 			if (!termAccession.equals(""))
-				termAccession = "conceptid=" + termAccession;
-			this.queryURL = new URI(urlBASE + signature + ontologyID + "/?" + termAccession
-					+ urlAddOn).toURL();
+				termAccession = "conceptid=" + URLEncoder.encode(termAccession, "UTF-8");
+			this.queryURL = new URL(urlBASE + signature + ontologyID + "/?" + termAccession
+					+ urlAddOn);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			throw new OntologyServiceException(e);
-		} catch (URISyntaxException e) {
-			throw new OntologyServiceException(e);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -205,13 +206,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
-			this.queryURL = new URI(urlBASE + "search/" + keyword + "/?" + urlAddOn
-					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession).toURL();
+			keyword  = URLEncoder.encode(keyword, "UTF-8");
+			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?" + urlAddOn
+					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			throw new OntologyServiceException(e);
-		} catch (URISyntaxException e) {
-			throw new OntologyServiceException(e);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 	}
 
