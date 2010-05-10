@@ -176,12 +176,25 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		processServiceURL("virtual/rootpath/", ontologyAccession, termAccession);
 	}
 
+	// Adding conceptid does not work for hierarchy services
+	// so you cannot pass urls as concept ids!
+	// this is a temporary workaround until BP guys fix it
+	private boolean temporarayBioportalHack(String signature) {
+		return !(signature.contains("parents") || signature.contains("children") || signature
+				.contains("rootpath"));
+	}
+
 	private void processServiceURL(String signature, String ontologyID, String termAccession)
 			throws OntologyServiceException {
 		try {
-			if (!termAccession.equals(""))
-				termAccession = "conceptid=" + URLEncoder.encode(termAccession, "UTF-8");
-			this.queryURL = new URL(urlBASE + signature + ontologyID + "/?" + termAccession
+			if (!termAccession.equals("") && temporarayBioportalHack(signature)){
+				termAccession = "?conceptid=" + URLEncoder.encode(termAccession, "UTF-8");
+			}
+			// temporary for the fix, otherwise prepend after ontology + "/?"
+			else {
+				termAccession += "?";
+			}
+			this.queryURL = new URL(urlBASE + signature + ontologyID + "/" + termAccession
 					+ urlAddOn);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
@@ -206,7 +219,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
-			keyword  = URLEncoder.encode(keyword, "UTF-8");
+			keyword = URLEncoder.encode(keyword, "UTF-8");
 			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?" + urlAddOn
 					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession);
 			transformRESTXML();
