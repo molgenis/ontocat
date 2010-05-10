@@ -35,6 +35,9 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 	 */
 	private static ArrayList<OntologyIdMapping> initialiseMappings() {
 		ArrayList<OntologyIdMapping> temp = new ArrayList<OntologyIdMapping>();
+
+		temp.add(new BioportalMapping("^TAO:", "(TAO:.*)", "1110", "TAO:0000117"));
+		temp.add(new BioportalMapping("^ZFA:", "(ZFA:.*)", "1051", "ZFA:0000117"));
 		temp.add(new BioportalMapping("^EFO_", "(EFO_.*)", "1136", "EFO_0000538"));
 		temp.add(new BioportalMapping("^MSH", ":([A-Z]\\d+)", "1351", "MSH:D012512"));
 		temp.add(new BioportalMapping("^NCBITaxon:", "(NCBITaxon:.*)", "1132", "NCBITaxon:2"));
