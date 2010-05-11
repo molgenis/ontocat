@@ -40,8 +40,8 @@ public class ServiceComparison {
 			XPathExpressionException, IOException, ParserConfigurationException, SAXException,
 			ServiceException {
 		queryOLS();
-		queryBioportal();
-		queryOntoCAT();
+		// queryBioportal();
+		// queryOntoCAT();
 
 	}
 
@@ -49,8 +49,11 @@ public class ServiceComparison {
 			SAXException, XPathExpressionException {
 		// Create a REST URL
 		String query = "thymus";
+		// Setting maxnumhits to an arbitrary large number will make sure that
+		// the result set will not be truncated
 		URL urlQuery = new URL("http://rest.bioontology.org/bioportal/search/" + query
-				+ "/?isexactmatch=0&includeproperties=0&email=ontocat-svn@lists.sourceforge.net");
+				+ "/?isexactmatch=0" + "&includeproperties=1" + "&maxnumhits=10000000"
+				+ "&email=ontocat-svn@lists.sourceforge.net");
 
 		// Prepare XML parser
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -86,9 +89,8 @@ public class ServiceComparison {
 		qs = new QueryServiceLocator().getOntologyQuery();
 
 		// Search for terms containing thymus
-		String query = "thymus";
-		Set<Map.Entry<String, String>> terms = qs.getPrefixedTermsByName(query, false)
-				.entrySet();
+		String query = "blood";
+		Set<Map.Entry<String, String>> terms = qs.getPrefixedTermsByName(query, false).entrySet();
 
 		// Iterate over result set
 		for (Map.Entry<String, String> entry : terms) {
@@ -112,14 +114,14 @@ public class ServiceComparison {
 
 		os = new BioportalOntologyService();
 		// Search for terms containing thymus
-		List<OntologyTerm> terms = os.searchAll("thymus",
-				SearchOptions.INCLUDE_PROPERTIES);
+		List<OntologyTerm> terms = os.searchAll("thymus", SearchOptions.INCLUDE_PROPERTIES);
 
 		// Iterate over result set
 		for (OntologyTerm ot : terms) {
-			System.out.println("termAccession: " + ot.getAccession() + "\tontologyAccession: "
-					+ ot.getOntologyAccession() + "\tlabel: " + ot.getLabel());
+			// System.out.println("termAccession: " + ot.getAccession() +
+			// "\tontologyAccession: "
+			// + ot.getOntologyAccession() + "\tlabel: " + ot.getLabel());
 		}
-			log.info(terms.size() + " CAT terms");
+		log.info(terms.size() + " CAT terms");
 	}
 }
