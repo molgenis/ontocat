@@ -96,10 +96,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 		try {
 			// add the result to cache if it's not there already
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
-				ServiceCache.put(new Element(cacheKey, method.invoke(target, args)));
-				Element el;
-
-				el = new Element(cacheKey, method.invoke(target, args));
+				Element el = new Element(cacheKey, method.invoke(target, args));
 				ServiceCache.put(el);
 				EternalCache.put(el);
 			}

@@ -40,17 +40,15 @@ public class ServiceComparison {
 			XPathExpressionException, IOException, ParserConfigurationException, SAXException,
 			ServiceException {
 		queryOLS();
-		// queryBioportal();
-		// queryOntoCAT();
+		queryBioportal();
+		queryOntoCAT();
 
 	}
 
 	private static void queryBioportal() throws IOException, ParserConfigurationException,
 			SAXException, XPathExpressionException {
-		// Create a REST URL
 		String query = "thymus";
-		// Setting maxnumhits to an arbitrary large number will make sure that
-		// the result set will not be truncated
+		// Create a REST URL
 		URL urlQuery = new URL("http://rest.bioontology.org/bioportal/search/" + query
 				+ "/?isexactmatch=0" + "&includeproperties=1" + "&maxnumhits=10000000"
 				+ "&email=ontocat-svn@lists.sourceforge.net");
@@ -89,7 +87,7 @@ public class ServiceComparison {
 		qs = new QueryServiceLocator().getOntologyQuery();
 
 		// Search for terms containing thymus
-		String query = "blood";
+		String query = "thymus";
 		Set<Map.Entry<String, String>> terms = qs.getPrefixedTermsByName(query, false).entrySet();
 
 		// Iterate over result set
@@ -97,14 +95,16 @@ public class ServiceComparison {
 			String termAccession = entry.getKey();
 			String ontologyAccession = entry.getValue().split(":")[0];
 			String label = entry.getValue().split(":")[1];
-			System.out.println("termAccession: " + termAccession + "\tontologyAccession: "
-					+ ontologyAccession + "\tlabel: " + label);
+			// System.out.println("termAccession: " + termAccession +
+			// "\tontologyAccession: "
+			// + ontologyAccession + "\tlabel: " + label);
 		}
 
 		log.info(terms.size() + " OLS terms");
 	}
 
 	private static void queryOntoCAT() throws OntologyServiceException {
+		String query = "thymus";
 		// Instantiate composite OntologyService consisting of
 		// both BioPortal and OLS
 		List<OntologyService> lOntologies = new ArrayList<OntologyService>();
@@ -112,9 +112,8 @@ public class ServiceComparison {
 		lOntologies.add(new OlsOntologyService());
 		OntologyService os = CompositeDecorator.getService(lOntologies);
 
-		os = new BioportalOntologyService();
 		// Search for terms containing thymus
-		List<OntologyTerm> terms = os.searchAll("thymus", SearchOptions.INCLUDE_PROPERTIES);
+		List<OntologyTerm> terms = os.searchAll(query, SearchOptions.INCLUDE_PROPERTIES);
 
 		// Iterate over result set
 		for (OntologyTerm ot : terms) {
