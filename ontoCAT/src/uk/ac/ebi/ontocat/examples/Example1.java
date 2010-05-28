@@ -7,6 +7,7 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 /**
@@ -26,7 +27,8 @@ public class Example1 {
 		}
 
 		// Find all terms containing string thymus
-		for (OntologyTerm ot : os.searchAll("thymus"))
+		for (OntologyTerm ot : os.searchAll("thymus", SearchOptions.EXACT,
+				SearchOptions.INCLUDE_PROPERTIES))
 			System.out.println(ot);
 	}
 }

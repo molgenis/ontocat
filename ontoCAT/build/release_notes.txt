@@ -1,5 +1,12 @@
 Onto CAT Java API Release Notes
 
+Version 0.9.2, 28/05/2010
+	Added SearchOptions for searchAll() and searchOntology(): EXACT, INCLUDE_PROPERTIES
+	Fixed maxnumhits setting in BioPortal query to arbitrary large number
+	Updated BioPortal rest signatures to support URLs as concept IDs
+	URL encoding parameters in BioPortal queries
+	Some fixes to make BioportalOntologyService and CachedServiceDecorator thread safe.
+
 Version 0.9.1, 8/04/2010
 	Re-implemented searchAll() in OLSOntologyService as it suddenly stopped working
 	Consistent exceptions throwing for incorrect accessions
