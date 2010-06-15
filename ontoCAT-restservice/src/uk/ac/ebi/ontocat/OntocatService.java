@@ -203,7 +203,9 @@ public class OntocatService
 		System.out.println("test "+ontologyAccession + ":"+termAccession);
 		try
 		{
-			return new OntologyTerm(os.getTerm(ontologyAccession, termAccession));
+			return os.getTerm(ontologyAccession, termAccession);
+			//return new	OntologyTerm(String ontologyAccession, String termAccession, String label) 
+
 		}
 		catch (OntologyServiceException e)
 		{
