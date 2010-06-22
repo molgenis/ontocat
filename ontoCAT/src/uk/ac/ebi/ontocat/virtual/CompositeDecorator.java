@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -98,6 +99,21 @@ public class CompositeDecorator implements InvocationHandler {
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
 		return (OntologyService) CompositeDecorator.createProxy(new OlsOntologyService(), list);
+	}
+
+	/**
+	 * Alternative constructor to simplify access in examples
+	 * 
+	 * @param varchar
+	 *            list of ontologies to combine
+	 * @return the composite service service
+	 * @throws OntologyServiceException
+	 *             the ontology service exception
+	 */
+	public static OntologyService getService(OntologyService... list)
+			throws OntologyServiceException {
+		return (OntologyService) CompositeDecorator.createProxy(new OlsOntologyService(), Arrays
+				.asList(list));
 	}
 
 	// here the magic happens
