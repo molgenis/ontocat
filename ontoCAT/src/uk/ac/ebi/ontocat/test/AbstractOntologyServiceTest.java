@@ -1,5 +1,7 @@
 package uk.ac.ebi.ontocat.test;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,10 +26,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetOntologies() throws OntologyServiceException {
 		printCurrentTest();
 		List<Ontology> list = os.getOntologies();
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Ontology list empty!", list);
 		for (Ontology oe : list) {
 			println(oe);
 		}
@@ -44,10 +43,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.searchOntology(ONTOLOGY_ACCESSION, "death");
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Search list empty!", list);
 		for (OntologyTerm ot : list)
 			println(ot);
 		log.info(list.size());
@@ -57,23 +53,19 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testSearchAll() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.searchAll("nephroblastoma", SearchOptions.EXACT);
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Search list empty!", list);
+
 		for (OntologyTerm ot : list)
 			println(ot);
-		log.info(list.size());
+
 	}
 
 	@Test
 	public final void testGetRootTerms() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getRootTerms(ONTOLOGY_ACCESSION);
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Root terms list empty!", list);
+
 		for (OntologyTerm ot : list)
 			println(ot);
 	}
@@ -97,10 +89,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetTermPath() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getTermPath(ONTOLOGY_ACCESSION, TERM_ACCESSION);
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Term path list empty!", list);
 		for (OntologyTerm ot : list)
 			println(ot);
 	}
@@ -109,10 +98,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetChildren() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getChildren(ONTOLOGY_ACCESSION, TERM_ACCESSION);
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Children list empty!", list);
 		for (OntologyTerm ot : list)
 			println(ot);
 	}
@@ -121,10 +107,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getParents(ONTOLOGY_ACCESSION, TERM_ACCESSION);
-		if (list == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Parents list empty!", list);
 		for (OntologyTerm ot : list)
 			println(ot);
 	}
@@ -133,10 +116,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetAnnotations() throws OntologyServiceException {
 		printCurrentTest();
 		Map<String, List<String>> maps = os.getAnnotations(ONTOLOGY_ACCESSION, TERM_ACCESSION);
-		if (maps == null) {
-			log.info("NULL RETURNED");
-			return;
-		}
+		assertNotNull("Annotations list empty!", maps);
 		for (Entry<String, List<String>> e : maps.entrySet()) {
 			println(e.getKey());
 			for (String s : e.getValue()) {
