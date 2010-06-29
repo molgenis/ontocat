@@ -141,7 +141,11 @@ public class CompositeDecorator implements InvocationHandler {
 			// searchAll or getOntologies so combine results
 			result = new ArrayList();
 			for (Future<Object> future : ec.invokeAll(tasks)) {
-				((List) result).addAll((Collection) future.get());
+				try {
+					((List) result).addAll((Collection) future.get());
+				} catch (ExecutionException e) {
+					log.warn("Composite service component threw an exception " + e);
+				}
 			}
 		} else {
 			// Any valid results will do, don't wait for the others
