@@ -241,6 +241,31 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		}
 	}
 
+	/**
+	 * Another version of this method created specifically to allow subtree
+	 * searching
+	 * 
+	 * @throws OntologyServiceException
+	 * 
+	 */
+	private void processSearchUrl(String ontologyAccession, String termAccession, String query,
+			SearchOptions[] options) throws OntologyServiceException {
+		try {
+			query = URLEncoder.encode(query, "UTF-8");
+			String subtreeSetting = "&subtreerootconceptid="
+					+ URLEncoder.encode(termAccession, "UTF-8");
+			this.queryURL = new URL(urlBASE + "search/" + query + "/?maxnumhits=10000000"
+					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
+					+ ontologyAccession + subtreeSetting);
+			transformRESTXML();
+		} catch (MalformedURLException e) {
+			throw new OntologyServiceException(e);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private String processSearchOptions(SearchOptions[] options) {
 		String val = "";
 		List<SearchOptions> al = new ArrayList<SearchOptions>(Arrays.asList(options));
@@ -518,6 +543,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		getOntology(ontologyAccession);
 		// search it
 		processSearchUrl(ontologyAccession, query, options);
+		return getSearchResults();
+	}
+
+	public List<OntologyTerm> searchSubtree(String ontologyAccession, String termAccession,
+			String query, SearchOptions... options) throws OntologyServiceException {
+		// confirm the ontology exists
+		getOntology(ontologyAccession);
+		// search it
+		processSearchUrl(ontologyAccession, termAccession, query, options);
 		return getSearchResults();
 	}
 
