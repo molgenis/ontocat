@@ -93,6 +93,7 @@ public class CompositeDecorator implements InvocationHandler {
 				.getInterfaces(), new CompositeDecorator(list));
 	}
 
+	@Deprecated
 	public static OntologyService getService(List list) throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
@@ -112,6 +113,10 @@ public class CompositeDecorator implements InvocationHandler {
 	 */
 	public static OntologyService getService(OntologyService... list)
 			throws OntologyServiceException {
+		// instantiate OLSService,
+		// it's never used but need an instance of OntologyService interface
+		// to properly reflect, could use anything else, or instantiate
+		// a private type
 		return (OntologyService) CompositeDecorator.createProxy(new OlsOntologyService(), Arrays
 				.asList(list));
 	}
@@ -152,6 +157,8 @@ public class CompositeDecorator implements InvocationHandler {
 			try {
 				result = ec.invokeAny(tasks);
 			} catch (ExecutionException e) {
+				// Rethrowing it here as this is the expected behaviour
+				// when nothing is found
 				throw new OntologyServiceException("Nothing found");
 			}
 		}
