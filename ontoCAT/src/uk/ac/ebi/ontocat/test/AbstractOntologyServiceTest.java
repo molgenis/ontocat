@@ -76,7 +76,6 @@ public abstract class AbstractOntologyServiceTest {
 		OntologyTerm ot = os.getTerm(ONTOLOGY_ACCESSION, TERM_ACCESSION);
 		println(ot);
 		println(ot.getOntology());
-		println(ot.getServiceType().toString());
 	}
 
 	@Test

@@ -365,7 +365,15 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			}
 		}
 
-		return new ArrayList<OntologyTerm>(terms);
+		return injectTermContext(new ArrayList<OntologyTerm>(terms), options);
+	}
+
+	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
+			SearchOptions[] options) {
+		for (OntologyTerm ot : list) {
+			ot.getContext().setSearchOptions(options);
+		}
+		return list;
 	}
 
 	/*
@@ -468,7 +476,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 	private String getFragment(URI uri) {
 		// can't use URI.getFragment() as it's not always delimited with # (see
 		// EFO)
-		Pattern pattern = Pattern.compile("[^//#]*$");
+		Pattern pattern = Pattern.compile("[^//#=]*$");
 		Matcher matcher = pattern.matcher(uri.toString());
 		if (matcher.find())
 			return matcher.group();

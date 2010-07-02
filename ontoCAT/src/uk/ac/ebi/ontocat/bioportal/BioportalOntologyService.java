@@ -231,8 +231,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		try {
 			keyword = URLEncoder.encode(keyword, "UTF-8");
 			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?maxnumhits=10000000"
-					+ urlAddOn
-					+ processSearchOptions(options) + "&ontologyids=" + ontologyAccession);
+					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
+					+ ontologyAccession);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			throw new OntologyServiceException(e);
@@ -324,6 +324,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 				SearchOptions.INCLUDE_PROPERTIES);
 		// bioportal id for the concept found or exception thrown already
 		processConceptUrl(ontologyAccession, this.getSearchResults().get(0).getAccession());
+	}
+
+	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
+			SearchOptions[] searchOptions) {
+		for (OntologyTerm ot : list) {
+			ot.getContext().setSearchOptions(searchOptions);
+		}
+		return list;
 	}
 
 	/**
@@ -543,7 +551,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		getOntology(ontologyAccession);
 		// search it
 		processSearchUrl(ontologyAccession, query, options);
-		return getSearchResults();
+		return injectTermContext(getSearchResults(), options);
 	}
 
 	public List<OntologyTerm> searchSubtree(String ontologyAccession, String termAccession,
@@ -552,14 +560,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		getOntology(ontologyAccession);
 		// search it
 		processSearchUrl(ontologyAccession, termAccession, query, options);
-		return getSearchResults();
+		return injectTermContext(getSearchResults(), options);
 	}
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
 			throws OntologyServiceException {
 		processSearchUrl(null, query, options);
-		return getSearchResults();
+		return injectTermContext(getSearchResults(), options);
 	}
 
 	@Override

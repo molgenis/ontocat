@@ -1,7 +1,8 @@
 package uk.ac.ebi.ontocat;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
@@ -35,6 +37,81 @@ public class OntologyTerm implements Serializable {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(OntologyTerm.class);
 
+	private OntologyTermContext context = new OntologyTermContext();
+
+	public enum OntologyServiceType {
+		/** OlsOntologyService. */
+		OLS,
+		/** BioportalOntologyService. */
+		BIOPORTAL,
+		/** FileOntologyService */
+		FILE,
+		/** Anything else */
+		UNKNOWN
+	};
+
+	public class OntologyTermContext {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return "OntologyTermContext [SimilarityScore=" + SimilarityScore + ", searchOptions="
+					+ Arrays.toString(searchOptions) + ", serviceType=" + getServiceType()
+					+ ", timestamp=" + timestamp + "]";
+		}
+
+		/**
+		 * The Enum OntologyServiceType.
+		 */
+		private Date timestamp = new Date();
+		private Integer SimilarityScore = null;
+		private SearchOptions[] searchOptions;
+
+		/**
+		 * Gets the service type that the ontology term origanted from.
+		 * 
+		 * @return the service type
+		 * @throws OntologyServiceException
+		 */
+		public OntologyServiceType getServiceType() {
+			// File will have http in accession
+			// TODO: check if that's true for OBO
+			if (getOntologyAccession().startsWith("http"))
+				return OntologyServiceType.FILE;
+			// OLS will be up to four letters
+			if (getOntologyAccession().matches("[A-Z]{2,5}"))
+				return OntologyServiceType.OLS;
+			// BioPortal will be four digits
+			if (getOntologyAccession().matches("\\d{4}"))
+				return OntologyServiceType.BIOPORTAL;
+			log.warn("Could not infer ServiceType!");
+			return OntologyServiceType.UNKNOWN;
+		}
+
+		public Date getTimestamp() {
+			return timestamp;
+		}
+
+		public void setSearchOptions(SearchOptions[] searchOptions) {
+			this.searchOptions = searchOptions;
+		}
+
+		public SearchOptions[] getSearchOptions() {
+			return searchOptions;
+		}
+
+		public void setSimilarityScore(Integer similarityScore) {
+			SimilarityScore = similarityScore;
+		}
+
+		public Integer getSimilarityScore() {
+			return SimilarityScore;
+		}
+	}
+
 	/**
 	 * Instantiates a new ontology term.
 	 * 
@@ -46,9 +123,8 @@ public class OntologyTerm implements Serializable {
 	 *            the label
 	 */
 	public OntologyTerm() {
-		
 	}
-	
+
 	public OntologyTerm(String ontologyAccession, String termAccession, String label) {
 		this.setAccession(termAccession);
 		this.setLabel(label);
@@ -181,39 +257,6 @@ public class OntologyTerm implements Serializable {
 	}
 
 	/**
-	 * The Enum OntologyServiceType.
-	 */
-	public enum OntologyServiceType {
-		/** OlsOntologyService. */
-		OLS,
-		/** BioportalOntologyService. */
-		BIOPORTAL,
-		/** FileOntologyService */
-		FILE
-	};
-
-	/**
-	 * Gets the service type that the ontology term origanted from.
-	 * 
-	 * @return the service type
-	 * @throws OntologyServiceException
-	 */
-	public OntologyServiceType getServiceType() throws OntologyServiceException {
-		// File will have http in accession
-		// TODO: check if that's true for OBO
-		if (getOntologyAccession().startsWith("http"))
-			return OntologyServiceType.FILE;
-		// OLS will be up to four letters
-		if (getOntologyAccession().matches("[A-Z]{2,4}"))
-			return OntologyServiceType.OLS;
-		// BioPortal will be four digits
-		if (getOntologyAccession().matches("\\d{4}"))
-			return OntologyServiceType.BIOPORTAL;
-		log.error("Could not infer ServiceType!");
-		throw new OntologyServiceException("Could not infer ServiceType!");
-	}
-
-	/**
 	 * The ontology cache. Stores ontology lists from OLS and BP for
 	 * {@link OntologyTerm#getOntology()}
 	 */
@@ -228,12 +271,9 @@ public class OntologyTerm implements Serializable {
 	private void initalizeOntologyCache() throws OntologyServiceException {
 		if (ontologyCache == null) {
 			ontologyCache = new HashMap<String, Ontology>();
-			OntologyService os = CompositeDecorator.getService(new ArrayList<OntologyService>() {
-				{
-					add(new OlsOntologyService());
-					add(new BioportalOntologyService());
-				}
-			});
+			OntologyService os = CompositeDecorator.getService(new OlsOntologyService(),
+					new BioportalOntologyService());
+
 			for (Ontology o : os.getOntologies()) {
 				ontologyCache.put(o.getOntologyAccession(), o);
 			}
@@ -253,9 +293,17 @@ public class OntologyTerm implements Serializable {
 		initalizeOntologyCache();
 		if (ontologyCache.containsKey(getOntologyAccession())) {
 			return ontologyCache.get(getOntologyAccession());
-		} else if (getServiceType() == OntologyServiceType.FILE) {
+		} else if (getContext().getServiceType() == OntologyServiceType.FILE) {
 			return new Ontology(getOntologyAccession());
 		}
 		throw new OntologyServiceException("Could not infer ontology!");
+	}
+
+	public OntologyTermContext getContext() {
+		// Instantiate the context for Bioportal
+		// as xml beans are instantiated without the fields
+		if (context == null)
+			context = new OntologyTermContext();
+		return context;
 	}
 }

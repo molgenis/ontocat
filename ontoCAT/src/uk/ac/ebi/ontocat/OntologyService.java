@@ -273,5 +273,5 @@ public interface OntologyService {
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException;
-
+	
 }

@@ -97,7 +97,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 				terms = qs.getTermsByName(query, ontologyAccession, false);
 			}
 			if (ops.contains(SearchOptions.INCLUDE_PROPERTIES)) {
-				logger.warn("OLS does not support searching properties");
 				// params for getTermsByAnnotationData()
 				// ontologyName - - the name of the ontology to limit the term
 				// search on (mandatory)
@@ -105,7 +104,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 				// strValue - - the string value of annotations to limit search
 				// fromDblValue - - lower numeric value of annotations to limit
 				// toDblValue - - higher numeric value of annotations to limit
-				// FIXME: This is always returns NULL!
+				// FIXME: This always returns NULL!
 				DataHolder[] dhs = qs
 						.getTermsByAnnotationData(ontologyAccession, null, query, 0, 0);
 				if (dhs != null) {
@@ -118,10 +117,18 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 					}
 				}
 			}
-			return fetchFullTerms(terms);
+			return injectTermContext(fetchFullTerms(terms), options);
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
+	}
+
+	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
+			SearchOptions[] options) {
+		for (OntologyTerm ot : list) {
+			ot.getContext().setSearchOptions(options);
+		}
+		return list;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -130,7 +137,11 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 			throws OntologyServiceException {
 		List<SearchOptions> ops = new ArrayList<SearchOptions>(Arrays.asList(options));
 		if (ops.contains(SearchOptions.INCLUDE_PROPERTIES))
-			logger.warn("OLS does not support searching properties");
+			// remove include properties from ops
+			// so that it does not show up in context
+			ops.remove(SearchOptions.INCLUDE_PROPERTIES);
+		logger
+				.warn("OLS does not support searching properties in searchAll(), use searchOntology() instead");
 		try {
 			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(query, false)
 					.entrySet();
@@ -145,9 +156,11 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 				// filter out non-exact terms if necessary
 				if (ops.contains(SearchOptions.EXACT) && !label.equalsIgnoreCase(query))
 					continue;
-				result.add(new OntologyTerm(ontologyAccession, termAccession, label));
+				// Inject searchoptions into context
+				OntologyTerm ot = new OntologyTerm(ontologyAccession, termAccession, label);
+				result.add(ot);
 			}
-			return result;
+			return injectTermContext(result, ops.toArray(new SearchOptions[0]));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
