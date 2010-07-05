@@ -28,7 +28,7 @@ public interface OntologyService {
 	 * @param ontologyAccession
 	 * @param termAccession
 	 * 
-	 * @return term
+	 * @return OntologyTerm or null if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
@@ -40,7 +40,7 @@ public interface OntologyService {
 	 * 
 	 * @param termAccession
 	 *            . E.g. GO:00001
-	 * @return
+	 * @return OntologyTerm or null if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException;
@@ -50,7 +50,7 @@ public interface OntologyService {
 	 * starting with the root and finishing with the term itself
 	 * 
 	 * @param termAccession
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
@@ -61,7 +61,7 @@ public interface OntologyService {
 	 * starting with the root and finishing with the term itself
 	 * 
 	 * @param term
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException;
@@ -69,7 +69,7 @@ public interface OntologyService {
 	/**
 	 * List available ontology accessions
 	 * 
-	 * @return terms
+	 * @return List of Ontologies or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<Ontology> getOntologies() throws OntologyServiceException;
@@ -89,7 +89,7 @@ public interface OntologyService {
 	 *            excludes - properties from search.
 	 * @param options
 	 *            - search options for the query
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
@@ -105,7 +105,7 @@ public interface OntologyService {
 	 * @param options
 	 *            - EXACT - only exact matching of query. INCLUDE_PROPERTIES -
 	 *            includes properties in search.
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
@@ -115,7 +115,7 @@ public interface OntologyService {
 	 * Find the root terms for this ontology
 	 * 
 	 * @param ontologyAccession
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
@@ -125,7 +125,7 @@ public interface OntologyService {
 	 * Find the root terms for this ontology
 	 * 
 	 * @param ontology
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getRootTerms(Ontology ontology) throws OntologyServiceException;
@@ -134,7 +134,7 @@ public interface OntologyService {
 	 * Find child concepts for this termAccession
 	 * 
 	 * @param termAccession
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
@@ -144,7 +144,7 @@ public interface OntologyService {
 	 * Find child concepts for this termAccession
 	 * 
 	 * @param term
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getChildren(OntologyTerm term) throws OntologyServiceException;
@@ -153,7 +153,7 @@ public interface OntologyService {
 	 * Find parent concepts for this termAccession
 	 * 
 	 * @param termAccession
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
@@ -163,7 +163,7 @@ public interface OntologyService {
 	 * Find parent concepts for this termAccession
 	 * 
 	 * @param termAccession
-	 * @return terms
+	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getParents(OntologyTerm term) throws OntologyServiceException;
@@ -173,7 +173,7 @@ public interface OntologyService {
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
-	 * @return
+	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
@@ -183,7 +183,7 @@ public interface OntologyService {
 	 * Find annotations for this termAccession.
 	 * 
 	 * @param term
-	 * @return
+	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public Map<String, List<String>> getAnnotations(OntologyTerm term)
@@ -194,7 +194,7 @@ public interface OntologyService {
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
-	 * @return
+	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
@@ -204,7 +204,7 @@ public interface OntologyService {
 	 * Find relations for this termAccession.
 	 * 
 	 * @param term
-	 * @return
+	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public Map<String, List<String>> getRelations(OntologyTerm term)
@@ -214,7 +214,7 @@ public interface OntologyService {
 	 * Generate a hyperlink to drill down to ontology source
 	 * 
 	 * @param termAccession
-	 * @return
+	 * @return lookup hyperlink or null
 	 */
 	public String makeLookupHyperlink(String termAccession);
 
@@ -222,7 +222,7 @@ public interface OntologyService {
 	 * Generate a hyperlink to drill down to ontology source
 	 * 
 	 * @param termAccession
-	 * @return
+	 * @return lookup hyperlink or null
 	 */
 	public String makeLookupHyperlink(String ontologyAccession, String termAccession);
 
@@ -230,7 +230,7 @@ public interface OntologyService {
 	 * Load an ontology from the service.
 	 * 
 	 * @param ontologyAccession
-	 * @return
+	 * @return Ontology or null if nothing was found
 	 */
 	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException;
 
@@ -239,7 +239,7 @@ public interface OntologyService {
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
-	 * @return
+	 * @return List of synonyms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getSynonyms(String ontologyAccession, String termAccession)
@@ -249,7 +249,7 @@ public interface OntologyService {
 	 * Load synonyms for a term
 	 * 
 	 * @param term
-	 * @return
+	 * @return List of synonyms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getSynonyms(OntologyTerm term) throws OntologyServiceException;
@@ -259,7 +259,7 @@ public interface OntologyService {
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
-	 * @return
+	 * @return List of definitions or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
@@ -269,7 +269,7 @@ public interface OntologyService {
 	 * Load definitions for a term
 	 * 
 	 * @param term
-	 * @return
+	 * @return List of definitions or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException;
