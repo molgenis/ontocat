@@ -61,7 +61,7 @@ public interface OntologyService {
 	 * starting with the root and finishing with the term itself
 	 * 
 	 * @param term
-	 * @return List of OntologyTerms or an empty list if nothing was found
+	 * @return List of OntologyTerms that has at least one element
 	 * @throws OntologyServiceException
 	 */
 	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException;

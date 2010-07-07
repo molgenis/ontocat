@@ -123,8 +123,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		}
 	}
 
-	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
-			SearchOptions[] options) {
+	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list, SearchOptions[] options) {
 		for (OntologyTerm ot : list) {
 			ot.getContext().setSearchOptions(options);
 		}
@@ -145,8 +144,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		try {
 			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(query, false)
 					.entrySet();
-			if (sTerms.size() == 0)
-				return null;
 			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 			for (Map.Entry<String, String> entry : sTerms) {
 				// splitting e.g. 228975=NEWT:Thymus magnus
@@ -172,7 +169,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		try {
 			String label = (String) qs.getOntologyNames().get(ontologyAccession);
 			if (label == null)
-				throw new OntologyServiceException("Ontology not found");
+				return null;
 			o.setLabel(label);
 			o.setDateReleased(qs.getOntologyLoadDate(ontologyAccession));
 			o.setVersionNumber(qs.getVersion());
@@ -190,9 +187,8 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		try {
 			label = qs.getTermById(termAccession, ontologyAccession);
 			if (label.equals(termAccession))
-				throw new OntologyServiceException("Term not found");
+				return null;
 		} catch (RemoteException e) {
-			logger.error("Problem retrieving label for " + termAccession + e.getMessage());
 			throw new OntologyServiceException(e);
 		}
 		return new OntologyTerm(ontologyAccession, termAccession, label);
@@ -237,9 +233,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		if (!annotationCache.containsKey(key)) {
 			try {
 				Map result = qs.getTermMetadata(termAccession, ontologyAccession);
-				// need a null result if set was empty
-				if (result.size() == 0)
-					return null;
 				// clean out the String from String[]
 				for (Object metadataKey : result.keySet()) {
 					// logger.debug("getting annotation "+metadataKey);
@@ -263,7 +256,11 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	@Override
 	public List<String> getSynonyms(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get("exact_synonym");
+		Map<String, List<String>> map = getAnnotations(ontologyAccession, termAccession);
+		if (map.size() > 0) {
+			return map.get("exact_synonym");
+		} else
+			return Collections.EMPTY_LIST;
 	}
 
 	@Override
@@ -279,9 +276,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	// helper methods
 	protected List<OntologyTerm> fetchFullTerms(Map<String, String> terms)
 			throws OntologyServiceException {
-		// need a null result if set was empty
-		if (terms.size() == 0)
-			return null;
 		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 		for (String termAccession : terms.keySet()) {
 			OntologyTerm o = getTerm(termAccession);
@@ -293,7 +287,11 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	@Override
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		return getAnnotations(ontologyAccession, termAccession).get("definition");
+		Map<String, List<String>> map = getAnnotations(ontologyAccession, termAccession);
+		if (map.size() > 0) {
+			return map.get("definition");
+		} else
+			return Collections.EMPTY_LIST;
 	}
 
 	@Override
@@ -332,15 +330,15 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		int iteration = 0;
 		// get its parents and iterate over first parent
 		List<OntologyTerm> parents = getParents(ontologyAccession, termAccession);
-		while (parents != null) {
+		while (parents.size() != 0) {
 			current = parents.get(0);
 			path.add(current);
 			parents = getParents(current.getOntologyAccession(), current.getAccession());
 
 			// safety break for circular relations
 			if (iteration++ > 100) {
-				logger.error("findSearchTermPath(): TOO MANY ITERATIONS (" + iteration + "x)");
-				break;
+				throw new OntologyServiceException("findSearchTermPath(): TOO MANY ITERATIONS ("
+						+ iteration + "x)");
 			}
 		}
 
