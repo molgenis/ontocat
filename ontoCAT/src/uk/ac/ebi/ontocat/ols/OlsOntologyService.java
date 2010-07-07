@@ -256,11 +256,10 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	@Override
 	public List<String> getSynonyms(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		Map<String, List<String>> map = getAnnotations(ontologyAccession, termAccession);
-		if (map.size() > 0) {
-			return map.get("exact_synonym");
-		} else
+		List<String> result = getAnnotations(ontologyAccession, termAccession).get("exact_synonym");
+		if (result == null)
 			return Collections.EMPTY_LIST;
+		return result;
 	}
 
 	@Override
@@ -287,11 +286,10 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	@Override
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		Map<String, List<String>> map = getAnnotations(ontologyAccession, termAccession);
-		if (map.size() > 0) {
-			return map.get("definition");
-		} else
+		List<String> result = getAnnotations(ontologyAccession, termAccession).get("definition");
+		if (result == null)
 			return Collections.EMPTY_LIST;
+		return result;
 	}
 
 	@Override

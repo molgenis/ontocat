@@ -14,7 +14,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -415,10 +414,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private BufferedInputStream loadURL() throws OntologyServiceException {
 		for (int i = 0; i < 10; i++) {
 			try {
-				HttpURLConnection conn = (HttpURLConnection) queryURL.openConnection();
-				if (conn.getResponseCode() == 500)
-					log.error(conn.getResponseMessage() + " on " + queryURL.toString());
-				return new BufferedInputStream(conn.getInputStream());
+				return new BufferedInputStream(queryURL.openStream());
 			} catch (ConnectException e) {
 				log.warn("Bioportal is timing out on us. Sleep for 5s and repeat");
 				try {
@@ -427,12 +423,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 					e1.printStackTrace();
 					throw new OntologyServiceException(e1);
 				}
+
 			} catch (FileNotFoundException e) {
-				// no stack trace as this is expected behaviour for concept not
+				// no logging as this is expected behaviour for concept not
 				// found and processed accordingly in searchConceptID
-				e.printStackTrace();
 				throw new OntologyServiceException(e);
 			} catch (IOException e) {
+				// less expected usually means an error on BP side
+				log.error("Possible problems on BioPortal side - " + e + " on "
+						+ queryURL.toString());
 				throw new OntologyServiceException(e);
 			}
 		}
