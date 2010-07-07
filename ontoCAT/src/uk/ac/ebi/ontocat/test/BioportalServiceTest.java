@@ -1,7 +1,6 @@
 package uk.ac.ebi.ontocat.test;
 
-import static org.junit.Assert.assertNotNull;
-
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -25,7 +24,7 @@ public class BioportalServiceTest extends AbstractOntologyServiceTest {
 		BioportalOntologyService bos = new BioportalOntologyService();
 		List<OntologyTerm> list1 = bos
 				.searchSubtree(ONTOLOGY_ACCESSION, TERM_ACCESSION, "membrane");
-		assertNotNull("Subtree search list empty!", list1);
+		Assert.assertNotSame("Subtree search list empty!", Collections.EMPTY_LIST, list1);
 
 		for (OntologyTerm ot : list1)
 			System.out.println(ot);
