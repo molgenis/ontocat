@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -414,7 +415,10 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private BufferedInputStream loadURL() throws OntologyServiceException {
 		for (int i = 0; i < 10; i++) {
 			try {
-				return new BufferedInputStream(queryURL.openStream());
+				HttpURLConnection conn = (HttpURLConnection) queryURL.openConnection();
+				if (conn.getResponseCode() == 500)
+					log.error(conn.getResponseMessage() + " on " + queryURL.toString());
+				return new BufferedInputStream(conn.getInputStream());
 			} catch (ConnectException e) {
 				log.warn("Bioportal is timing out on us. Sleep for 5s and repeat");
 				try {
@@ -426,15 +430,13 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			} catch (FileNotFoundException e) {
 				// no stack trace as this is expected behaviour for concept not
 				// found and processed accordingly in searchConceptID
+				e.printStackTrace();
 				throw new OntologyServiceException(e);
 			} catch (IOException e) {
-				// no stack trace as this is expected behaviour for concept not
-				// found
-				throw new OntologyServiceException("Term not found");
+				throw new OntologyServiceException(e);
 			}
 		}
-		throw new OntologyServiceException(new Exception(
-				"Could not access Bioportal REST services."));
+		throw new OntologyServiceException("Could not access Bioportal REST services.");
 	}
 
 	/**
@@ -676,9 +678,12 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			throws OntologyServiceException {
 		// PARSE THE XML OUTPUT
 		try {
-		processPathUrl(ontologyAccession, termAccession);
+			processPathUrl(ontologyAccession, termAccession);
 		} catch (OntologyServiceException e) {
-			return Collections.EMPTY_LIST;
+			// The list needs at least one term
+			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
+			result.add(getTerm(ontologyAccession, termAccession));
+			return result;
 		}
 		// so it's not true ontology term per se, but the way
 		// bioportal process this query it will dump the path
