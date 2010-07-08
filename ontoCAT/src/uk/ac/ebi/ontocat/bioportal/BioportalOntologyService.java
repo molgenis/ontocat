@@ -430,8 +430,13 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 				throw new OntologyServiceException(e);
 			} catch (IOException e) {
 				// less expected usually means an error on BP side
-				log.error("Possible problems on BioPortal side - " + e + " on "
-						+ queryURL.toString());
+				// other than response code 400
+				// alternatively could implement this via
+				// HttpURLConnection.getResponseCode()
+				if (!e.getMessage().contains("HTTP response code: 400"))
+					log.error("Possible problems on BioPortal side - " + e + " on "
+							+ queryURL.toString());
+
 				throw new OntologyServiceException(e);
 			}
 		}
@@ -567,7 +572,10 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
 			throws OntologyServiceException {
 		// warning this uses and undocumented feature!
-		ConceptBean cb = (ConceptBean) getTerm(ontologyAccession, "root");
+		// need the no search version, so that the ontology is not searched for
+		// root
+		// in second pass on fail (takes too much time)
+		ConceptBean cb = (ConceptBean) getTermNoSearch(ontologyAccession, "root");
 		if (cb == null)
 			return Collections.EMPTY_LIST;
 		return fetchFullTerms(cb.getChildren(), ontologyAccession);
@@ -612,6 +620,18 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			} catch (OntologyServiceException e2) {
 				return null;
 			}
+		}
+		ConceptBean ot = this.getConceptBean();
+		ot.setOntologyAccession(ontologyAccession);
+		return ot;
+	}
+
+	public OntologyTerm getTermNoSearch(String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		try {
+			processConceptUrl(ontologyAccession, termAccession);
+		} catch (OntologyServiceException e) { // try to catch the first one?
+			return null;
 		}
 		ConceptBean ot = this.getConceptBean();
 		ot.setOntologyAccession(ontologyAccession);

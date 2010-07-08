@@ -6,7 +6,9 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
@@ -85,6 +88,8 @@ public class CompositeDecorator implements InvocationHandler {
 		try {
 			obj.getClass().getMethod("searchAll", String.class, SearchOptions[].class);
 			obj.getClass().getMethod("getOntologies");
+			obj.getClass().getMethod("getTermPath", String.class, String.class);
+			obj.getClass().getMethod("getTermPath", OntologyTerm.class);
 		} catch (Exception e) {
 			log.fatal("Signature has changed in proxy pattern!");
 			throw new OntologyServiceException(e);
@@ -149,7 +154,11 @@ public class CompositeDecorator implements InvocationHandler {
 				try {
 					((List) result).addAll((Collection) future.get());
 				} catch (ExecutionException e) {
-					log.warn("Composite service component threw an exception " + e);
+					if (e.getCause() instanceof NoResultsException) {
+						log.debug(e.getCause().getMessage());
+					} else {
+						log.error(e + " " + e.getCause().getMessage());
+					}
 				}
 			}
 		} else {
@@ -157,9 +166,15 @@ public class CompositeDecorator implements InvocationHandler {
 			try {
 				result = ec.invokeAny(tasks);
 			} catch (ExecutionException e) {
-				// Rethrowing it here as this is the expected behaviour
-				// when nothing is found
-				throw new OntologyServiceException("Nothing found");
+				if (e.getCause() instanceof NoResultsException) {
+					log.debug(e.getCause().getMessage());
+				} else {
+					log.error(e + " " + e.getCause().getMessage());
+				}
+				if (method.getReturnType() == List.class) 
+					result = Collections.EMPTY_LIST;
+				if (method.getReturnType() == Map.class)
+					result = Collections.EMPTY_MAP;
 			}
 		}
 		ec.shutdown();
@@ -180,10 +195,32 @@ public class CompositeDecorator implements InvocationHandler {
 		@Override
 		public Object call() throws Exception {
 			Object result = method.invoke(target, args);
+
 			// Throw exception here, so invokeAny skips this result
+			NoResultsException e = new NoResultsException("No results from " + method.getName()
+					+ " in " + target.getClass().getSimpleName());
+
 			if (result == null)
-				throw new OntologyServiceException("No results from " + method.getName());
+				throw e;
+			if (result instanceof Map && ((Map) result).size() == 0)
+				throw e;
+			if (result instanceof List) {
+				Integer listSize = ((List) result).size();
+				String methodName = method.getName();
+				if ((listSize == 0)
+						|| (methodName.equalsIgnoreCase("getTermPath") && listSize == 1))
+					throw e;
+			}
+
 			return result;
+		}
+	}
+
+	public class NoResultsException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public NoResultsException(String str) {
+			super(str);
 		}
 	}
 

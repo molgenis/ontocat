@@ -295,6 +295,11 @@ public class OntologyTerm implements Serializable {
 			return ontologyCache.get(getOntologyAccession());
 		} else if (getContext().getServiceType() == OntologyServiceType.FILE) {
 			return new Ontology(getOntologyAccession());
+		} else if (getContext().getServiceType() == OntologyServiceType.BIOPORTAL) {
+			// possibly a view, fire an extra query and store in cache
+			ontologyCache.put(getOntologyAccession(), new BioportalOntologyService()
+					.getOntology(getOntologyAccession()));
+			return ontologyCache.get(getOntologyAccession());
 		}
 		throw new OntologyServiceException("Could not infer ontology!");
 	}
