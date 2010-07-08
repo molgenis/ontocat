@@ -35,15 +35,10 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 				"http://www.ebi.ac.uk/efo"));
 		osFile.setSynonymSlot("alternative_term");
 
-		os = CompositeDecorator.getService(new ArrayList<OntologyService>() {
-			{
-				add(osOLS);
-				add(osBP);
-				add(osFile);
-			}
-		});
+		os = CompositeDecorator.getService(osOLS, osBP, osFile);
+
 		// GO accession
-		ONTOLOGY_ACCESSION = "1070";
+		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo";
 	}
 
 	@Test

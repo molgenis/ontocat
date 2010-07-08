@@ -56,11 +56,11 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testSearchAll() throws OntologyServiceException {
 		printCurrentTest();
-		List<OntologyTerm> list = os.searchAll("nephroblastoma", SearchOptions.EXACT);
+		List<OntologyTerm> list = os.searchAll("nephroblastoma", SearchOptions.EXACT,
+				SearchOptions.INCLUDE_PROPERTIES);
 		assertNotSame("Empty list returned!", 0, list.size());
 		for (OntologyTerm ot : list)
 			println(ot);
-
 	}
 
 	@Test
