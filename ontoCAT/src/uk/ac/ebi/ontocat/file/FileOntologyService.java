@@ -83,6 +83,8 @@ public final class FileOntologyService extends AbstractOntologyService implement
 		ontology = new OntologyLoader(uriOntology).getOntology();
 		// get all possible URIs in onotlogy
 		for (OWLClass cls : ontology.getReferencedClasses()) {
+
+			cache.put(getFragment(cls), cls);
 			try {
 				ontoAccessions.add(getOntologyAccession(cls));
 			} catch (OntologyServiceException e) {
@@ -146,7 +148,8 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			// class without parents, looks like root
 			// TODO: add reasoner, otherwise fails for defined classes
 			// TODO: test if reasoner works with OBO ontologies
-			if (cls.getSuperClasses(ontology).size() == 0) {
+			if (cls.getSuperClasses(ontology).size() == 0
+					&& !getAnnotations(cls).containsKey("is_obsolete")) {
 				rootTerms.add(getTerm(cls));
 			}
 		}

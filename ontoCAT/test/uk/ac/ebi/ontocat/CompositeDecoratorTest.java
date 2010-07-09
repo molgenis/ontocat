@@ -18,9 +18,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ebi.ontocat.OntologyService;
-import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
@@ -39,7 +36,8 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 		os = CompositeDecorator.getService(osOLS, osBP, osFile);
 
 		// GO accession
-		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo";
+		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
+		TERM_ACCESSION = "EFO_0000004";
 	}
 
 	@Test

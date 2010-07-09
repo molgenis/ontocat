@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="dist-with-dependencies" name="ontoCAT" basedir=".">
+<project default="dist" name="ontoCAT" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
 	<property name="version" value="0.9.3" />
 	<property name="copyright"
-	          value="Copyright © 2010 by the European Bioinformatics 
-		Institute and the University of Groeningen. All rights reserved." />
+	          value="Copyright © 2010 European Bioinformatics 
+		Institute and University of Groeningen. Released under LGPLv3." />
 
 	<!-- set class path -->
 	<path id="test.classpath">
@@ -45,8 +45,22 @@
 		</javadoc>
 
 	</target>
-	<target name="dist-with-dependencies">
-		<jar destfile="build/${ant.project.name}_deps_v${version}.jar"
+
+	<target name="dist" depends="javadoc, jar, jar-with-deps">
+		<zip destfile="build/${ant.project.name}_v${version}.zip">
+			<zipfileset dir="doc" prefix="docs" />
+			<zipfileset dir="build"
+			            includes="${ant.project.name}_with_deps_v${version}.jar" />
+			<zipfileset dir="build"
+			            includes="${ant.project.name}_v${version}.jar" />
+			<zipfileset dir="build" includes="release_notes.txt" />
+			<zipfileset dir="build" includes="COPYING" />
+			<zipfileset dir="build" includes="COPYING.LESSER" />
+		</zip>
+	</target>
+
+	<target name="jar-with-deps">
+		<jar destfile="build/${ant.project.name}_with_deps_v${version}.jar"
 		     filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class"
@@ -107,7 +121,7 @@
 		</jar>
 	</target>
 
-	<target name="dist">
+	<target name="jar">
 		<jar destfile="build/${ant.project.name}_v${version}.jar">
 			<fileset dir="bin" />
 		</jar>
