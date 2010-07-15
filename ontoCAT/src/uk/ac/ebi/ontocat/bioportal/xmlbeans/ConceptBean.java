@@ -3,6 +3,7 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class ConceptBean extends OntologyTerm {
 				return e.getConceptBeans();
 			}
 		}
-		return null;
+		return Collections.EMPTY_LIST;
 	}
 
 	/*
@@ -100,7 +101,7 @@ public class ConceptBean extends OntologyTerm {
 				}
 			}
 		}
-		return null;
+		return Collections.EMPTY_LIST;
 	}
 
 	/*
@@ -121,7 +122,7 @@ public class ConceptBean extends OntologyTerm {
 				}
 			}
 		}
-		return null;
+		return Collections.EMPTY_LIST;
 	}
 
 	public String getPathString() {
