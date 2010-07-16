@@ -6,17 +6,15 @@ import static org.junit.Assert.assertNotSame;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyService;
-import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 public abstract class AbstractOntologyServiceTest {
@@ -109,11 +107,30 @@ public abstract class AbstractOntologyServiceTest {
 	}
 
 	@Test
+	@Ignore("This runs for more than 10 minutes on a remote service")
+	public final void testGetAllChildren() throws OntologyServiceException {
+		printCurrentTest();
+		Set<OntologyTerm> set = os.getAllChildren(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		assertNotSame("Empty set returned!", 0, set.size());
+		for (OntologyTerm ot : set)
+			println(ot);
+	}
+
+	@Test
 	public final void testGetParents() throws OntologyServiceException {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getParents(ONTOLOGY_ACCESSION, TERM_ACCESSION);
 		assertNotSame("Empty list returned!", 0, list.size());
 		for (OntologyTerm ot : list)
+			println(ot);
+	}
+
+	@Test
+	public final void testGetAllParents() throws OntologyServiceException {
+		printCurrentTest();
+		Set<OntologyTerm> set = os.getAllParents(ONTOLOGY_ACCESSION, TERM_ACCESSION);
+		assertNotSame("Empty set returned!", 0, set.size());
+		for (OntologyTerm ot : set)
 			println(ot);
 	}
 
@@ -147,7 +164,7 @@ public abstract class AbstractOntologyServiceTest {
 		println(list.get(0));
 	}
 
-	private void printCurrentTest() {
+	protected static void printCurrentTest() {
 		println();
 		println("**************************");
 		println(Thread.currentThread().getStackTrace()[2].getMethodName().substring(4));
@@ -155,19 +172,11 @@ public abstract class AbstractOntologyServiceTest {
 		println();
 	}
 
-	private void println() {
+	private static void println() {
 		System.out.println();
 	}
 
-	private static void println(String in) {
-		System.out.println(in);
-	}
-
-	private static void println(OntologyTerm in) {
-		System.out.println(in);
-	}
-
-	private static void println(Ontology in) {
-		System.out.println(in);
+	protected static void println(Object o) {
+		System.out.println(o);
 	}
 }

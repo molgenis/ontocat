@@ -2,7 +2,7 @@
 <project default="dist" name="ontoCAT" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.3" />
+	<property name="version" value="0.9.4-SNAPSHOT" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -44,6 +44,10 @@
 
 		<zip destfile="build/${ant.project.name}_v${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />
+			<zipfileset dir="src" prefix="source/src" />
+			<zipfileset dir="test" prefix="source/test" />
+			<zipfileset dir="lib" prefix="source/lib" />
+			<zipfileset dir="." prefix="source" includes="build.xml" />
 			<zipfileset dir="build" includes="${ant.project.name}_with_deps_v${version}.jar" />
 			<zipfileset dir="build" includes="${ant.project.name}_v${version}.jar" />
 			<zipfileset dir="build" includes="release_notes.txt" />
@@ -98,7 +102,7 @@
 		<echo>Running junit tests...</echo>
 		<junit fork="yes" haltonfailure="no" printSummary="true" showOutput="false">
 			<classpath refid="test.classpath" />
-			<formatter type="plain" usefile="true" />
+			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="bin">
 					<patternset refid="test.sources" />
@@ -107,19 +111,7 @@
 		</junit>
 	</target>
 
-	<target name="test-html">
-		<delete dir="${test.reports}" />
-		<mkdir dir="${test.reports}" />
-		<echo>Running junit tests...</echo>
-		<junit fork="yes" printsummary="no" haltonfailure="no">
-			<classpath refid="test.classpath" />
-			<formatter type="xml" />
-			<batchtest fork="yes" todir="${test.reports}">
-				<fileset dir="bin">
-					<patternset refid="test.sources" />
-				</fileset>
-			</batchtest>
-		</junit>
+	<target name="test-html" depends="test">
 		<echo>Generating html report...</echo>
 		<junitreport todir="${test.reports}">
 			<fileset dir="${test.reports}">

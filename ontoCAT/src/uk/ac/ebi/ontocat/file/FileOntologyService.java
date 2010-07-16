@@ -24,7 +24,6 @@ import org.semanticweb.owl.model.OWLOntology;
 
 import uk.ac.ebi.ontocat.AbstractOntologyService;
 import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 
@@ -32,7 +31,7 @@ import uk.ac.ebi.ontocat.OntologyTerm;
 /**
  * The Class FileOntologyService. This works on both OBO and OWL files.
  */
-public final class FileOntologyService extends AbstractOntologyService implements OntologyService {
+public final class FileOntologyService extends AbstractOntologyService {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(FileOntologyService.class.getName());
 
@@ -167,9 +166,15 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession))
 			return Collections.EMPTY_LIST;
-		List<String> result = getAnnotations(ontologyAccession, termAccession).get(synonymSlot);
-		if (result == null)
-			return Collections.EMPTY_LIST;
+		List<String> result = new ArrayList<String>();
+		try {
+			result.addAll(getAnnotations(ontologyAccession, termAccession).get(synonymSlot));
+		} catch (NullPointerException e) {
+		}
+		try {
+			result.addAll(getAnnotations(ontologyAccession, termAccession).get("synonym")); // OBO
+		} catch (NullPointerException e) {
+		}
 		return result;
 	}
 
@@ -182,7 +187,7 @@ public final class FileOntologyService extends AbstractOntologyService implement
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (ontologyAccession != null && !ontoAccessions.contains(ontologyAccession))
 			return null;
 		return getTerm(termAccession);
 	}
@@ -287,6 +292,21 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			}
 		}
 		return list;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.ontocat.AbstractOntologyService#getAllTerms(java.lang.String)
+	 */
+	@Override
+	public Set<OntologyTerm> getAllTerms(String ontologyAccession) throws OntologyServiceException {
+		Set<OntologyTerm> result = new HashSet<OntologyTerm>();
+		for (OWLClass cls : ontology.getReferencedClasses()) {
+			result.add(getTerm(cls));
+		}
+		return result;
 	}
 
 	/*
@@ -405,9 +425,16 @@ public final class FileOntologyService extends AbstractOntologyService implement
 			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession))
 			return Collections.EMPTY_LIST;
-		List<String> result = getAnnotations(ontologyAccession, termAccession).get(definitionSlot);
-		if (result == null)
-			return Collections.EMPTY_LIST;
+		List<String> result = new ArrayList<String>();
+		try {
+			result.addAll(getAnnotations(ontologyAccession, termAccession).get(definitionSlot));
+		} catch (NullPointerException e) {
+		}
+		try {
+			result.addAll(getAnnotations(ontologyAccession, termAccession).get("def")); // OBO
+		} catch (NullPointerException e) {
+		}
+
 		return result;
 	}
 

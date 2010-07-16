@@ -7,6 +7,11 @@ Deferred for next release:
 	Extend FileOntologyService to skip obsolete terms
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
+	
+Version 0.9.4, -/-/2010
+	Skip OBO obsolete terms in FileOntologyService
+	Add overridable methods getAllTerms() getAllChildren() getAllParents()
+	Automatically recognised OBO definition and synonyms in FileOntologyService
 
 Version 0.9.3, 9/7/2010
 	Extended BioportalOntologyService with the searchSubtree method

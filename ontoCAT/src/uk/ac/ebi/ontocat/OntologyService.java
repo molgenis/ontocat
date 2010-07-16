@@ -2,6 +2,7 @@ package uk.ac.ebi.ontocat;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Ontology service interface, e.g. Bioportal REST or OLS
@@ -273,5 +274,47 @@ public interface OntologyService {
 	 * @throws OntologyServiceException
 	 */
 	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException;
-	
+
+	/**
+	 * Gets the all terms in a given ontology
+	 * 
+	 * @param os
+	 *            the ontology service encapsulating the ontology
+	 * @param ontologyAccession
+	 *            the ontology accession identifying the ontology in the service
+	 * 
+	 * @return A set as we want to collapse duplicate terms
+	 * 
+	 * @throws OntologyServiceException
+	 */
+	public Set<OntologyTerm> getAllTerms(String ontologyAccession) throws OntologyServiceException;
+
+	/**
+	 * Gets the all children terms of a given term.
+	 * 
+	 * @param os
+	 *            the ontology service encapsulating the ontology
+	 * @param term
+	 *            the term which children are to be returned
+	 * 
+	 * @return all the child terms of the given term in is_a hierarchy or an
+	 *         empty set if no parents were found
+	 */
+	public Set<OntologyTerm> getAllChildren(String ontologyAccession, String termAccession)
+			throws OntologyServiceException;
+
+	/**
+	 * Gets the all parent terms of a given term.
+	 * 
+	 * @param os
+	 *            the ontology service encapsulating the ontology
+	 * @param term
+	 *            the term which parents are to be returned
+	 * 
+	 * @return all the parent terms of the given term in is_a hierarchy or an
+	 *         empty set if no parents were found
+	 */
+	public Set<OntologyTerm> getAllParents(String ontologyAccession, String termAccession)
+			throws OntologyServiceException;
+
 }
