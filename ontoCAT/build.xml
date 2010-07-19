@@ -40,7 +40,7 @@
 		</javac>
 	</target>
 
-	<target name="dist" depends="javadoc, jar, jar-with-deps, compile, test">
+	<target name="dist" depends="compile, test, jar, jar-with-deps, javadoc">
 
 		<zip destfile="build/${ant.project.name}_v${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />

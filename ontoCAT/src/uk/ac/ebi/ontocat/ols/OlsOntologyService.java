@@ -117,7 +117,14 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 					}
 				}
 			}
-			return injectTermContext(fetchFullTerms(terms), options);
+			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
+			for (String key : terms.keySet()) {
+				// splitting e.g. 228975=NEWT:Thymus magnus
+				String ontAccession = key.split(":")[0];
+				String label = terms.get(key);
+				result.add(new OntologyTerm(ontAccession, key, label));
+			}
+			return injectTermContext(result, options);
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}

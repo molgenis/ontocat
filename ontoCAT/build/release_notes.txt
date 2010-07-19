@@ -1,17 +1,15 @@
-###############################
 OntoCAT Java API Release Notes
-###############################
+==============================
 
 Deferred for next release:
 	Make FileOntologyService fully thread-safe
-	Extend FileOntologyService to skip obsolete terms
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 	
 Version 0.9.4, -/-/2010
-	Skip OBO obsolete terms in FileOntologyService
-	Add overridable methods getAllTerms() getAllChildren() getAllParents()
-	Automatically recognised OBO definition and synonyms in FileOntologyService
+	Removed a bottleneck in OLS.searchOntology to speed up queries
+	Added overridable methods getAllTerms() getAllChildren() getAllParents()
+	Now automatically recognises OBO definition and synonyms in FileOntologyService
 
 Version 0.9.3, 9/7/2010
 	Extended BioportalOntologyService with the searchSubtree method
@@ -41,9 +39,8 @@ Version 0.9, 25/03/2010
 Version 0.8, 10/02/2010
 	First public release.
 	
-###############################
 COPYRIGHT & LICENSE
-###############################
+===================
 
 Copyright © 2010 European Bioinformatics Institute and University of Groeningen
 

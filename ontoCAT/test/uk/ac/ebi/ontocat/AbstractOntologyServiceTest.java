@@ -77,7 +77,7 @@ public abstract class AbstractOntologyServiceTest {
 		OntologyTerm ot = os.getTerm(ONTOLOGY_ACCESSION, TERM_ACCESSION);
 		assertNotNull("Null returned", ot);
 		println(ot);
-		println(ot.getOntology());
+		// println(ot.getOntology());
 	}
 
 	@Test
