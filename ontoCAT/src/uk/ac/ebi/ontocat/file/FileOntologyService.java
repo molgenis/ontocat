@@ -43,13 +43,15 @@ public final class FileOntologyService extends AbstractOntologyService {
 
 	/** The slots. */
 	/** The skos:synonym slot. */
-	public String synonymSlot = "altLabel";
+	private String synonymSlot = "altLabel";
+
+	private Matcher regexDropSyns = Pattern.compile("\"?([^\"]*)").matcher("");
 
 	/** The skos:definition slot. */
 	public String definitionSlot = "definition";
 
 	/** The skos:label slot if not rdfs:label is used */
-	public String labelSlot = "prefLabel";
+	private String labelSlot = "prefLabel";
 
 	public void setSynonymSlot(String synonymSlot) {
 		this.synonymSlot = synonymSlot;
@@ -168,12 +170,27 @@ public final class FileOntologyService extends AbstractOntologyService {
 			return Collections.EMPTY_LIST;
 		List<String> result = new ArrayList<String>();
 		try {
-			result.addAll(getAnnotations(ontologyAccession, termAccession).get(synonymSlot));
+			result.addAll(dropQuotes(getAnnotations(ontologyAccession, termAccession).get(
+					synonymSlot)));
 		} catch (NullPointerException e) {
 		}
 		try {
-			result.addAll(getAnnotations(ontologyAccession, termAccession).get("synonym")); // OBO
+			// prevent adding duplicates if user specified the same string
+			// by setting synonym slot
+			if (!synonymSlot.equalsIgnoreCase("synonym"))
+				result.addAll(dropQuotes(getAnnotations(ontologyAccession, termAccession).get(
+						"synonym"))); // OBO
 		} catch (NullPointerException e) {
+		}
+
+		return result;
+	}
+
+	private List<String> dropQuotes(List<String> list) {
+		List<String> result = new ArrayList<String>();
+		for (String val : list) {
+			regexDropSyns.reset(val).find();
+			result.add(regexDropSyns.group(1));
 		}
 		return result;
 	}
@@ -431,7 +448,10 @@ public final class FileOntologyService extends AbstractOntologyService {
 		} catch (NullPointerException e) {
 		}
 		try {
-			result.addAll(getAnnotations(ontologyAccession, termAccession).get("def")); // OBO
+			// prevent adding duplicates if user specified the same string
+			// by setting definition slot
+			if (!synonymSlot.equalsIgnoreCase("def"))
+				result.addAll(getAnnotations(ontologyAccession, termAccession).get("def")); // OBO
 		} catch (NullPointerException e) {
 		}
 

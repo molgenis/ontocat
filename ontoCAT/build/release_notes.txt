@@ -7,9 +7,11 @@ Deferred for next release:
 	Add getUri method to OntologyTerm
 	
 Version 0.9.4, -/-/2010
+	Made FileOntologyService more OBO friendly
+		-automatically recognises OBO definition and synonyms
+		-drops metadata EXACT, RELATED [] etc from synonyms
 	Removed a bottleneck in OLS.searchOntology to speed up queries
 	Added overridable methods getAllTerms() getAllChildren() getAllParents()
-	Now automatically recognises OBO definition and synonyms in FileOntologyService
 
 Version 0.9.3, 9/7/2010
 	Extended BioportalOntologyService with the searchSubtree method
