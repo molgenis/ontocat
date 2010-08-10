@@ -3,12 +3,13 @@ package uk.ac.ebi.ontocat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 
 public class BioportalServiceTest extends AbstractOntologyServiceTest {
@@ -16,7 +17,7 @@ public class BioportalServiceTest extends AbstractOntologyServiceTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		os = new BioportalOntologyService();
-		// GO accession
+		// GO accession, alternatively use 1506
 		ONTOLOGY_ACCESSION = "1070";
 	}
 
@@ -34,5 +35,14 @@ public class BioportalServiceTest extends AbstractOntologyServiceTest {
 		List<OntologyTerm> list2 = bos.searchOntology(ONTOLOGY_ACCESSION, "membrane");
 		Assert.assertTrue("Incorrect list size returned!", list1.size() < list2.size());
 		log.info(list1.size() + " < " + list2.size());
+	}
+
+	@Test
+	@Ignore("Takes too long to test usually")
+	public void testGetAllTerms() throws Exception {
+		// Fetch all terms for EFO
+		Set<OntologyTerm> set = os.getAllTerms("1136");
+		log.info(set.size() + " terms returned.");
+		Assert.assertTrue("Less than expected terms returned", set.size() > 2600);
 	}
 }

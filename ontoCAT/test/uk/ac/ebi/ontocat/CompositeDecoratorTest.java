@@ -37,7 +37,7 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 
 		// GO accession
 		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
-		TERM_ACCESSION = "EFO_0000004";
+		TERM_ACCESSION = "EFO_0000400";
 	}
 
 	@Test
