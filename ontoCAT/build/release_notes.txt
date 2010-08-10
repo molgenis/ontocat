@@ -6,14 +6,19 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 	
-Version 0.9.4, -/-/2010
+Version 0.9.4, 10/08/2010
 	Made FileOntologyService more OBO friendly
 		-automatically recognises OBO definition and synonyms
 		-drops metadata EXACT, RELATED [] etc from synonyms
 	Removed a bottleneck in OLS.searchOntology to speed up queries
-	Added overridable methods getAllTerms() getAllChildren() getAllParents()
+	Extended OntologyService interface with getAllTerms(), getAllChildren(), getAllParents()
+		-FileOntologyService has optimised versions for all three
+		-BioportalOntologySerice only implements getAllTerms() through paging
+		-all other cases are emulated in a slow unopotimized fashion (a warning
+		is issued)
+	Added downloadLocation to OntologyBean (fix for a new field in BioPortal response)
 
-Version 0.9.3, 9/7/2010
+Version 0.9.3, 9/07/2010
 	Extended BioportalOntologyService with the searchSubtree method
 	Added OntologyContext to OntologyTerm
 	Harmonised all services to return null values or empty lists on empty results
@@ -24,7 +29,7 @@ Version 0.9.2, 28/05/2010
 	Fixed maxnumhits setting in BioPortal query to arbitrary large number
 	Updated BioPortal rest signatures to support URLs as concept IDs
 	URL encoding parameters in BioPortal queries
-	Some fixes to make BioportalOntologyService and CachedServiceDecorator thread safe.
+	Some fixes to make BioportalOntologyService and CachedServiceDecorator thread safe
 
 Version 0.9.1, 8/04/2010
 	Re-implemented searchAll() in OLSOntologyService as it suddenly stopped working

@@ -2,7 +2,7 @@
 <project default="dist" name="ontoCAT" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.4-SNAPSHOT" />
+	<property name="version" value="0.9.4" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -40,7 +40,7 @@
 		</javac>
 	</target>
 
-	<target name="dist" depends="compile, test, jar, jar-with-deps, javadoc">
+	<target name="dist" depends="compile, test-html, jar, jar-with-deps, javadoc">
 
 		<zip destfile="build/${ant.project.name}_v${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />
