@@ -6,8 +6,6 @@ package uk.ac.ebi.ontocat.examples;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,18 +29,14 @@ public class Example9 {
 		URI uriHPO = new File("human-phenotype-ontology_v1208.obo").toURI();
 		URI uriFMA = new File("fma2_obo.obo").toURI();
 		// Load FMA
-		System.out.println(getTime() + "Loading FMA...");
 		FileOntologyService osFMA = new FileOntologyService(uriFMA);
 
 		// Load HPO
-		System.out.println(getTime() + "Loading HPO...");
 		FileOntologyService osHPO = new FileOntologyService(uriHPO);
 
 		// Load all HPO terms into a set
-		// geneontology namespace is an artifact of using OWLAPI
-		// behind the scenes as an OBO parser
-		Set<OntologyTerm> termsHPO = osHPO.getAllTerms("http://www.geneontology.org/go#");
-		System.out.println(getTime() + "Loaded " + termsHPO.size() + " HPO terms");
+		Set<OntologyTerm> termsHPO = osHPO.getAllTerms(null);
+		System.out.println("Loaded " + termsHPO.size() + " HPO terms");
 
 		// Regex to extract FMA xrefs from HPO definitions
 		Pattern p = Pattern.compile("(FMA:\\d+)");
@@ -77,9 +71,4 @@ public class Example9 {
 		}
 	}
 
-	private static String getTime() {
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		return sdf.format(cal.getTime()) + " ";
-	}
 }

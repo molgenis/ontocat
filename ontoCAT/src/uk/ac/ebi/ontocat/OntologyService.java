@@ -24,7 +24,7 @@ public interface OntologyService {
 	};
 
 	/**
-	 * Retrieve a term using its accession.
+	 * Return a term.
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
@@ -36,19 +36,19 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Retrieve a term using only its accession. Here it is assumed that the
-	 * source assumes terms have a unique accession between ontologies.
+	 * Return a term using only its accession. This will only resolve correctly
+	 * if the accession is unique within the service.
 	 * 
 	 * @param termAccession
-	 *            . E.g. GO:00001
+	 *            E.g. GO:00001
 	 * @return OntologyTerm or null if nothing was found
 	 * @throws OntologyServiceException
 	 */
 	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException;
 
 	/**
-	 * Retrieve a path to the root of the ontology. Returns a list of terms,
-	 * starting with the root and finishing with the term itself
+	 * Return a path to the root of the ontology. Returns a list of terms,
+	 * starting with the root and finishing with the term itself.
 	 * 
 	 * @param termAccession
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -58,8 +58,8 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Retrieve a path to the root of the ontology. Returns a list of terms,
-	 * starting with the root and finishing with the term itself
+	 * Return a path to the root of the ontology. Returns a list of terms,
+	 * starting with the root and finishing with the term itself.
 	 * 
 	 * @param term
 	 * @return List of OntologyTerms that has at least one element
@@ -68,7 +68,7 @@ public interface OntologyService {
 	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException;
 
 	/**
-	 * List available ontology accessions
+	 * Return all available ontology accessions in a service.
 	 * 
 	 * @return List of Ontologies or an empty list if nothing was found
 	 * @throws OntologyServiceException
@@ -76,10 +76,9 @@ public interface OntologyService {
 	public List<Ontology> getOntologies() throws OntologyServiceException;
 
 	/**
-	 * Find terms matching keyword within a particular ontology accession. This
-	 * only returns a subset of information for each of the terms. Without
-	 * setting any options the search will be the most permissive, i.e. match
-	 * substrings and in all properties.
+	 * Return terms matching query within a particular ontology. Without setting
+	 * any options the search will be the most permissive, i.e. match substrings
+	 * and in all properties.
 	 * 
 	 * @param ontologyAccession
 	 * @param query
@@ -97,7 +96,7 @@ public interface OntologyService {
 			SearchOptions... options) throws OntologyServiceException;
 
 	/**
-	 * Find terms matching key word. Without setting any options the search will
+	 * Return terms matching query. Without setting any options the search will
 	 * match substrings but will not include properties.
 	 * 
 	 * @param query
@@ -113,7 +112,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find the root terms for this ontology
+	 * Return the root terms for this ontology
 	 * 
 	 * @param ontologyAccession
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -123,7 +122,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find the root terms for this ontology
+	 * Return the root terms for this ontology
 	 * 
 	 * @param ontology
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -132,7 +131,7 @@ public interface OntologyService {
 	public List<OntologyTerm> getRootTerms(Ontology ontology) throws OntologyServiceException;
 
 	/**
-	 * Find child concepts for this termAccession
+	 * Return child concepts for this termAccession
 	 * 
 	 * @param termAccession
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -142,7 +141,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find child concepts for this termAccession
+	 * Return child concepts for this termAccession
 	 * 
 	 * @param term
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -151,7 +150,7 @@ public interface OntologyService {
 	public List<OntologyTerm> getChildren(OntologyTerm term) throws OntologyServiceException;
 
 	/**
-	 * Find parent concepts for this termAccession
+	 * Return parent concepts for this termAccession
 	 * 
 	 * @param termAccession
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -161,7 +160,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find parent concepts for this termAccession
+	 * Return parent concepts for this termAccession
 	 * 
 	 * @param termAccession
 	 * @return List of OntologyTerms or an empty list if nothing was found
@@ -170,7 +169,7 @@ public interface OntologyService {
 	public List<OntologyTerm> getParents(OntologyTerm term) throws OntologyServiceException;
 
 	/**
-	 * Find annotations for this termAccession.
+	 * Return annotations for this termAccession.
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
@@ -181,7 +180,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find annotations for this termAccession.
+	 * Return annotations for this termAccession.
 	 * 
 	 * @param term
 	 * @return Map of OntologyTerms or an empty map if nothing was found
@@ -191,7 +190,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find relations for this termAccession.
+	 * Return relations for this termAccession.
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
@@ -202,7 +201,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Find relations for this termAccession.
+	 * Return relations for this termAccession.
 	 * 
 	 * @param term
 	 * @return Map of OntologyTerms or an empty map if nothing was found
@@ -212,7 +211,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Generate a hyperlink to drill down to ontology source
+	 * Generate a hyperlink to drill down to ontology source.
 	 * 
 	 * @param termAccession
 	 * @return lookup hyperlink or null
@@ -220,7 +219,7 @@ public interface OntologyService {
 	public String makeLookupHyperlink(String termAccession);
 
 	/**
-	 * Generate a hyperlink to drill down to ontology source
+	 * Generate a hyperlink to drill down to ontology source.
 	 * 
 	 * @param termAccession
 	 * @return lookup hyperlink or null
@@ -228,7 +227,7 @@ public interface OntologyService {
 	public String makeLookupHyperlink(String ontologyAccession, String termAccession);
 
 	/**
-	 * Load an ontology from the service.
+	 * Return an ontology from the service.
 	 * 
 	 * @param ontologyAccession
 	 * @return Ontology or null if nothing was found
@@ -236,7 +235,7 @@ public interface OntologyService {
 	public Ontology getOntology(String ontologyAccession) throws OntologyServiceException;
 
 	/**
-	 * Load synonyms for a term
+	 * Return term's synonyms.
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
@@ -247,7 +246,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Load synonyms for a term
+	 * Return term's synonyms.
 	 * 
 	 * @param term
 	 * @return List of synonyms or an empty list if nothing was found
@@ -256,7 +255,7 @@ public interface OntologyService {
 	public List<String> getSynonyms(OntologyTerm term) throws OntologyServiceException;
 
 	/**
-	 * Load definitions for a term
+	 * Return term's definitions.
 	 * 
 	 * @param ontologyAccession
 	 * @param termAccession
@@ -267,7 +266,7 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Load definitions for a term
+	 * Return term's definitions.
 	 * 
 	 * @param term
 	 * @return List of definitions or an empty list if nothing was found
@@ -276,12 +275,15 @@ public interface OntologyService {
 	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException;
 
 	/**
-	 * Gets the all terms in a given ontology
+	 * Return all the terms in the ontology.
 	 * 
-	 * @param os
-	 *            the ontology service encapsulating the ontology
 	 * @param ontologyAccession
-	 *            the ontology accession identifying the ontology in the service
+	 *            the ontology accession identifying the ontology in the
+	 *            service. Can be null if the underlying service is of
+	 *            FileOntologyService type. You can however use the base uri for
+	 *            an owl ontology, or http://www.geneontology.org/go# for OBO
+	 *            ontologies if you wish. Things get easily complicated here,
+	 *            that's why null is also an accepted value.
 	 * 
 	 * @return A set as we want to collapse duplicate terms
 	 * 
@@ -290,12 +292,10 @@ public interface OntologyService {
 	public Set<OntologyTerm> getAllTerms(String ontologyAccession) throws OntologyServiceException;
 
 	/**
-	 * Gets the all children terms of a given term.
+	 * Get all the children terms of a given term.
 	 * 
-	 * @param os
-	 *            the ontology service encapsulating the ontology
-	 * @param term
-	 *            the term which children are to be returned
+	 * @param ontologyAccession
+	 * @param termAccession
 	 * 
 	 * @return all the child terms of the given term in is_a hierarchy or an
 	 *         empty set if no parents were found
@@ -304,12 +304,10 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Gets the all parent terms of a given term.
+	 * Get all the parent terms of a given term.
 	 * 
-	 * @param os
-	 *            the ontology service encapsulating the ontology
-	 * @param term
-	 *            the term which parents are to be returned
+	 * @param ontologyAccession
+	 * @param termAccession
 	 * 
 	 * @return all the parent terms of the given term in is_a hierarchy or an
 	 *         empty set if no parents were found

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class SuccessBean {
 	private String accessedResource;
 	private String accessDate;
+	private Integer numPages;
 	private static final String urlBASE = "http://rest.bioontology.org";
 
 	/**
@@ -32,5 +33,9 @@ public class SuccessBean {
 			accessDate = matcher.group();
 		}
 		return accessDate;
+	}
+
+	public Integer getNumberOfPages() {
+		return numPages;
 	}
 }

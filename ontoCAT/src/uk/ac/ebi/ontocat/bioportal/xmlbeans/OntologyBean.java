@@ -55,6 +55,7 @@ public class OntologyBean extends Ontology {
 	private String filePath;
 	private String viewDefinition;
 	private String viewDefinitionLanguage;
+	private String downloadLocation;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);
