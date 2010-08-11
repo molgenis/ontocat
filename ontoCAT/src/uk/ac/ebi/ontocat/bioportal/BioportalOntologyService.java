@@ -103,8 +103,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			+ "<xsl:copy-of select='success/accessDate'/>"
 			+ "<xsl:copy-of select='success/data/page/numPages'/>"
 			+ "</success>"
-			+ "</xsl:template>"
-			+ "</xsl:stylesheet>";
+			+ "</xsl:template>" + "</xsl:stylesheet>";
 
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
@@ -456,7 +455,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 				// alternatively could implement this via
 				// HttpURLConnection.getResponseCode()
 				if (!e.getMessage().contains("HTTP response code: 400")
-						&& !e.getMessage().contains("virtual/parents/"))
+						&& !e.getMessage().contains("No parents"))
 					log.error("Possible problems on BioPortal side - " + e + " on "
 							+ queryURL.toString());
 
@@ -604,7 +603,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		ConceptBean cb = (ConceptBean) getTermNoSearch(ontologyAccession, "root");
 		if (cb == null)
 			return Collections.emptyList();
-		return fetchFullTerms(cb.getChildren(), ontologyAccession);
+		return injectOntologyAccession(cb.getChildren(), ontologyAccession);
 	}
 
 	@Override
@@ -693,7 +692,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		} catch (OntologyServiceException e) {
 			return Collections.EMPTY_LIST;
 		}
-		return fetchFullTerms((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
+		return injectOntologyAccession((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -705,19 +704,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		} catch (OntologyServiceException e) {
 			return Collections.emptyList();
 		}
-		return fetchFullTerms((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
+		return injectOntologyAccession((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<OntologyTerm> fetchFullTerms(List<OntologyTerm> list, String ontologyAccession)
-			throws OntologyServiceException {
-		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
-		for (OntologyTerm ot : list) {
-			OntologyTerm fullTerm = getTerm(ontologyAccession, ot.getAccession());
-			if (ot != null)
-				result.add(fullTerm);
-		}
-		return result;
+	private List<OntologyTerm> injectOntologyAccession(List<OntologyTerm> list,
+			String ontologyAccession) throws OntologyServiceException {
+		for (OntologyTerm ot : list)
+			ot.setOntologyAccession(ontologyAccession);
+		return list;
 	}
 
 	@Override
@@ -809,7 +804,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		// Fetch first page
 		processGetAllURL(ontologyAccession, PAGESIZE, 1);
 		result.addAll((Set<OntologyTerm>) getBeanFromQuery());
-		
+
 		// Fetch any remaining pages
 		pageCount = getSuccessBean().getNumberOfPages();
 		for (Integer pageNo = 2; pageNo <= pageCount; pageNo++) {

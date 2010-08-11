@@ -21,7 +21,7 @@ public class BioportalServiceTest extends AbstractOntologyServiceTest {
 		ONTOLOGY_ACCESSION = "1070";
 	}
 
-	@Test
+	@Test(timeout = 5000)
 	public void testSearchSubtree() throws Exception {
 		BioportalOntologyService bos = new BioportalOntologyService();
 		List<OntologyTerm> list1 = bos

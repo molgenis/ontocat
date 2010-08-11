@@ -5,7 +5,12 @@ Deferred for next release:
 	Make FileOntologyService fully thread-safe
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
-	
+
+Version 0.9.5, --/--/2010
+	FIX: removed unnecessary eager fetching on some of the methods in BioportalOntologyService
+	(e.g. getParents, getChildren where the return list was post-processed on 
+	individual term	basis)
+
 Version 0.9.4, 10/08/2010
 	Made FileOntologyService more OBO friendly
 		-automatically recognises OBO definition and synonyms
