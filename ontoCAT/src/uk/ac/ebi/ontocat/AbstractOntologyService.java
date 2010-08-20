@@ -1,5 +1,6 @@
 package uk.ac.ebi.ontocat;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,27 +21,37 @@ public abstract class AbstractOntologyService implements OntologyService {
 	@Override
 	public Map<String, List<String>> getAnnotations(OntologyTerm term)
 			throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyMap();
 		return getAnnotations(term.getOntologyAccession(), term.getAccession());
 	}
 
 	@Override
 	public List<OntologyTerm> getChildren(OntologyTerm term) throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyList();
 		return getChildren(term.getOntologyAccession(), term.getAccession());
 	}
 
 	@Override
 	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyList();
 		return getDefinitions(term.getOntologyAccession(), term.getAccession());
 	}
 
 	@Override
 	public List<OntologyTerm> getParents(OntologyTerm term) throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyList();
 		return getParents(term.getOntologyAccession(), term.getAccession());
 	}
 
 	@Override
 	public Map<String, List<String>> getRelations(OntologyTerm term)
 			throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyMap();
 		return getRelations(term.getOntologyAccession(), term.getAccession());
 	}
 
@@ -51,17 +62,21 @@ public abstract class AbstractOntologyService implements OntologyService {
 
 	@Override
 	public List<String> getSynonyms(OntologyTerm term) throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyList();
 		return getSynonyms(term.getOntologyAccession(), term.getAccession());
 	}
 
 	@Override
 	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException {
+		if (term == null)
+			return Collections.emptyList();
 		return getTermPath(term.getOntologyAccession(), term.getAccession());
 	}
 
 	public Set<OntologyTerm> getAllChildren(OntologyTerm term) throws OntologyServiceException {
-		log.warn("Using unoptimised version of getAllChildren()");
-
+		if (term == null)
+			return Collections.emptySet();
 		return processStack(term, new MyFunctor() {
 			@Override
 			public List<OntologyTerm> call(OntologyTerm term) throws OntologyServiceException {
@@ -71,7 +86,8 @@ public abstract class AbstractOntologyService implements OntologyService {
 	}
 
 	public Set<OntologyTerm> getAllParents(OntologyTerm term) throws OntologyServiceException {
-		log.warn("Using unoptimised version of getAllParents()");
+		if (term == null)
+			return Collections.emptySet();
 		return processStack(term, new MyFunctor() {
 			@Override
 			public List<OntologyTerm> call(OntologyTerm term) throws OntologyServiceException {
@@ -102,7 +118,6 @@ public abstract class AbstractOntologyService implements OntologyService {
 		}
 		result.remove(seed);
 		return result;
-
 	}
 
 	@Override
@@ -117,7 +132,6 @@ public abstract class AbstractOntologyService implements OntologyService {
 			throws OntologyServiceException {
 		return getAllParents(getTerm(ontologyAccession, termAccession));
 	}
-
 
 	@Override
 	public Set<OntologyTerm> getAllTerms(String ontologyAccession) throws OntologyServiceException {
