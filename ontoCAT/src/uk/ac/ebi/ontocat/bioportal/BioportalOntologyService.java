@@ -44,6 +44,7 @@ import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.ConceptBean;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.EntryBean;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.InstanceBean;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.OntologyBean;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.SearchBean;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.SuccessBean;
@@ -138,6 +139,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		xstream.alias("searchBean", SearchBean.class);
 		xstream.alias("success", SuccessBean.class);
 		xstream.alias("ontologyBean", OntologyBean.class);
+		xstream.alias("instanceBean", InstanceBean.class);
+		xstream.omitField(InstanceBean.class, "instanceType");
 		// xstream.alias("searchResultList", SearchResultListBean.class);
 		xstream.addImplicitCollection(EntryBean.class, "UnmodifiableCollection");
 		xstream.addImplicitCollection(EntryBean.class, "strings", "string", String.class);
@@ -482,7 +485,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			// throw new OntologyServiceException("Term not found");
 		} catch (ConversionException e) {
 			log.error("Web service signature has changed!");
-			e.printStackTrace();
+			log.error(e.getMessage());
+			// e.printStackTrace();
 			return null;
 		}
 	}

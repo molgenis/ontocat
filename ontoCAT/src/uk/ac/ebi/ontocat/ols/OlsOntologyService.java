@@ -56,6 +56,8 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	String lookupURI = "http://www.ebi.ac.uk/ontology-lookup/?termId=";
 	// cache of annotations
 	Map<String, Map<String, List<String>>> annotationCache = new TreeMap<String, Map<String, List<String>>>();
+	// logger
+	private static final Logger log = Logger.getLogger(OlsOntologyService.class.getName());
 
 	public OlsOntologyService() throws OntologyServiceException {
 		// Try to make connections to the database and the webservice

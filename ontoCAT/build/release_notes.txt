@@ -10,6 +10,8 @@ Version 0.9.5, --/--/2010
 	FIX: removed unnecessary eager fetching on some of the methods in BioportalOntologyService
 	(e.g. getParents, getChildren where the return list was post-processed on 
 	individual term	basis)
+	FIX: updated to the latest BioPortal service signature, i.e. instances XML
+	Less warnings on using unoptimised getAllParents and getAllChildren
 
 Version 0.9.4, 10/08/2010
 	Made FileOntologyService more OBO friendly

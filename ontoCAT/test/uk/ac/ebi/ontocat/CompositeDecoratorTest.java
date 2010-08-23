@@ -35,7 +35,7 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 
 		os = CompositeDecorator.getService(osOLS, osBP, osFile);
 
-		// GO accession
+		// Testing with EFO
 		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
 		TERM_ACCESSION = "EFO_0000400";
 	}

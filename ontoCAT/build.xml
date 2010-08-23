@@ -19,6 +19,7 @@
 			<include name="**/*Test.class" />
 			<exclude name="**/AbstractOntologyServiceTest*" />
 			<exclude name="**/MediaWikiOntologyServiceTest*" />
+			<exclude name="**/ZoomaTest*" />
 		</patternset>
 	</fileset>
 
@@ -96,11 +97,11 @@
 		</jar>
 	</target>
 
-	<target name="test">
+	<target name="test" >
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit fork="yes" haltonfailure="no" printSummary="true" showOutput="false">
+		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false">
 			<classpath refid="test.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
