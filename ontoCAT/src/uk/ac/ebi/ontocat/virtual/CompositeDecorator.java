@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -203,6 +204,8 @@ public class CompositeDecorator implements InvocationHandler {
 			if (result == null)
 				throw e;
 			if (result instanceof Map && ((Map) result).size() == 0)
+				throw e;
+			if (result instanceof Set && ((Set) result).size() == 0)
 				throw e;
 			if (result instanceof List) {
 				Integer listSize = ((List) result).size();

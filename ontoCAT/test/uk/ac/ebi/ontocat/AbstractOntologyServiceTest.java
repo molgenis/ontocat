@@ -45,7 +45,7 @@ public abstract class AbstractOntologyServiceTest {
 	@Test
 	public final void testSearchOntology() throws OntologyServiceException {
 		printCurrentTest();
-		List<OntologyTerm> list = os.searchOntology(ONTOLOGY_ACCESSION, "death");
+		List<OntologyTerm> list = os.searchOntology(ONTOLOGY_ACCESSION, "asthma");
 		assertNotSame("Empty list returned!", 0, list.size());
 		for (OntologyTerm ot : list)
 			println(ot);

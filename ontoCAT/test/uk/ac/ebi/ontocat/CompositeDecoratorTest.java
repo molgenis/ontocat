@@ -31,9 +31,12 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 		final OntologyService osOLS = new OlsOntologyService();
 		final FileOntologyService osFile = new FileOntologyService(new URI(
 				"http://www.ebi.ac.uk/efo"));
+		final FileOntologyService osFile2 = new FileOntologyService(
+				new URI(
+						"https://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
 		osFile.setSynonymSlot("alternative_term");
 
-		os = CompositeDecorator.getService(osOLS, osBP, osFile);
+		os = CompositeDecorator.getService(osOLS, osBP, osFile, osFile2);
 
 		// Testing with EFO
 		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
