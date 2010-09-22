@@ -547,20 +547,26 @@ public final class FileOntologyService extends AbstractOntologyService {
 	private String getLabel(OWLClass cls) throws OntologyServiceException {
 		// Try the slot label (SKOS or custom)
 		Map<String, List<String>> clsAnnotations = getAnnotations(cls);
-		List<String> labels = clsAnnotations.get(labelSlot);
-
-		if (labels != null && labels.size() > 0) {
-			if (labels.size() != 1)
-				log.warn("Multple labels found on " + cls);
-			return labels.get(0);
-			// Try the rdfs:label if no results from slotLabel
-		} else if (!labelSlot.equalsIgnoreCase("label")) {
-			labels = clsAnnotations.get("label");
-			if (labels != null && labels.size() != 1)
-				log.warn("Multple labels found on " + cls);
-			return labels.get(0);
+		List<String> labels1 = null;
+		List<String> labels2 = null;
+		if (clsAnnotations != null) {
+			labels1 = clsAnnotations.get(labelSlot);
+			labels2 = clsAnnotations.get("label");
 		}
-		throw new OntologyServiceException("No label found on " + cls);
+
+		if (labels1 != null) {
+			if (labels1.size() != 1)
+				log.warn("Multple labels found on " + cls);
+			return labels1.get(0);
+			// Try the rdfs:label if no results from slotLabel
+		} else if (labels2 != null) {
+			if (labels2.size() != 1)
+				log.warn("Multple labels found on " + cls);
+			return labels2.get(0);
+			// try fragment
+		} else {
+			return getFragment(cls);
+		}
 	}
 
 }

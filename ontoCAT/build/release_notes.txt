@@ -6,7 +6,8 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 
-Version 0.9.5, --/--/2010
+Version 0.9.5, 22/10/2010
+	Added support for labels being part of the class URI
 	FIX: removed unnecessary eager fetching on some of the methods in BioportalOntologyService
 	(e.g. getParents, getChildren where the return list was post-processed on 
 	individual term	basis)
