@@ -18,8 +18,8 @@ import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 /**
  * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
  * capabilities to an OntologyService. Implemented using Java reflection dynamic
- * proxy pattern See the following link for more details {@link http
- * ://www.webreference.com/internet/reflection/3.html}
+ * proxy pattern See the following link for more details
+ * http://www.webreference.com/internet/reflection/3.html
  * 
  * @author Tomasz Adamusiak
  */
@@ -34,8 +34,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	private List sortOrder;
 
 	/** The Constant log. */
-	private static final Logger log = Logger
-			.getLogger(SortedSubsetDecorator.class);
+	private static final Logger log = Logger.getLogger(SortedSubsetDecorator.class);
 
 	/**
 	 * Instantiates a new sorted subset decorator.
@@ -64,8 +63,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj, List list)
-			throws OntologyServiceException {
+	private static Object createProxy(Object obj, List list) throws OntologyServiceException {
 		// If an exception if thrown here, the OntologyService
 		// interface must have changed and you have to modify
 		// the <searchAll> and <searchOntology> strings below
@@ -78,9 +76,8 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			log.fatal("Signature has changed in proxy pattern!");
 			throw new OntologyServiceException(e);
 		}
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
-				.getClass().getInterfaces(), new SortedSubsetDecorator(obj,
-				list));
+		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
+				.getInterfaces(), new SortedSubsetDecorator(obj, list));
 	}
 
 	public static OntologyService getService(OntologyService os, List list)
@@ -96,8 +93,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		try {
 			// in case for searching a particular ontology
@@ -136,8 +132,8 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result,
-			List sortOrder) throws OntologyServiceException {
+	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result, List sortOrder)
+			throws OntologyServiceException {
 		// trim list
 		for (int i = result.size() - 1; i >= 0; i--) {
 			if (!sortOrder.contains(result.get(i).getOntologyAccession()))
@@ -172,8 +168,8 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		 */
 		@Override
 		public int compare(OntologyTerm term0, OntologyTerm term1) {
-			if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder
-					.indexOf(term1.getOntologyAccession())) {
+			if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder.indexOf(term1
+					.getOntologyAccession())) {
 				return -1;
 			} else {
 				return 1;

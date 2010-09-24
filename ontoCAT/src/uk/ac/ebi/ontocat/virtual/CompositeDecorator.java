@@ -27,8 +27,8 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 /**
  * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
  * capabilities to an OntologyService. Implemented using Java reflection dynamic
- * proxy pattern See the following link for more details {@link http
- * ://www.webreference.com/internet/reflection/3.html}
+ * proxy pattern See the following link for more details
+ * http://www.webreference.com/internet/reflection/3.html
  * 
  * @author Tomasz Adamusiak
  */
@@ -111,7 +111,7 @@ public class CompositeDecorator implements InvocationHandler {
 	/**
 	 * Alternative constructor to simplify access in examples
 	 * 
-	 * @param varchar
+	 * @param list
 	 *            list of ontologies to combine
 	 * @return the composite service service
 	 * @throws OntologyServiceException
@@ -172,7 +172,7 @@ public class CompositeDecorator implements InvocationHandler {
 				} else {
 					log.error(e + " " + e.getCause().getMessage());
 				}
-				if (method.getReturnType() == List.class) 
+				if (method.getReturnType() == List.class)
 					result = Collections.EMPTY_LIST;
 				if (method.getReturnType() == Map.class)
 					result = Collections.EMPTY_MAP;

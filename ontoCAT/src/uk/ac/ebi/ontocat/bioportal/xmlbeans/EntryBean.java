@@ -49,7 +49,7 @@ public class EntryBean implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<String> getList() {
 		try {
-			if (list != null && list.get(0) instanceof String) {
+			if (list != null && list.size() > 0 && list.get(0) instanceof String) {
 				return list;
 			} else
 				return null;

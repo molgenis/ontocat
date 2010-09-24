@@ -76,9 +76,6 @@ public final class FileOntologyService extends AbstractOntologyService {
 	 * 
 	 * @param uriOntology
 	 *            where to load the ontology from, can be local file or URL
-	 * @param fdesc
-	 *            FieldDescriptor describing which annotations hold synonyms,
-	 *            definitions and labels
 	 */
 	public FileOntologyService(URI uriOntology) {
 		ontology = new OntologyLoader(uriOntology).getOntology();

@@ -113,6 +113,12 @@ public class OntologyTerm implements Serializable {
 	}
 
 	/**
+	 * Instantiates a new ontology term. Empty constructor.
+	 */
+	public OntologyTerm() {
+	}
+
+	/**
 	 * Instantiates a new ontology term.
 	 * 
 	 * @param ontologyAccession
@@ -122,9 +128,6 @@ public class OntologyTerm implements Serializable {
 	 * @param label
 	 *            the label
 	 */
-	public OntologyTerm() {
-	}
-
 	public OntologyTerm(String ontologyAccession, String termAccession, String label) {
 		this.setAccession(termAccession);
 		this.setLabel(label);

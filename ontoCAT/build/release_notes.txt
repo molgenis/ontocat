@@ -6,6 +6,11 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 
+Version 0.9.5.1, 24/10/2010
+	FIX: getAnnotations() would result in IndexOutOfBoundsException in some cases
+	FIX: Updated to recent BioPortal web services signature for OntologyBean - authorSlot
+	FIX: Various fixes to javadoc
+
 Version 0.9.5, 22/10/2010
 	Added support for labels being part of the class URI
 	FIX: removed unnecessary eager fetching on some of the methods in BioportalOntologyService

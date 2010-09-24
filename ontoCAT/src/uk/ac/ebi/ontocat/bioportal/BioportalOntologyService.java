@@ -125,8 +125,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	/**
 	 * Shorthand that uses ontocat-svn email to instantiate the service
 	 * 
-	 * @param email
-	 *            the email
 	 */
 	public BioportalOntologyService() {
 		this("ontocat-svn@lists.sourceforge.net");

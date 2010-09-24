@@ -87,8 +87,6 @@ public interface OntologyService {
 	 * @param options
 	 *            - EXACT - only exact matching of query. EXCLUDE_PROPERTIES
 	 *            excludes - properties from search.
-	 * @param options
-	 *            - search options for the query
 	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
@@ -160,9 +158,9 @@ public interface OntologyService {
 			throws OntologyServiceException;
 
 	/**
-	 * Return parent concepts for this termAccession
+	 * Return parent concepts for a particular OntologyTerm
 	 * 
-	 * @param termAccession
+	 * @param term
 	 * @return List of OntologyTerms or an empty list if nothing was found
 	 * @throws OntologyServiceException
 	 */
