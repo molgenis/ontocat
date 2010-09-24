@@ -6,6 +6,10 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 
+Version 0.9.5.2, 24/10/2010
+	FIX: Fixed inconsistency when getOntologyAccession() was not in the list of 
+	possible accessions of an OWL file thus preventing some of the methods from completing
+	
 Version 0.9.5.1, 24/10/2010
 	FIX: getAnnotations() would result in IndexOutOfBoundsException in some cases
 	FIX: Updated to recent BioPortal web services signature for OntologyBean - authorSlot
