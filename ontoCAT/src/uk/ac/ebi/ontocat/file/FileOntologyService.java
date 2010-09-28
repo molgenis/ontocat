@@ -372,18 +372,6 @@ public final class FileOntologyService extends AbstractOntologyService {
 		// iterate through all classes annotations
 		// TODO: lucene index?
 		for (OWLClass cls : ontology.getReferencedClasses()) {
-			// if label is only in the fragment
-			if (getFragment(cls).contains(query)) {
-				// filter out non exact matches
-				if (ops.contains(SearchOptions.EXACT) && getFragment(cls).equalsIgnoreCase(query)) {
-					terms.add(getTerm(cls));
-					// just add it if nonexact search
-				} else if (!ops.contains(SearchOptions.EXACT)) {
-					terms.add(getTerm(cls));
-				}
-			}
-
-			// regular label
 			if (ops.contains(SearchOptions.EXACT) && getLabel(cls).equalsIgnoreCase(query)) {
 				terms.add(getTerm(cls));
 				// just add it if nonexact search
