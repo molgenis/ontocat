@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -248,6 +249,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
+			keyword = keyword.replace(":", ""); // colon will crash the service
 			keyword = URLEncoder.encode(keyword, "UTF-8");
 			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?maxnumhits=10000000"
 					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
@@ -605,7 +607,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		ConceptBean cb = (ConceptBean) getTermNoSearch(ontologyAccession, "root");
 		if (cb == null)
 			return Collections.emptyList();
-		return injectOntologyAccession(cb.getChildren(), ontologyAccession);
+		return (List<OntologyTerm>) injectOntologyAccession(cb.getChildren(), ontologyAccession);
 	}
 
 	@Override
@@ -694,7 +696,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		} catch (OntologyServiceException e) {
 			return Collections.EMPTY_LIST;
 		}
-		return injectOntologyAccession((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
+		return (List<OntologyTerm>) injectOntologyAccession(
+				(List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -706,11 +709,12 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		} catch (OntologyServiceException e) {
 			return Collections.emptyList();
 		}
-		return injectOntologyAccession((List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
+		return (List<OntologyTerm>) injectOntologyAccession(
+				(List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<OntologyTerm> injectOntologyAccession(List<OntologyTerm> list,
+	private Collection<OntologyTerm> injectOntologyAccession(Collection<OntologyTerm> list,
 			String ontologyAccession) throws OntologyServiceException {
 		for (OntologyTerm ot : list)
 			ot.setOntologyAccession(ontologyAccession);
@@ -814,6 +818,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			processGetAllURL(ontologyAccession, PAGESIZE, pageNo);
 			result.addAll((Set<OntologyTerm>) getBeanFromQuery());
 		}
-		return result;
+		return (Set<OntologyTerm>) injectOntologyAccession(result, ontologyAccession);
 	}
 }
