@@ -50,7 +50,7 @@ public class OntologyTerm implements Serializable {
 		UNKNOWN
 	};
 
-	public class OntologyTermContext {
+	public class OntologyTermContext implements Serializable {
 		/*
 		 * (non-Javadoc)
 		 * 
