@@ -2,7 +2,7 @@
 <project default="dist" name="ontoCAT" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.5.2" />
+	<property name="version" value="0.9.5.3" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -41,6 +41,13 @@
 		</javac>
 	</target>
 
+	<target name="clean-dist">
+		  <delete>
+		    <fileset dir="build" includes="*.jar"/>
+		  	<fileset dir="build" includes="*.zip"/>
+		  </delete>
+	</target>
+	
 	<target name="dist" depends="compile, test-html, jar, jar-with-deps, javadoc">
 
 		<zip destfile="build/${ant.project.name}_v${version}.zip">
@@ -125,7 +132,7 @@
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false">
+		<junit fork="yes" haltonfailure="no" printSummary="true" showOutput="false">
 			<classpath refid="test.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">

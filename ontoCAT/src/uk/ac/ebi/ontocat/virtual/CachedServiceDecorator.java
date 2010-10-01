@@ -41,7 +41,6 @@ public class CachedServiceDecorator implements InvocationHandler {
 
 	private static Cache ServiceCache;
 	private static Cache EternalCache;
-	private static CacheManager manager;
 
 	/**
 	 * Instantiates a new sorted subset decorator.
@@ -55,9 +54,13 @@ public class CachedServiceDecorator implements InvocationHandler {
 		target = obj;
 		// Initialise the cache singleton
 		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
-		manager = CacheManager.create(getClass().getResource("ehcache.xml"));
+		CacheManager manager = CacheManager.create(getClass().getResource("ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
 		EternalCache = manager.getCache("EternalServiceCache");
+	}
+
+	public static void clearCache() {
+		CacheManager.getInstance().clearAll();
 	}
 
 	/**

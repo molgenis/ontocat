@@ -12,6 +12,7 @@ public class CachedDecoratorTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		CachedServiceDecorator.clearCache();
 		os = CachedServiceDecorator.getService(new BioportalOntologyService());
 		// GO accession
 		ONTOLOGY_ACCESSION = "1070";
