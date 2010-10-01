@@ -249,7 +249,8 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void processSearchUrl(String ontologyAccession, String keyword,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
-			keyword = keyword.replace(":", ""); // colon will crash the service
+			// colon in the begining will crash the service
+			keyword = keyword.replaceFirst("$:", "");
 			keyword = URLEncoder.encode(keyword, "UTF-8");
 			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?maxnumhits=10000000"
 					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
