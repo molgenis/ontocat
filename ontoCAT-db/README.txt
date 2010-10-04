@@ -1,4 +1,6 @@
-Welcome by MOLGENIS
+Welcome by OntoCAT MOLGENIS template
+
+This database expects a database named 'ontocat' on mysql.
 
 How to generate:
 - Edit molgenis_db.xml and molgenis_ui.xml to (re)model your application
