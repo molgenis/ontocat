@@ -6,6 +6,9 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 
+Version 0.9.5.4 -/-/-
+	FIX: FileOntologyService will throw exception if there are classes with no properties
+
 Version 0.9.5.3 1/10/2010
 	FIX: Colon in query would crash BioPortal
 	FIX: CachedOntologyService -> OntologyTermContext was not serializable
