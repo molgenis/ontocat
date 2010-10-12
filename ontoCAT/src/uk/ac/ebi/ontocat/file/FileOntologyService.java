@@ -492,8 +492,6 @@ public final class FileOntologyService extends AbstractOntologyService {
 			// and convert it back to String[] before putting back in map
 			metadata.put(key, arr);
 		}
-		if (metadata.size() == 0)
-			return null;
 		return metadata;
 	}
 
