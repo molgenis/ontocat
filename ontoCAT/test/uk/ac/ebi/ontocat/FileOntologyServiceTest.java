@@ -1,6 +1,5 @@
 package uk.ac.ebi.ontocat;
 
-
 import static org.junit.Assert.assertNotSame;
 
 import java.net.URI;
@@ -15,7 +14,9 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		os = new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"));
+		os = new FileOntologyService(
+				new URI(
+						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
 		// Use a non-SKOS annotation for synonyms
 		((FileOntologyService) os).setSynonymSlot("alternative_term");
 
