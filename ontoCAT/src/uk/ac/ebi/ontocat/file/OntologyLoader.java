@@ -6,9 +6,10 @@ package uk.ac.ebi.ontocat.file;
 import java.net.URI;
 
 import org.apache.log4j.Logger;
-import org.semanticweb.owl.model.OWLOntology;
-import org.semanticweb.owl.model.OWLOntologyCreationException;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,14 +19,14 @@ import org.semanticweb.owl.model.OWLOntologyManager;
  */
 public final class OntologyLoader {
 
-	/** The Constant _log. */
-	private static final Logger _log = Logger.getLogger(OntologyLoader.class.getName());
+	/** The Constant log. */
+	private static final Logger log = Logger.getLogger(OntologyLoader.class.getName());
 
-	/** The Constant _manager. */
-	private static final OWLOntologyManager _manager = OntologyManagerSingleton.INSTANCE;
+	/** The Constant manager. */
+	private static final OWLOntologyManager manager = OntologyManagerSingleton.INSTANCE;
 
-	/** The _ont loaded. */
-	private OWLOntology _ontLoaded;
+	/** The ontology to be loaded. */
+	private OWLOntology ontology;
 
 	/**
 	 * The Constructor.
@@ -38,19 +39,24 @@ public final class OntologyLoader {
 			// Manager has to be synchronised otherwise parser will
 			// complain: Parsers should load imported ontologies using
 			// the makeImportLoadRequest method.
-			synchronized (_manager) {
+			synchronized (manager) {
 				// Try to remove this ontology first
 				// For some reason obo ontologies are duplicated
 				// hogging memory, though documentation says otherwise
-				_manager.removeOntology(uriOntology);
-				_ontLoaded = _manager.loadOntologyFromPhysicalURI(uriOntology);
+				// ----------
+				// have not tested it in OWL API 3
+				// possibly not needed anymore
+				// also cannot remove ontology by URI anymore
+				// manager.removeOntology(uriOntology);
+				IRI iri = IRI.create(uriOntology);
+				ontology = manager.loadOntologyFromOntologyDocument(iri);
 			}
 		} catch (OWLOntologyCreationException e) {
-			_log.fatal("The ontology could not be created: " + e.getMessage());
+			log.fatal("The ontology could not be created: " + e.getMessage());
 			System.exit(1);
 		} catch (java.lang.OutOfMemoryError e) {
-			_log.error("Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
-			_log.fatal(e);
+			log.error("Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
+			log.fatal(e);
 			System.exit(1);
 		}
 	}
@@ -61,6 +67,6 @@ public final class OntologyLoader {
 	 * @return ontology loaded in the constructor
 	 */
 	public OWLOntology getOntology() {
-		return _ontLoaded;
+		return ontology;
 	}
 }

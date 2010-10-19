@@ -6,7 +6,8 @@ Deferred for next release:
 	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
 	Add getUri method to OntologyTerm
 
-Version 0.9.5.4 -/-/-
+Version 0.9.6 -/-/-
+	Updated OWL API dependence to 3.1
 	FIX: FileOntologyService will throw exception if there are classes with no properties
 
 Version 0.9.5.3 1/10/2010

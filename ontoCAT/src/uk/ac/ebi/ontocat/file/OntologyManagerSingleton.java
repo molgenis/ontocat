@@ -3,8 +3,8 @@
  */
 package uk.ac.ebi.ontocat.file;
 
-import org.semanticweb.owl.apibinding.OWLManager;
-import org.semanticweb.owl.model.OWLOntologyManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 /**
  * Employs singleton pattern to serve a static reference to OWLOntologyManager.
