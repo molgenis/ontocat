@@ -136,7 +136,9 @@ public final class FileOntologyService extends AbstractOntologyService {
 		// FIXME: should iterate over ontoAccessions maybe?
 		return new ArrayList<Ontology>() {
 			{
-				add(new Ontology(ontology.getOntologyID().toString()));
+				String ontologyAccession = ontology.getOntologyID().toString();
+				ontologyAccession = ontologyAccession.replaceFirst("^<", "").replaceFirst(">$", "");
+				add(new Ontology(ontologyAccession));
 			}
 		};
 	}
