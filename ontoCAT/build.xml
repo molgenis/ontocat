@@ -43,29 +43,29 @@
 
 	<target name="clean-dist">
 		  <delete>
-		    <fileset dir="build" includes="*.jar"/>
-		  	<fileset dir="build" includes="*.zip"/>
+		    <fileset dir="dist" includes="*.jar"/>
+		  	<fileset dir="dist" includes="*.zip"/>
 		  </delete>
 	</target>
 	
 	<target name="dist" depends="compile, test-html, jar, jar-with-deps, javadoc">
 
-		<zip destfile="build/${ant.project.name}_v${version}.zip">
+		<zip destfile="dist/${ant.project.name}_v${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />
 			<zipfileset dir="src" prefix="source/src" />
 			<zipfileset dir="test" prefix="source/test" />
 			<zipfileset dir="lib" prefix="source/lib" />
 			<zipfileset dir="." prefix="source" includes="build.xml" />
-			<zipfileset dir="build" includes="${ant.project.name}_with_deps_v${version}.jar" />
-			<zipfileset dir="build" includes="${ant.project.name}_v${version}.jar" />
-			<zipfileset dir="build" includes="release_notes.txt" />
-			<zipfileset dir="build" includes="COPYING" />
-			<zipfileset dir="build" includes="COPYING.LESSER" />
+			<zipfileset dir="dist" includes="${ant.project.name}_with_deps_v${version}.jar" />
+			<zipfileset dir="dist" includes="${ant.project.name}_v${version}.jar" />
+			<zipfileset dir="dist" includes="release_notes.txt" />
+			<zipfileset dir="dist" includes="COPYING" />
+			<zipfileset dir="dist" includes="COPYING.LESSER" />
 		</zip>
 	</target>
 
 	<target name="jar-with-deps">
-		<jar destfile="build/${ant.project.name}_with_deps_v${version}.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="dist/${ant.project.name}_with_deps_v${version}.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="uk.ac.ebi.ontocat.examples.Example3" />
 				<attribute name="Class-Path" value="." />
@@ -96,7 +96,7 @@
 	</target>
 	
 	<target name="jar-with-deps-small">
-			<jar destfile="build/${ant.project.name}_with_deps_small_v${version}.jar" filesetmanifest="mergewithoutmain">
+			<jar destfile="dist/${ant.project.name}_with_deps_small_v${version}.jar" filesetmanifest="mergewithoutmain">
 				<manifest>
 					<attribute name="Main-Class" value="uk.ac.ebi.ontocat.examples.Example3" />
 					<attribute name="Class-Path" value="." />
@@ -122,7 +122,7 @@
 		</target>
 
 	<target name="jar">
-		<jar destfile="build/${ant.project.name}_v${version}.jar">
+		<jar destfile="dist/${ant.project.name}_v${version}.jar">
 			<fileset dir="bin" />
 		</jar>
 	</target>

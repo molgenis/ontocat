@@ -1,4 +1,4 @@
-package uk.ac.ebi.ontocat.special;
+package uk.ac.ebi.ontocat.utils;
 
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyServiceException;
