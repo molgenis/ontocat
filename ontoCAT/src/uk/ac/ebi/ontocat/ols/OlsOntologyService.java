@@ -46,6 +46,7 @@ import uk.ac.ebi.ook.web.services.QueryServiceLocator;
  * 
  */
 
+@SuppressWarnings("unchecked")
 public class OlsOntologyService extends AbstractOntologyService implements OntologyService {
 	Logger logger = Logger.getLogger(OlsOntologyService.class);
 	// Webservice API
@@ -57,6 +58,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	// cache of annotations
 	Map<String, Map<String, List<String>>> annotationCache = new TreeMap<String, Map<String, List<String>>>();
 	// logger
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(OlsOntologyService.class.getName());
 
 	public OlsOntologyService() throws OntologyServiceException {
@@ -139,7 +141,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
 			throws OntologyServiceException {
@@ -227,7 +228,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 		try {
 			return fetchFullTerms(qs.getRootTerms(ontologyAccession));
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new OntologyServiceException(e.getMessage());
 		}
@@ -381,7 +381,6 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 			}
 
 		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
 			throw new OntologyServiceException(e1);
 		}
 		return temp;

@@ -34,14 +34,6 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
  */
 @SuppressWarnings("unchecked")
 public class CompositeDecorator implements InvocationHandler {
-	// standard invocation
-	// see http://www.webreference.com/internet/reflection/4.html
-	/** The target. */
-	private Object target;
-
-	/** The sort order. */
-	private List sortOrder;
-
 	/** Underlying services */
 	private List<OntologyService> ontoServices;
 
@@ -99,7 +91,6 @@ public class CompositeDecorator implements InvocationHandler {
 				.getInterfaces(), new CompositeDecorator(list));
 	}
 
-	@Deprecated
 	public static OntologyService getService(List list) throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface

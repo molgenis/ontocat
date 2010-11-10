@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * @version $Id$
  */
 public class OntologyIdMapping implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/** Confirms match to this particular ontology. */
 	protected Pattern pConfirmMatch;
 	/** Extracts bioportal compatible id from matched string. */

@@ -29,7 +29,6 @@ import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
  * 
  * @author Tomasz Adamusiak, Niran Abeygunawardena
  */
-@SuppressWarnings("unchecked")
 public class CachedServiceDecorator implements InvocationHandler {
 	// standard invocation
 	// see http://www.webreference.com/internet/reflection/4.html
