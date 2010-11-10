@@ -26,6 +26,8 @@ public class Example4 {
 		// Create a list of ontologies to be included in the query
 		// HP and MP only
 		List<String> subset = new ArrayList<String>() {
+			private static final long serialVersionUID = 1L;
+
 			{
 				add("HP");
 				add("MP");

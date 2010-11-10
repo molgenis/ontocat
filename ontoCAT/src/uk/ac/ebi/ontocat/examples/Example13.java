@@ -61,6 +61,7 @@ public class Example13 {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Stack<Stack<OntologyTerm>> getClassPathToRoot(OntologyService os,
 			OntologyTerm term) throws Exception {
 		Stack<Stack<OntologyTerm>> tempStack = new Stack<Stack<OntologyTerm>>();

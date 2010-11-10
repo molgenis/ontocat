@@ -25,7 +25,6 @@ import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
  */
 public class Example9 {
 
-	@SuppressWarnings("serial")
 	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
 		// These need to point to ontologies either locally or on the web
 		URI uriHPO = new File("human-phenotype-ontology_v1208.obo").toURI();

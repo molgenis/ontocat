@@ -21,7 +21,6 @@ import uk.ac.ebi.ontocat.virtual.TranslatedOntologyService;
  * 
  */
 public class Example7 {
-	@SuppressWarnings("serial")
 	public static void main(String[] args) throws OntologyServiceException {
 		// Instantiate ontology services to be combined
 		final OntologyService osBP = new BioportalOntologyService();

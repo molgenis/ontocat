@@ -21,7 +21,6 @@ import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
  * 
  */
 public class Example6 {
-	@SuppressWarnings("serial")
 	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
 		// Instantiate a composite service
 		OntologyService os = CompositeDecorator.getService(new BioportalOntologyService(),
