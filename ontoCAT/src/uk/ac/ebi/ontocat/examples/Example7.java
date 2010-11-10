@@ -38,10 +38,10 @@ public class Example7 {
 			System.out.println(ot);
 	}
 
+	@SuppressWarnings("serial")
 	private class OLS2BPtranslator implements OntologyIdTranslator {
 		List<OntologyIdMapping> mappings = new ArrayList<OntologyIdMapping>();
 
-		@SuppressWarnings("serial")
 		public OLS2BPtranslator() {
 			// Instantiate mappings to MP, EFO and DO
 			OntologyIdMapping MPmapping = new OntologyIdMapping();
