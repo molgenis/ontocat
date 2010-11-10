@@ -16,11 +16,12 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 	public static void setUpBeforeClass() throws Exception {
 		os = new FileOntologyService(
 				new URI(
-						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
+						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"),
+				"EFO");
 		// Use a non-SKOS annotation for synonyms
 		((FileOntologyService) os).setSynonymSlot("alternative_term");
 
-		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
+		ONTOLOGY_ACCESSION = "EFO";
 		TERM_ACCESSION = "EFO_0000318";
 	}
 

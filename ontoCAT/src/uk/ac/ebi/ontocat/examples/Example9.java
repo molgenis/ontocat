@@ -10,9 +10,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
+import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -29,13 +31,15 @@ public class Example9 {
 		URI uriHPO = new File("human-phenotype-ontology_v1208.obo").toURI();
 		URI uriFMA = new File("fma2_obo.obo").toURI();
 		// Load FMA
-		FileOntologyService osFMA = new FileOntologyService(uriFMA);
+		FileOntologyService osFMA = new FileOntologyService(uriFMA, "FMA");
 
 		// Load HPO
-		FileOntologyService osHPO = new FileOntologyService(uriHPO);
+		FileOntologyService osHPO = new FileOntologyService(uriHPO, "HPO");
 
+		// Single entry point
+		OntologyService os = CompositeDecorator.getService(osFMA, osHPO);
 		// Load all HPO terms into a set
-		Set<OntologyTerm> termsHPO = osHPO.getAllTerms(null);
+		Set<OntologyTerm> termsHPO = os.getAllTerms("HPO");
 		System.out.println("Loaded " + termsHPO.size() + " HPO terms");
 
 		// Regex to extract FMA xrefs from HPO definitions
@@ -45,7 +49,7 @@ public class Example9 {
 		// Iterate through HPO terms
 		for (OntologyTerm termHPO : termsHPO) {
 			// Iterate through definitions
-			for (String def : osHPO.getDefinitions(termHPO)) {
+			for (String def : os.getDefinitions(termHPO)) {
 				m.reset(def);
 				// For each FMA xref found
 				while (m.find()) {
@@ -53,7 +57,7 @@ public class Example9 {
 					// as OWLAPI changes them on loading
 					String idFMA = m.group().replace(":", "_");
 					// Fetch the full term from FMA
-					OntologyTerm termFMA = osFMA.getTerm(idFMA);
+					OntologyTerm termFMA = os.getTerm(idFMA);
 					// Check if null as some terms may not be
 					// resolvable due to versioning, etc.
 					if (termFMA != null) {

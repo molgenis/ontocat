@@ -24,10 +24,9 @@ public class Example6 {
 	@SuppressWarnings("serial")
 	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
 		// Instantiate a composite service
-		OntologyService os = CompositeDecorator.getService(
-				new BioportalOntologyService(),
-				new OlsOntologyService(),
-				new FileOntologyService(new URI("http://www.ebi.ac.uk/efo/efo.owl")));
+		OntologyService os = CompositeDecorator.getService(new BioportalOntologyService(),
+				new OlsOntologyService(), new FileOntologyService(new URI(
+						"http://www.ebi.ac.uk/efo/efo.owl"), "EFOlocal"));
 
 		// Run a search across them all
 		for (OntologyTerm ot : os.searchAll("thymus"))

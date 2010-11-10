@@ -23,14 +23,15 @@ public class Example13 {
 		// Instantiate a FileOntologyService
 		FileOntologyService os = new FileOntologyService(
 				new URI(
-						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
+						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"),
+				"EFO");
 
 		// Use a non-SKOS annotation for synonyms
 		os.setSynonymSlot("alternative_term");
 
 		// Get functional roots in EFO
 		Boolean functionalRootFound = false;
-		for (OntologyTerm t : os.getAllTerms("http://www.ebi.ac.uk/efo")) {
+		for (OntologyTerm t : os.getAllTerms("EFO")) {
 			if (isFunctionalRoot(os, t)) {
 				log.info("Functional root is " + t);
 				functionalRootFound = true;
@@ -38,7 +39,7 @@ public class Example13 {
 		}
 		// Or alternatively just regular roots
 		if (functionalRootFound != true) {
-			log.info(os.getRootTerms("http://www.ebi.ac.uk/efo"));
+			log.info(os.getRootTerms("EFO"));
 		}
 
 		// Get hierarchy for a term

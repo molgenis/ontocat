@@ -23,13 +23,13 @@ public class Example10 {
 		// Use new File().toURI() for local files
 		URI uri = new URI("http://www.ebi.ac.uk/efo/efo.owl");
 
-		// Load the ontology
-		OntologyService os = new FileOntologyService(uri);
+		// Load the ontology and set the accession for it
+		OntologyService os = new FileOntologyService(uri, "EFO");
 
 		// Load all classes into a set
 		// Note: you must specify the ontologyAccession unless it's
 		// FileOntologyService
-		Set<OntologyTerm> terms = os.getAllTerms(null);
+		Set<OntologyTerm> terms = os.getAllTerms("EFO");
 
 		// Iterate through all the terms
 		for (OntologyTerm term : terms) {

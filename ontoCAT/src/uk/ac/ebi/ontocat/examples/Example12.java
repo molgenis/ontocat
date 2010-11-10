@@ -21,7 +21,7 @@ public class Example12 {
 
 	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
 		// Instantiate a FileOntologyService
-		FileOntologyService os = new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"));
+		FileOntologyService os = new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"), "EFO");
 		// Use a non-SKOS annotation for synonyms
 		os.setSynonymSlot("alternative_term");
 
