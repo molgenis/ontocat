@@ -1,31 +1,30 @@
 package uk.ac.ebi.ontocat.utils;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
+import org.apache.commons.validator.UrlValidator;
 import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
+
+import java.io.File;
+import java.net.URI;
+import java.util.*;
 
 
 /**
  * Methods to parse ontology: search terms, get children and parents of term,
  * show hierarchy and paths to term, get info about ontology.
- * 
+ *
  * Author: Natalja Kurbatova
  * Date: 2010-09-20
  */
 public class OntologyParser {
 
 
-    private static FileOntologyService os;
-    private static Ontology ontology;
+    private OntologyService os;
+    private String ontologySource;
+    private String ontologyAccession;
 
 
     //* ****************************************************************************************************
@@ -48,11 +47,13 @@ public class OntologyParser {
             os = new FileOntologyService(new URI(
                     "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
 
+            ontologySource = "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl";
+
             // Use a non-SKOS annotation for synonyms
             for (Ontology ot : os.getOntologies())
-                ontology = ot;
+                ontologyAccession = ot.getOntologyAccession();//ontology = ot;
 
-            os.setSynonymSlot("alternative_term");
+            ((FileOntologyService) os).setSynonymSlot("alternative_term");
         }
         catch (Exception e) {
             System.out.println("Sorry, OntologyParser for EFO http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl can't be created.");
@@ -68,22 +69,36 @@ public class OntologyParser {
      */
     public OntologyParser(String pathToOntology) {
 
+        boolean correctResourse = false;
+
         try {
 
             File file = new File(pathToOntology);
-            URI uri = new URI(pathToOntology);
+            URI uri = null;
 
             if (file.exists()) {
                 uri = file.toURI();
+                correctResourse = true;
+            } else {
+                UrlValidator urlValidator = new UrlValidator();
+                if (urlValidator.isValid(pathToOntology)) {
+                    uri = new URI(pathToOntology);
+                    correctResourse = true;
+                }
+            }
+
+            if (correctResourse) {
+                ontologySource = pathToOntology;
+
                 // Instantiate a FileOntologyService
                 os = new FileOntologyService(uri);
                 // Use a non-SKOS annotation for synonyms
 
                 for (Ontology ot : os.getOntologies()) {
-                    ontology = ot;
+                    ontologyAccession = ot.getOntologyAccession();//ontology = ot;
                 }
 
-                os.setSynonymSlot("alternative_term");
+                ((FileOntologyService) os).setSynonymSlot("alternative_term");
 
             } else
                 System.out.println("Sorry, OntologyParser for " + pathToOntology + " can't be created. " +
@@ -95,6 +110,36 @@ public class OntologyParser {
             System.out.println("Sorry, OntologyParser for " + pathToOntology + " can't be created.");
         }
 
+    }
+
+    /**
+     * Creates instance of OntologyParser for OntologyService (OLS Bioportal) and ontology from
+     * these resources defined by ontologyAccession String
+     *
+     * @param os                - ontology service to work with
+     * @param ontologyAccession - ontology accession to work with
+     */
+    public OntologyParser(OntologyService os, String ontologyAccession) {
+        this.os = os;
+        this.ontologyAccession = ontologyAccession;
+    }
+
+    /**
+     * Returns ontologySource, usually URI
+     *
+     * @return ontologySource
+     */
+    public String getOntologySource() {
+        return ontologySource;
+    }
+
+    /**
+     * Returns ontologyService
+     *
+     * @return ontologyService used in this instance of OntologyParser
+     */
+    public OntologyService getOntologyService() {
+        return os;
     }
 
 
@@ -111,6 +156,7 @@ public class OntologyParser {
      *
      * @param text words to search
      * @return list of OntologyTerm - terms in ontology that have this word in label
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> searchTerm(String text) throws OntologyServiceException {
 
@@ -126,7 +172,9 @@ public class OntologyParser {
      * Searches for term prefix in ontology
      *
      * @param prefix prefix to search
-     * @return list of OntologyTerms - terms in ontology that have required prefix in label or synonyms
+     * @return list of OntologyTerms - terms in ontology that have required prefix in label
+     *         or synonyms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> searchTermPrefix(String prefix) throws OntologyServiceException {
 
@@ -134,7 +182,7 @@ public class OntologyParser {
 
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
-        for (OntologyTerm ot : os.getAllTerms(ontology.getOntologyAccession())) {
+        for (OntologyTerm ot : os.getAllTerms(ontologyAccession)) {
             if (ot.getLabel().toLowerCase().startsWith(lprefix) || ot.getAccession().toLowerCase().startsWith(lprefix)) {
                 result.add(ot);
             } else for (String alt : os.getSynonyms(ot))
@@ -160,24 +208,31 @@ public class OntologyParser {
      * Returns list of all terms in ontology
      *
      * @return list of OntologyTerm - all terms in ontology
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getAllTerms() throws OntologyServiceException {
+        List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
-        List<OntologyTerm> result = new ArrayList<OntologyTerm>(os.getAllTerms(ontology.getOntologyAccession()));
+
+        for (OntologyTerm ot : os.getAllTerms(ontologyAccession))
+            result.add(ot);
 
         return result;
+
+
     }
 
     /**
      * Returns list of all term accessions in ontology
      *
      * @return list of Strings - all term accessions in ontology
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getAllTermIds() throws OntologyServiceException {
 
         List<String> result = new ArrayList<String>();
 
-        for (OntologyTerm ot : os.getAllTerms(ontology.getOntologyAccession()))
+        for (OntologyTerm ot : os.getAllTerms(ontologyAccession))
             result.add(ot.getAccession());
 
         return result;
@@ -195,12 +250,13 @@ public class OntologyParser {
      * Returns list of root node accessions
      *
      * @return list of Strings - root node accessions
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getRootIds() throws OntologyServiceException {
 
         List<String> result = new ArrayList<String>();
 
-        for (OntologyTerm n : os.getRootTerms(ontology.getOntologyAccession())) {
+        for (OntologyTerm n : os.getRootTerms(ontologyAccession)) {
             result.add(n.getAccession());
         }
         return result;
@@ -210,10 +266,11 @@ public class OntologyParser {
      * Returns list of root terms
      *
      * @return list of OntologyTerms - root terms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getRoots() throws OntologyServiceException {
 
-        return os.getRootTerms(ontology.getOntologyAccession());
+        return os.getRootTerms(ontologyAccession);
 
     }
 
@@ -221,12 +278,13 @@ public class OntologyParser {
      * EFO specific method. Returns list of branch root accessions. Method specific for EFO ontology
      *
      * @return list of Strings - EFO branch root accessions
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getEFOBranchRootIds() throws OntologyServiceException {
 
         List<String> result = new ArrayList<String>();
 
-        for (OntologyTerm n : os.getAllTerms(ontology.getOntologyAccession())) {
+        for (OntologyTerm n : os.getAllTerms(ontologyAccession)) {
             if (isEFOBranchRoot(n.getAccession()))
                 result.add(n.getAccession());
         }
@@ -237,12 +295,13 @@ public class OntologyParser {
      * EFO specific method. Returns list of branch root accessions. Method specific for EFO ontology
      *
      * @return list of OntologyTerms - EFO branch root terms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getEFOBranchRoots() throws OntologyServiceException {
 
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
-        for (OntologyTerm n : os.getAllTerms(ontology.getOntologyAccession())) {
+        for (OntologyTerm n : os.getAllTerms(ontologyAccession)) {
             if (isEFOBranchRoot(n.getAccession()))
                 result.add(n);
         }
@@ -263,6 +322,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of OntologyTerms - direct child terms of the term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getTermChildren(String accession) throws OntologyServiceException {
 
@@ -286,6 +346,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of OntologyTerms - direct parent terms of the term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getTermParents(String accession) throws OntologyServiceException {
 
@@ -307,6 +368,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of OntologyTerms - all term children
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getAllTermChildren(String accession) throws OntologyServiceException {
 
@@ -317,7 +379,7 @@ public class OntologyParser {
             System.out.println("Sorry, term '" + accession + "' is not found in ontology.");
             return result;
         }
-        for (OntologyTerm ot : os.getAllChildren(term))
+        for (OntologyTerm ot : os.getAllChildren(ontologyAccession, term.getAccession()))
             result.add(ot);
         return result;
 
@@ -328,6 +390,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of OntologyTerms - all term parents
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<OntologyTerm> getAllTermParents(String accession) throws OntologyServiceException {
 
@@ -338,7 +401,7 @@ public class OntologyParser {
             System.out.println("Sorry, term '" + accession + "' is not found in the ontology.");
             return result;
         }
-        for (OntologyTerm ot : os.getAllParents(term))
+        for (OntologyTerm ot : os.getAllParents(ontologyAccession, term.getAccession()))
             result.add(ot);
         return result;
     }
@@ -348,20 +411,26 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of accessions, empty if term is not found
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getTermAndAllChildrenIds(String accession) throws OntologyServiceException {
         OntologyTerm term = os.getTerm(accession);
+        List<String> result = new ArrayList<String>();
 
-        List<String> ids = new ArrayList<String>(term == null ? 0 : os.getChildren(term).size());
-
-        if (term != null) {
-            for (OntologyTerm child : os.getAllChildren(term))
-                ids.add(child.getAccession());
-
-            ids.add(term.getAccession());
+        if (term == null) {
+            System.out.println("Sorry, term '" + accession + "' is not found in the ontology.");
+            return result;
         }
+        //List<String> ids = new ArrayList<String>(term == null ? 0 : os.getChildren(term).size());
 
-        return ids;
+
+        for (OntologyTerm child : os.getAllChildren(ontologyAccession, term.getAccession()))
+            result.add(child.getAccession());
+
+        result.add(term.getAccession());
+
+
+        return result;
     }
 
 
@@ -379,6 +448,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return OntologyTerm - external term representation
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public OntologyTerm getTermById(String accession) throws OntologyServiceException {
 
@@ -399,6 +469,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return String - term label
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public String getTermNameById(String accession) throws OntologyServiceException {
 
@@ -420,6 +491,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of Strings - term's definitions
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getTermDefinitionsById(String accession) throws OntologyServiceException {
 
@@ -442,6 +514,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return list of Strings - term's synonyms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getTermSynonymsById(String accession) throws OntologyServiceException {
 
@@ -466,7 +539,7 @@ public class OntologyParser {
      * @param term - OntologyTerm og interest
      * @return String - term label
      */
-    public String getTermName(OntologyTerm term) throws OntologyServiceException {
+    public String getTermName(OntologyTerm term) {
 
         String result = "";
 
@@ -485,6 +558,7 @@ public class OntologyParser {
      *
      * @param term - OntologyTerm of interest
      * @return list of Strings - term's definitions
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getTermDefinitions(OntologyTerm term) throws OntologyServiceException {
 
@@ -506,6 +580,7 @@ public class OntologyParser {
      *
      * @param term - OntologyTerm of interest
      * @return list of Strings - term's synonyms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public List<String> getTermSynonyms(OntologyTerm term) throws OntologyServiceException {
 
@@ -536,6 +611,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return true if term with provided accession is in ontology
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public boolean hasTerm(String accession) throws OntologyServiceException {
 
@@ -550,6 +626,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return true if term is root ontology term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public boolean isRoot(String accession) throws OntologyServiceException {
 
@@ -559,7 +636,7 @@ public class OntologyParser {
             System.out.println("Sorry, term '" + accession + "' is not found in the ontology.");
             return false;
         }
-        for (OntologyTerm ot : os.getRootTerms(ontology.getOntologyAccession()))
+        for (OntologyTerm ot : os.getRootTerms(ontologyAccession))
             if (ot.equals(term))
                 result = true;
 
@@ -571,6 +648,7 @@ public class OntologyParser {
      *
      * @param term - OntologyTerm of interest
      * @return true if term is root ontology term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public boolean isRoot(OntologyTerm term) throws OntologyServiceException {
         if (term != null && term.getAccession() != null)
@@ -586,6 +664,7 @@ public class OntologyParser {
      *
      * @param accession - term accession
      * @return true if term is EFO branch root term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public boolean isEFOBranchRoot(String accession) throws OntologyServiceException {
 
@@ -596,11 +675,9 @@ public class OntologyParser {
         } else {
             List<String> propBranchClass = os.getAnnotations(term).get("branch_class");
 
-            if (propBranchClass != null && propBranchClass.size() > 0
-                    && propBranchClass.get(0).equalsIgnoreCase("true"))
-                return true;
+            return propBranchClass != null && propBranchClass.size() > 0
+                    && propBranchClass.get(0).equalsIgnoreCase("true");
 
-            return false;
         }
 
     }
@@ -610,6 +687,7 @@ public class OntologyParser {
      *
      * @param term - OntologyTerm of interest
      * @return true if term is EFO branch root term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public boolean isEFOBranchRoot(OntologyTerm term) throws OntologyServiceException {
 
@@ -635,8 +713,9 @@ public class OntologyParser {
      * Prints out flat sub-tree representation
      *
      * @param accession of term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
-    public void showHierarchyDownToTerm(String accession) throws Exception {
+    public void showHierarchyDownToTerm(String accession) throws OntologyServiceException {
 
         OntologyTerm term = os.getTerm(accession);
 
@@ -658,6 +737,7 @@ public class OntologyParser {
      * Prints out flat sub-tree representation
      *
      * @param term - OntologyTerm of interest
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public void showHierarchyDownToTerm(OntologyTerm term) throws Exception {
 
@@ -672,8 +752,9 @@ public class OntologyParser {
      * Prints paths to term
      *
      * @param accession of term
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
-    public void showPathsToTerm(String accession) throws Exception {
+    public void showPathsToTerm(String accession) throws OntologyServiceException {
         OntologyTerm term = os.getTerm(accession);
 
         if (term == null)
@@ -699,8 +780,9 @@ public class OntologyParser {
      * Prints paths to term
      *
      * @param term - OntologyTerm of interest
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
-    public void showPathsToTerm(OntologyTerm term) throws Exception {
+    public void showPathsToTerm(OntologyTerm term) throws OntologyServiceException {
 
         if (term == null || term.getAccession() == null)
             System.out.println("Sorry, term is not found in the ontology.");
@@ -723,10 +805,13 @@ public class OntologyParser {
      * Returns parsed ontology description
      *
      * @return ontology description: accession, version
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     public String getOntologyDescription() throws OntologyServiceException {
 
-        String result = "";
+        String result;
+        Ontology ontology = os.getOntology(ontologyAccession);
+
         result = "Accession: " + ontology.getOntologyAccession();
         result = result + " Version: " + ontology.getVersionNumber();
         result = result + " Label: " + ontology.getLabel();
@@ -743,9 +828,9 @@ public class OntologyParser {
      *
      * @return ontology accession
      */
-    public String getOntologyAccession() throws OntologyServiceException {
+    public String getOntologyAccession() {
 
-        return ontology.getOntologyAccession();
+        return ontologyAccession;
 
     }
 
@@ -760,6 +845,14 @@ public class OntologyParser {
 
     /**
      * Method to collect all term children and their depths for one path
+     *
+     * @param nodes     - current nodes under inspection
+     * @param path      - path to mainTerm
+     * @param result    - stack with results
+     * @param depth     - current depth in ontology, will be assign to created nodes
+     * @param mainTerm  - term to collect tree down to
+     * @param shortPath - show all neighbour terms to inspected one or not
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     private void collectToPrintTreeDownTo(Stack<OntologyTerm> nodes, Stack<OntologyTerm> path,
                                           Stack<OntologyNode> result, int depth, OntologyTerm mainTerm, boolean shortPath) throws OntologyServiceException {
@@ -784,6 +877,15 @@ public class OntologyParser {
 
     /**
      * Method to collect all term children and their depths for multiple paths
+     *
+     * @param nodes        - current nodes under inspection
+     * @param paths        - paths to mainTerm
+     * @param result       - stack with results
+     * @param depth        - current depth in ontology, will be assign to created nodes
+     * @param mainTerm     - term to collect tree down to
+     * @param shortPath    - show all neighbour terms to inspected one or not
+     * @param stopMergeVal - common tree for all paths has been found or not
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     private void collectToPrintTreeDownTo(Stack<OntologyTerm> nodes, List<Stack<OntologyTerm>> paths,
                                           Stack<OntologyNode> result, int depth, OntologyTerm mainTerm, boolean shortPath, boolean stopMergeVal) throws OntologyServiceException {
@@ -819,16 +921,15 @@ public class OntologyParser {
 
         if (levelTerms.size() == 1 && !stopMerge) {
             //process the same part of the paths
-            Iterator iterator = levelTerms.keySet().iterator();
-            while (iterator.hasNext()) {
-                OntologyTerm next = (OntologyTerm) iterator.next();
-                int pathNr = levelTerms.get(next);
+            for (OntologyTerm ontologyTerm : levelTerms.keySet()) {
+
+                int pathNr = levelTerms.get(ontologyTerm);
 
                 //OntologyTerm next = levelTerms.
                 OntologyTerm temp = null;
-                boolean exclude = false;
+                //boolean exclude = false;
                 for (OntologyTerm n : nodes) {
-                    if (n.equals(next) && !paths.get(pathNr).empty())
+                    if (n.equals(ontologyTerm) && !paths.get(pathNr).empty())
                         temp = n;
                     else if (!shortPath)
                         result.push(new OntologyNode(depth, n));
@@ -875,8 +976,10 @@ public class OntologyParser {
     /**
      * Returns stack with term and its parents at the bottom
      *
-     * @param list of OntologyTerms to create a stack from, term - OntologyTerm to create a path to
+     * @param list of OntologyTerms to create a stack from
+     * @param term - OntologyTerm to create a path to
      * @return stack of OntologyTerms with term and its parents at the bottom
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
     private Stack<OntologyTerm> orderedStack(List<OntologyTerm> list, OntologyTerm term) throws OntologyServiceException {
         List<OntologyTerm> tempListBottom = new ArrayList<OntologyTerm>();
@@ -902,8 +1005,9 @@ public class OntologyParser {
      *
      * @param term - OntologyTerm to create a path to
      * @return list of paths represented as stack of OntologyTerms
+     * @throws OntologyServiceException - internal ontoCAT exception
      */
-    private List<Stack<OntologyTerm>> getClassPathToRoot(OntologyTerm term) throws Exception {
+    private List<Stack<OntologyTerm>> getClassPathToRoot(OntologyTerm term) throws OntologyServiceException {
 
         Stack<Stack<OntologyTerm>> tempStack = new Stack<Stack<OntologyTerm>>();
         Stack<Stack<OntologyTerm>> resultsStack = new Stack<Stack<OntologyTerm>>();
@@ -915,8 +1019,8 @@ public class OntologyParser {
         do {
             // Pop some path from stack
             Stack<OntologyTerm> path = tempStack.pop();
-            if (path.size() > 50)
-                throw new Exception("Circular path encountered in " + term);
+            //if (path.size() > 50)
+            //  throw new Exception("Circular path encountered in " + term);
             // Go through all the parents on top of the stack
             List<OntologyTerm> parents = os.getParents(path.peek());
             if (parents.size() != 0) {
@@ -949,8 +1053,8 @@ public class OntologyParser {
      * Class to store ontology term and term depth in ontology
      */
     private class OntologyNode implements Comparable {
-        protected int depth;
-        protected OntologyTerm term;
+        final int depth;
+        final OntologyTerm term;
 
         OntologyNode(int depth, OntologyTerm term) {
             this.depth = depth;
