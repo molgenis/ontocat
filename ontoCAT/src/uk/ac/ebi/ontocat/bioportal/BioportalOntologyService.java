@@ -327,6 +327,17 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		}
 	}
 
+	private void processViewsUrl() throws OntologyServiceException {
+		try {
+			this.queryURL = new URI(urlBASE + "views/?" + urlAddOn).toURL();
+			transformRESTXML();
+		} catch (MalformedURLException e) {
+			throw new OntologyServiceException(e);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Search concept id through attributes. If termAccession was not found,
 	 * BioPortal might be mapping a different id instead so try resolving it and
@@ -541,15 +552,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<Ontology> getOntologyList() {
-		try {
-			return (List<Ontology>) getBeanFromQuery();
-		} catch (StreamException e) {
-			return Collections.EMPTY_LIST;
-		}
-	}
-
 	/**
 	 * Gets the success bean.
 	 * 
@@ -578,14 +580,23 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	//
 	// ////////////////////////
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Ontology> getOntologies() throws OntologyServiceException {
-		try {
-			processOntologyUrl();
-		} catch (OntologyServiceException e) {
-			return Collections.emptyList();
-		}
-		return this.getOntologyList();
+		List<Ontology> result = new ArrayList<Ontology>();
+		List<Ontology> ontologies = new ArrayList<Ontology>();
+		List<Ontology> views = new ArrayList<Ontology>();
+
+		processOntologyUrl();
+		ontologies = (List<Ontology>) getBeanFromQuery();
+		processViewsUrl();
+		views = (List<Ontology>) getBeanFromQuery();
+
+		log.info(ontologies.size() + " ontologies and " + views.size() + " views");
+		result.addAll(ontologies);
+		result.addAll(views);
+
+		return result;
 	}
 
 	@Override
