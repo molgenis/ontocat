@@ -124,7 +124,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 			for (String key : terms.keySet()) {
 				// splitting e.g. 228975=NEWT:Thymus magnus
-				String ontAccession = key.split(":")[0];
+				String ontAccession = key.split(":|_")[0];
 				String label = terms.get(key);
 				result.add(new OntologyTerm(ontAccession, key, label));
 			}
@@ -145,12 +145,13 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
 			throws OntologyServiceException {
 		List<SearchOptions> ops = new ArrayList<SearchOptions>(Arrays.asList(options));
-		if (ops.contains(SearchOptions.INCLUDE_PROPERTIES))
+		if (ops.contains(SearchOptions.INCLUDE_PROPERTIES)) {
 			// remove include properties from ops
 			// so that it does not show up in context
 			ops.remove(SearchOptions.INCLUDE_PROPERTIES);
-		logger
-				.warn("OLS does not support searching properties in searchAll(), use searchOntology() instead");
+			logger
+					.warn("OLS does not support searching properties in searchAll(), use searchOntology() instead");
+		}
 		try {
 			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(query, false)
 					.entrySet();
