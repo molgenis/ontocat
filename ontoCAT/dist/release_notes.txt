@@ -1,14 +1,17 @@
 OntoCAT Java API Release Notes
 ==============================
 
-Deferred for next release:
-	Add SYNONYMS_OR_LABELS_ONLY to SearchOptions (supported by FileOntologyService only)
+Deferred for future releases:
 	Add getUri method to OntologyTerm
+	Mavenize the project
 
-Version 0.9.6 10/11/2010
+Version 0.9.6 15/11/2010
 	Updated OWL API dependence to 3.1
 	On creation of FileOntologyService you can specify a user-defined ontology accession
-	New utils package containing some convenience methods 
+	New utils package containing some convenience methods for the R ontocat package
+	BioportalOntologyService.getOntologies() also lists the views
+	FIX: Unnecessary warnings when searching OLS
+	FIX: Occasional incorrect parsing of ontology accessions when searching OLS 
 	FIX: FileOntologyService will throw exception if there are classes with no properties
 
 Version 0.9.5.3 1/10/2010
