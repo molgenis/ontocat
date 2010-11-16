@@ -1,335 +1,300 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<groupId>uk.ac.ebi</groupId>
-<artifactId>ontoCAT</artifactId>
-<packaging>jar</packaging>
-<version>0.9.6</version>
-<name>ontoCAT</name>
-<url>http://www.ontocat.org</url>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>uk.ac.ebi</groupId>
+  <artifactId>ontoCAT</artifactId>
+  <packaging>jar</packaging>
+  <version>0.9.6</version>
+  <name>ontoCAT</name>
+  <url>http://www.ontocat.org</url>
 
-<build>
-<plugins>
-<plugin>
-<artifactId>maven-compiler-plugin</artifactId>
-<configuration>
-<source>1.5</source>
-<target>1.5</target>
-</configuration>
-</plugin>
-<plugin>
-<artifactId>maven-source-plugin</artifactId>
-<executions>
-<execution>
-<id>attach-source</id>
-<goals>
-<goal>jar</goal>
-</goals>
-</execution>
-</executions>
-</plugin>
-<plugin>
-<artifactId>maven-assembly-plugin</artifactId>
-<configuration>
-<finalName>ZOOMA</finalName>
-<descriptors>
-<descriptor>src/main/assembly/zooma-public-assembly.xml</descriptor>
-</descriptors>
-</configuration>
-<!--
-       fixme: Maven bug MASSEMBLY-94 (http://jira.codehaus.org/browse/MASSEMBLY-94)
-       -->
-<!--<executions>-->
-<!--<execution>-->
-<!--<id>make-assembly</id>-->
-<!--<phase>package</phase>-->
-<!--<goals>-->
-<!--<goal>attached</goal>-->
-<!--</goals>-->
-<!--</execution>-->
-<!--</executions>-->
-</plugin>
-</plugins>
-</build>
+   <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-source</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <finalName>ontoCAT</finalName>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
 
-<!-- Reporting/Documentation output -->
-<reporting>
-<plugins>
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-javadoc-plugin</artifactId>
-<configuration>
-<aggregate>true</aggregate>
-</configuration>
-</plugin>
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-project-info-reports-plugin</artifactId>
-</plugin>
-</plugins>
-</reporting>
+  <!-- Reporting/Documentation output -->
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
 
-<!-- Licensing -->
-<licenses>
-<license>
-<name>GNU Lesser General Public License</name>
-<url>http://www.gnu.org/copyleft/lesser.html</url>
-<distribution>repo</distribution>
-</license>
-</licenses>
+  <!-- Licensing -->
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License</name>
+      <url>http://www.gnu.org/copyleft/lesser.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-<!-- Mailing Lists -->
-<mailingLists>
-<mailingList>
-<name>ontocat-users</name>
-<post>zooma-users@lists.sourceforge.net</post>
-</mailingList>
-</mailingLists>
+  <!-- Mailing Lists -->
+  <mailingLists>
+    <mailingList>
+      <name>ontocat-users</name>
+      <post>ontocat-users@lists.sourceforge.net</post>
+    </mailingList>
+  </mailingLists>
 
-<!-- Bug Tracker -->
-<issueManagement>
-<system>sourceforge</system>
-<url>https://sourceforge.net/tracker/?group_id=331755</url>
-</issueManagement>
+  <!-- Bug Tracker -->
+  <!--<issueManagement>
+    <system>sourceforge</system>
+    <url>https://sourceforge.net/tracker/?group_id=331755</url>
+  </issueManagement>  -->
 
-<!-- Developer Listing -->
-<developers>
-<developer>
-<id>tadamusiak</id>
-<name>Tomasz Adamusiak</name>
-<email>tomasz.adamusiak@ebi.ac.uk</email>
-<organization>EBI</organization>
-<organizationUrl>http://www.ebi.ac.uk</organizationUrl>
-<roles>
-<role>administrator</role>
-<role>Developer</role>
-</roles>
-<timezone>0</timezone>
-<properties/>
-</developer>
-<developer>
-<id>mswertz</id>
-<name>Morris Swertz</name>
-<email>m.a.swertz@rug.nl</email>
-<organization>University of Groningen</organization>
-<organizationUrl>http://www.rug.nl</organizationUrl>
-<roles>
-<role>Developer</role>
-</roles>
-<timezone>0</timezone>
-<properties/>
-</developer>    
-</developers>
+  <!-- Developer Listing -->
+  <developers>
+    <developer>
+      <id>tadamusiak</id>
+      <name>Tomasz Adamusiak</name>
+      <email>tomasz.adamusiak@ebi.ac.uk</email>
+      <organization>EBI</organization>
+      <organizationUrl>http://www.ebi.ac.uk</organizationUrl>
+      <roles>
+        <role>administrator</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>0</timezone>
+      <properties/>
+    </developer>
+   </developers>
 
-<!-- SVN connection -->
-<scm>
-<connection>
-     scm:svn:http://www.ontocat.org/svn/trunk/ontoCAT
-</connection>
-<developerConnection>
-     scm:svn:http://www.ontocat.org/svn/trunk/ontoCAT
-</developerConnection>
-<url>
-     http://www.ontocat.org/browser
-</url>
-</scm>
+  <!-- SVN connection -->
+  <scm>
+    <connection>
+      scm:svn:http://www.ontocat.org/svn/trunk/ontoCAT
+    </connection>
+    <developerConnection>
+      scm:svn:http://www.ontocat.org/svn/trunk/ontoCAT
+    </developerConnection>
+    <url>
+      http://www.ontocat.org/browser
+    </url>
+  </scm>
 
-<!-- Maven repository deploy -->
-<distributionManagement>
-<!--<downloadUrl>http://zooma.sourceforge.net/maven/repo</downloadUrl>
-<repository>
-<id>zooma-repo</id>
-<name>ZOOMA Mini-SF Repository</name>
-<url>
-       scp://shell.sourceforge.net/home/groups/z/zo/zooma/htdocs/maven/repo
-</url>
-</repository>
-<snapshotRepository>
-<id>zooma-repo</id>
-<name>ZOOMA Mini-SF Repository</name>
-<url>
-       scp://shell.sourceforge.net/home/groups/z/zo/zooma/htdocs/maven/repo
-</url>
-</snapshotRepository>
-<site>
-<id>zooma.sf.net</id>
-<url>scp://shell.sourceforge.net/home/groups/z/zo/zooma/htdocs</url>
-</site> -->
-</distributionManagement>
+  <!-- Maven repository deploy -->
+  <distributionManagement>
+    <downloadUrl>http://ontocat.sourceforge.net/maven/repo</downloadUrl>
+    <repository>
+      <id>ontoCAT-repo</id>
+      <name>OntoCAT SF Repository</name>
+      <url>
+        scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs/maven/repo
+      </url>
+    </repository>
+    <snapshotRepository>
+      <id>ontoCAT-repo</id>
+      <name>OntoCAT SF Repository</name>
+      <url>
+        scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs/maven/repo
+      </url>
+    </snapshotRepository>
+    <site>
+      <id>ontocat.sf.net</id>
+      <url>scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs</url>
+    </site>
+  </distributionManagement>
 
-<!-- Maven repository download -->
-<repositories>
-<repository>
-<id>zooma-repo</id>
-<name>ZOOMA Mini-SF Repository</name>
-<url>http://zooma.sourceforge.net/maven/repo</url>
-</repository>
-<repository>
-<id>tony-repo</id>
-<name>Tonys maven repository</name>
-<url>http://ebi.ac.uk/~tburdett/maven</url>
-</repository>
-<repository>
-<id>ehcache</id>
-<name>ehcache</name>
-<url>http://oss.sonatype.org/content/repositories/sourceforge-releases
-</url>
-</repository>
-<repository>
-<id>sonatype</id>
-<name>sonatype</name>
-<url>http://oss.sonatype.org/content/repositories/releases</url>
-</repository>
-<repository>
-<id>hasbanana-repo</id>
-<url>http://www.hasbanana.com/maven/repo</url>
-<snapshots>
-<enabled>true</enabled>
-</snapshots>
-</repository>
-</repositories>
-<pluginRepositories>
-<pluginRepository>
-<id>tony-repo</id>
-<name>Tonys maven repository</name>
-<url>http://ebi.ac.uk/~tburdett/maven</url>
-</pluginRepository>
-</pluginRepositories>
+  <!-- Maven repository download -->
+  <repositories>
+    <repository>
+      <id>ontoCAT-repo</id>
+      <name>ontoCAT SF Repository</name>
+      <url>http://ontocat.sourceforge.net/maven/repo</url>
+    </repository>
+    <repository>
+      <id>ehcache</id>
+      <name>ehcache</name>
+      <url>http://oss.sonatype.org/content/repositories/sourceforge-releases
+      </url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <name>sonatype</name>
+      <url>http://oss.sonatype.org/content/repositories/releases</url>
+    </repository>
+    <repository>
+      <id>hasbanana-repo</id>
+      <url>http://www.hasbanana.com/maven/repo</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <!--<pluginRepositories>
+    <pluginRepository>
+      <id>tony-repo</id>
+      <name>Tonys maven repository</name>
+      <url>http://ebi.ac.uk/~tburdett/maven</url>
+    </pluginRepository>
+  </pluginRepositories>  -->
 
-<!--<profiles>
+  <!--<profiles>
 
-<profile>
-<id>ebi</id>
-<activation>
-<activeByDefault>false</activeByDefault>
-</activation>
+    <profile>
+      <id>ebi</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
 
-<modules>
-<module>zooma-annotation</module>
-<module>zooma</module>
-<module>zooma-atlas</module>
-<module>zooma-service</module>
-<module>zooma-text</module>
-</modules>
+      <modules>
+        <module>zooma-annotation</module>
+        <module>zooma</module>
+        <module>zooma-atlas</module>
+        <module>zooma-service</module>
+        <module>zooma-text</module>
+      </modules>
 
 
 
-<build>
-<plugins>
-<plugin>
-<artifactId>maven-assembly-plugin</artifactId>
-<configuration>
-<finalName>ZOOMA-EBI</finalName>
-<descriptors>
-<descriptor>
-                 src/main/assembly/zooma-ebi-assembly.xml
-</descriptor>
-</descriptors>
-</configuration>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <finalName>ZOOMA-EBI</finalName>
+              <descriptors>
+                <descriptor>
+                  src/main/assembly/zooma-ebi-assembly.xml
+                </descriptor>
+              </descriptors>
+            </configuration>
 
-</plugin>
-</plugins>
-</build>
-</profile>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
 
-<profile>
-<id>public</id>
-<activation>
-<activeByDefault>true</activeByDefault>
-</activation>
+    <profile>
+      <id>public</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
 
-<modules>
-<module>zooma-annotation</module>
-<module>zooma</module>
-<module>zooma-service</module>
-<module>zooma-text</module>
-</modules>
-</profile>
+      <modules>
+        <module>zooma-annotation</module>
+        <module>zooma</module>
+        <module>zooma-service</module>
+        <module>zooma-text</module>
+      </modules>
+    </profile>
 
-</profiles>-->
+  </profiles>-->
 
-<dependencies>
-<!-- ontocat dependencies -->
-<dependency>
-<groupId>axis</groupId>
-<artifactId>axis</artifactId>
-<version>1.4</version>
-</dependency>
-<dependency>
-<groupId>commons-discovery</groupId>
-<artifactId>commons-discovery</artifactId>
-<version>0.2</version>
-</dependency>
-<dependency>
-<groupId>commons-logging</groupId>
-<artifactId>commons-logging</artifactId>
-<version>1.1.1</version>
-</dependency>
-<dependency>
-<groupId>net.sf.ehcache</groupId>
-<artifactId>ehcache-core</artifactId>
-<version>1.7.2</version>
-</dependency>
-<dependency>
-<groupId>log4j</groupId>
-<artifactId>log4j</artifactId>
-<version>1.2.14</version>
-</dependency>
-<dependency>
-<groupId>net.sourceforge.fluxion</groupId>
-<artifactId>fluxion-utils</artifactId>
-<version>1.0-alpha-3</version>
-</dependency>
-<dependency>
-<groupId>jargs</groupId>
-<artifactId>jargs</artifactId>
-<version>1.0</version>
-</dependency>
-<dependency>
-<groupId>jaxrpc</groupId>
-<artifactId>jaxrpc</artifactId>
-<version>1.0</version>
-</dependency>
-<dependency>
-<groupId>ols</groupId>
-<artifactId>ols-client</artifactId>
-<version>1.0</version>
-</dependency>
-<dependency>
-<groupId>opencsv</groupId>
-<artifactId>opencsv</artifactId>
-<version>1.8</version>
-</dependency>
-<dependency>
-<groupId>xpp3</groupId>
-<artifactId>xpp3_min</artifactId>
-<version>1.1.4c</version>
-</dependency>
-<dependency>
-<groupId>xstream</groupId>
-<artifactId>xstream</artifactId>
-<version>1.3.1</version>
-</dependency>
-<dependency>
-    <groupId>commons-validator</groupId>
-    <artifactId>commons-validator</artifactId>
-    <version>1.2.0</version>
-</dependency>    
-<!-- for unit tests -->
-<dependency>
-<groupId>junit</groupId>
-<artifactId>junit</artifactId>
-<version>4.2</version>
-<scope>test</scope>
-</dependency>
-    
+  <dependencies>
+    <!-- ontocat dependencies -->
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-discovery</groupId>
+      <artifactId>commons-discovery</artifactId>
+      <version>0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+      <version>1.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.fluxion</groupId>
+      <artifactId>fluxion-utils</artifactId>
+      <version>1.0-alpha-3</version>
+    </dependency>
+    <dependency>
+      <groupId>jargs</groupId>
+      <artifactId>jargs</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jaxrpc</groupId>
+      <artifactId>jaxrpc</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>ols</groupId>
+      <artifactId>ols-client</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>1.8</version>
+    </dependency>
+    <dependency>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3_min</artifactId>
+      <version>1.1.4c</version>
+    </dependency>
+    <dependency>
+      <groupId>xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <!-- for unit tests -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.2</version>
+      <scope>test</scope>
+    </dependency>
 
-</dependencies>
+  </dependencies>
 
-<properties>
-<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
 </project>
