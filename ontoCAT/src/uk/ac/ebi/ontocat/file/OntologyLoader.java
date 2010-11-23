@@ -6,6 +6,7 @@ package uk.ac.ebi.ontocat.file;
 import java.net.URI;
 
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -23,7 +24,20 @@ public final class OntologyLoader {
 	private static final Logger log = Logger.getLogger(OntologyLoader.class.getName());
 
 	/** The Constant manager. */
-	private static final OWLOntologyManager manager = OntologyManagerSingleton.INSTANCE;
+	// NOTE: this does no longer use the singleton, as it would complain
+	// on reloading the ontology
+	// The ontology could not be created: Ontology already exists.
+	// <http://www.ebi.ac.uk/efo/efo.owl>
+	// private static final OWLOntologyManager manager =
+	// OntologyManagerSingleton.INSTANCE;
+	private OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+
+	/**
+	 * @return the manager
+	 */
+	public OWLOntologyManager getManager() {
+		return manager;
+	}
 
 	/** The ontology to be loaded. */
 	private OWLOntology ontology;

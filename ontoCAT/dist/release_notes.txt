@@ -5,6 +5,10 @@ Deferred for future releases:
 	Add getUri method to OntologyTerm
 	Mavenize the project
 
+Version . . . / / /
+	Update to newest BioPortal ontology bean signature
+	Fix for "The ontology could not be created:" error in FileOntologyService
+
 Version 0.9.6 15/11/2010
 	Updated OWL API dependence to 3.1
 	On creation of FileOntologyService you can specify a user-defined ontology accession
