@@ -10,6 +10,9 @@
   <url>http://www.ontocat.org</url>
 
    <build>
+       <sourceDirectory>src</sourceDirectory>
+       <testSourceDirectory>test</testSourceDirectory>
+       
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -289,6 +292,11 @@
       <artifactId>junit</artifactId>
       <version>4.2</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.2.0</version>
     </dependency>
 
   </dependencies>
