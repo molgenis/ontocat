@@ -23,7 +23,7 @@ import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
  */
 @XmlRootElement(name = "term")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class OntologyTerm implements Serializable {
+public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 
 	/** The accession. */
 	private String accession;
@@ -79,6 +79,7 @@ public class OntologyTerm implements Serializable {
 		public OntologyServiceType getServiceType() {
 			// File will have http in accession
 			// TODO: check if that's true for OBO
+			// FIXME: this need to be injected by methods
 			if (getOntologyAccession().startsWith("http"))
 				return OntologyServiceType.FILE;
 			// OLS will be up to four letters
@@ -313,5 +314,14 @@ public class OntologyTerm implements Serializable {
 		if (context == null)
 			context = new OntologyTermContext();
 		return context;
+	}
+
+	@Override
+	public int compareTo(OntologyTerm o) {
+		if (this.getContext().getSimilarityScore() > o.getContext().getSimilarityScore())
+			return -1;
+		if (this.getContext().getSimilarityScore() < o.getContext().getSimilarityScore())
+			return 1;
+		return 0;
 	}
 }

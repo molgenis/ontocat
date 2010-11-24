@@ -6,7 +6,7 @@ Deferred for future releases:
 	Mavenize the project
 
 Version . . . / / /
-	Update to newest BioPortal ontology bean signature
+	Update to the newest BioPortal ontology bean signature
 	Fix for "The ontology could not be created:" error in FileOntologyService
 
 Version 0.9.6 15/11/2010

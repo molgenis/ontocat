@@ -35,9 +35,9 @@ public class OntologyTermContextTest {
 
 	@Test
 	public void testGetContext() throws OntologyServiceException {
-		for (OntologyTerm ot : os.searchAll("thymus",
- SearchOptions.INCLUDE_PROPERTIES,
-				SearchOptions.EXACT)) {
+		for (OntologyTerm ot : os.searchAll("thymus", SearchOptions.INCLUDE_PROPERTIES
+				)) {
+			log.info(ot);
 			log.info(ot.getContext());
 		}
 	}

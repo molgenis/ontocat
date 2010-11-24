@@ -1,5 +1,6 @@
 package uk.ac.ebi.ontocat;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -143,4 +145,28 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return result;
 	}
 
+	private String SplitSortLowersase(String in) {
+		String words[] = in.toLowerCase().split("[^A-Za-z]");
+		Arrays.sort(words);
+		StringBuilder builder = new StringBuilder();
+		for (String t : words)
+			builder.append(t);
+
+		return builder.toString();
+	}
+	
+	protected List<OntologyTerm> injectTermContext(List<OntologyTerm> list, String query,
+			SearchOptions[] searchOptions) {
+		for (OntologyTerm ot : list) {
+			ot.getContext().setSearchOptions(searchOptions);
+			// similarity
+			String arg1 = SplitSortLowersase(query);
+			String arg2 = SplitSortLowersase(ot.getLabel());
+			Integer LD = StringUtils.getLevenshteinDistance(arg2, arg1);
+			int LDnorm = (int) (((query.length() - LD) / (float) query.length()) * 100);
+			ot.getContext().setSimilarityScore(LDnorm);
+		}
+		Collections.sort(list);
+		return list;
+	}
 }

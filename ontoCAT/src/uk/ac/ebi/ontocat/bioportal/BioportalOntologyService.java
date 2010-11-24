@@ -360,13 +360,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		processConceptUrl(ontologyAccession, this.getSearchResults().get(0).getAccession());
 	}
 
-	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
-			SearchOptions[] searchOptions) {
-		for (OntologyTerm ot : list) {
-			ot.getContext().setSearchOptions(searchOptions);
-		}
-		return list;
-	}
 
 	/**
 	 * Transform restxml.
@@ -629,7 +622,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			return Collections.emptyList();
 		// search it
 		processSearchUrl(ontologyAccession, query, options);
-		return injectTermContext(getSearchResults(), options);
+		return injectTermContext(getSearchResults(), query, options);
 	}
 
 	public List<OntologyTerm> searchSubtree(String ontologyAccession, String termAccession,
@@ -639,14 +632,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			return Collections.emptyList();
 		// search it
 		processSearchUrl(ontologyAccession, termAccession, query, options);
-		return injectTermContext(getSearchResults(), options);
+		return injectTermContext(getSearchResults(), query, options);
 	}
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
 			throws OntologyServiceException {
 		processSearchUrl(null, query, options);
-		return injectTermContext(getSearchResults(), options);
+		return injectTermContext(getSearchResults(), query, options);
 	}
 
 	@Override

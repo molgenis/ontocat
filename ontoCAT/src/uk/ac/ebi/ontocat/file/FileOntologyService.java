@@ -137,6 +137,8 @@ public final class FileOntologyService extends AbstractOntologyService {
 		// FIXME: this list the main uri, but more namespaces are possible
 		// FIXME: should iterate over ontoAccessions maybe?
 		return new ArrayList<Ontology>() {
+			private static final long serialVersionUID = 1L;
+
 			{
 				String ontologyAccession = ontology.getOntologyID().toString();
 				ontologyAccession = ontologyAccession.replaceFirst("^<", "").replaceFirst(">$", "");
@@ -430,15 +432,7 @@ public final class FileOntologyService extends AbstractOntologyService {
 				}
 			}
 		}
-
-		return injectTermContext(new ArrayList<OntologyTerm>(terms), options);
-	}
-
-	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list, SearchOptions[] options) {
-		for (OntologyTerm ot : list) {
-			ot.getContext().setSearchOptions(options);
-		}
-		return list;
+		return injectTermContext(new ArrayList<OntologyTerm>(terms), query, options);
 	}
 
 	/*
@@ -451,7 +445,7 @@ public final class FileOntologyService extends AbstractOntologyService {
 	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
 			SearchOptions... options) throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession))
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		return searchAll(query, options);
 	}
 
@@ -464,7 +458,7 @@ public final class FileOntologyService extends AbstractOntologyService {
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession))
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		List<String> result = new ArrayList<String>();
 		try {
 			result.addAll(getAnnotations(ontologyAccession, termAccession).get(definitionSlot));
@@ -507,14 +501,14 @@ public final class FileOntologyService extends AbstractOntologyService {
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession))
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		return getAnnotations(getOwlClass(termAccession));
 	}
 
 	private Map<String, List<String>> getAnnotations(OWLClass cls) {
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
 		if (cls == null)
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		for (OWLAnnotation annot : cls.getAnnotations(ontology)) {
 			String key = getFragment(annot.getProperty().getIRI().toURI());
 			List<String> value = null;

@@ -128,17 +128,10 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 				String label = terms.get(key);
 				result.add(new OntologyTerm(ontAccession, key, label));
 			}
-			return injectTermContext(result, options);
+			return injectTermContext(result, query, options);
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
-	}
-
-	private List<OntologyTerm> injectTermContext(List<OntologyTerm> list, SearchOptions[] options) {
-		for (OntologyTerm ot : list) {
-			ot.getContext().setSearchOptions(options);
-		}
-		return list;
 	}
 
 	@Override
@@ -168,7 +161,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 				OntologyTerm ot = new OntologyTerm(ontologyAccession, termAccession, label);
 				result.add(ot);
 			}
-			return injectTermContext(result, ops.toArray(new SearchOptions[0]));
+			return injectTermContext(result, query, ops.toArray(new SearchOptions[0]));
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}

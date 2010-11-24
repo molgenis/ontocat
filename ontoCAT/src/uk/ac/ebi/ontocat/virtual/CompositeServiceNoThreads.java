@@ -6,6 +6,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,10 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 				return singleResult;
 		}
 
+		// final sort for the levenshtein to kick in
+		// and break the internal sorting per ontology source
+		if (combineResults)
+			Collections.sort((List<OntologyTerm>) result);
 		return result;
 	}
 
