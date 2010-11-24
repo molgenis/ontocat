@@ -36,7 +36,7 @@ public class Example4 {
 		// Add a filtering layer to the ontology service
 		OntologyService os = SortedSubsetDecorator.getService(composite, subset);
 
-		// Test that results are only returned form HP and MP
+		// Test that results are only returned form EFO, HP and MP
 		for (OntologyTerm ot : os.searchAll("thymus")) {
 			System.out.println(ot);
 			System.out.println("\tsimilarity to query: " + ot.getContext().getSimilarityScore()
