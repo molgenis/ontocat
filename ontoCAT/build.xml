@@ -2,7 +2,7 @@
 <project default="dist" name="ontoCAT" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.6" />
+	<property name="version" value="0.9.6.1" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
