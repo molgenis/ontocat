@@ -53,6 +53,7 @@ import uk.ac.ebi.ontocat.bioportal.xmlbeans.SuccessBean;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * The Class BioportalService.
@@ -78,7 +79,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private final String urlAddOn;
 
 	/** The xstream. */
-	private final XStream xstream = new XStream();
+	private XStream xstream;
 
 	// transformations that strip surrounding xml markup
 	/** The Constant xsltBEAN. */
@@ -131,6 +132,26 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	private void configureXstream() {
+		// ignore new fields
+		// solution from
+		// CustomMapperTest.testCanBeUsedToOmitUnexpectedElements()
+		// http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/CustomMapperTest.java?r=HEAD
+		xstream = new XStream() {
+			protected MapperWrapper wrapMapper(MapperWrapper next) {
+				return new MapperWrapper(next) {
+					public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+						if (definedIn != Object.class){
+							return super.shouldSerializeMember(definedIn,fieldName);
+						} else {
+							log.warn("Ignoring unexpected field <" + fieldName
+									+ "> in BioPortal xml output");
+							return false;
+						}
+					}
+				};
+			}
+
+		};
 		xstream.alias("classBean", ConceptBean.class);
 		xstream.alias("entry", EntryBean.class);
 		xstream.aliasField("int", EntryBean.class, "counter");
@@ -359,7 +380,6 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			throw new OntologyServiceException("Term not found");
 		processConceptUrl(ontologyAccession, this.getSearchResults().get(0).getAccession());
 	}
-
 
 	/**
 	 * Transform restxml.

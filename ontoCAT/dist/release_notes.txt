@@ -5,9 +5,11 @@ Deferred for future releases:
 	Add getUri method to OntologyTerm
 	Mavenize the project
 
-Version . . . / / /
-	Rolled out similarity enabled search (levenshtein distance across normalised strings)
-	Update to the newest BioPortal ontology bean signature
+Version 0.9.6.1 24/11/2010
+	Rolled out similarity enabled search (Levenshtein distance across normalised strings)
+	Update to the newest BioPortal ontology bean xml signature
+	Customised XStream parser so that future BioPortal xml updates will no longer block the parser
+	Fix for some of the issues with term context and service type 
 	Fix for "The ontology could not be created:" error in FileOntologyService
 
 Version 0.9.6 15/11/2010

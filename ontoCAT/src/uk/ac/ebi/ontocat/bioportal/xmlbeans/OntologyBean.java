@@ -15,7 +15,9 @@ import uk.ac.ebi.ontocat.Ontology;
  * @author $Id: ConceptBean.java 8301 2009-07-31 13:41:14Z tomasz $
  * 
  */
+@SuppressWarnings("unused")
 public class OntologyBean extends Ontology {
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String ontologyId;
 	private String virtualViewIds;
@@ -49,8 +51,8 @@ public class OntologyBean extends Ontology {
 	private String synonymSlot;
 	private String targetTerminologies;
 	private String preferredNameSlot;
-	private ArrayList categoryIds;
-	private ArrayList filenames;
+	private ArrayList<String> categoryIds;
+	private ArrayList<String> filenames;
 	private ArrayList<Integer> groupIds;
 	private String filePath;
 	private String viewDefinition;
