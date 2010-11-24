@@ -149,7 +149,7 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 
 		// final sort for the levenshtein to kick in
 		// and break the internal sorting per ontology source
-		if (combineResults)
+		if (combineResults && method.getName().equalsIgnoreCase("searchAll"))
 			Collections.sort((List<OntologyTerm>) result);
 		return result;
 	}

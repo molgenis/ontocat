@@ -155,7 +155,8 @@ public class CompositeDecorator implements InvocationHandler {
 			}
 			// final sort for the levenshtein to kick in
 			// and break the internal sorting per ontology source
-			Collections.sort((List<OntologyTerm>) result);
+			if (method.getName().equalsIgnoreCase("searchAll"))
+				Collections.sort((List<OntologyTerm>) result);
 		} else {
 			// Any valid results will do, don't wait for the others
 			try {
