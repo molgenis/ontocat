@@ -69,27 +69,20 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		private Date timestamp = new Date();
 		private Integer SimilarityScore = null;
 		private SearchOptions[] searchOptions;
+		private OntologyServiceType serviceType = OntologyServiceType.UNKNOWN;
 
 		/**
-		 * Gets the service type that the ontology term origanted from.
+		 * Gets the service type that the ontology term originated from.
 		 * 
 		 * @return the service type
 		 * @throws OntologyServiceException
 		 */
 		public OntologyServiceType getServiceType() {
-			// File will have http in accession
-			// TODO: check if that's true for OBO
-			// FIXME: this need to be injected by methods
-			if (getOntologyAccession().startsWith("http"))
-				return OntologyServiceType.FILE;
-			// OLS will be up to four letters
-			if (getOntologyAccession().matches("[A-Z]{2,5}"))
-				return OntologyServiceType.OLS;
-			// BioPortal will be four digits
-			if (getOntologyAccession().matches("\\d{4}"))
-				return OntologyServiceType.BIOPORTAL;
-			log.warn("Could not infer ServiceType!");
-			return OntologyServiceType.UNKNOWN;
+			return serviceType;
+		}
+
+		public void setServiceType(OntologyServiceType serviceType) {
+			this.serviceType = serviceType;
 		}
 
 		public Date getTimestamp() {

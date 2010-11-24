@@ -11,6 +11,11 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import uk.ac.ebi.ontocat.OntologyTerm.OntologyServiceType;
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.file.FileOntologyService;
+import uk.ac.ebi.ontocat.ols.OlsOntologyService;
+
 /**
  * Helper class for all methods that take OntologyTerm.
  * 
@@ -163,9 +168,20 @@ public abstract class AbstractOntologyService implements OntologyService {
 		for (OntologyTerm ot : list) {
 			ot.getContext().setSearchOptions(searchOptions);
 			ot.getContext().setSimilarityScore(getSimilarity(query, ot.getLabel()));
+			ot.getContext().setServiceType(getServiceType());
 		}
 		Collections.sort(list);
 		return list;
+	}
+
+	private OntologyServiceType getServiceType() {
+		if (this instanceof OlsOntologyService)
+			return OntologyServiceType.OLS;
+		if (this instanceof BioportalOntologyService)
+			return OntologyServiceType.BIOPORTAL;
+		if (this instanceof FileOntologyService)
+			return OntologyServiceType.FILE;
+		return OntologyServiceType.UNKNOWN;
 	}
 
 	/**
@@ -180,10 +196,9 @@ public abstract class AbstractOntologyService implements OntologyService {
 	 * @return the similarity score between the two input parameters
 	 */
 	private int getSimilarity(String query, String text) {
-		if (query.equalsIgnoreCase(text)){
+		if (query.equalsIgnoreCase(text)) {
 			return 100; // exact match
-		} else
-		{
+		} else {
 			int LD = StringUtils.getLevenshteinDistance(getNormalised(text), getNormalised(query));
 			// at this point LD==0 can only mean an anagram
 			// return 99 match, just so that it has a chance of being

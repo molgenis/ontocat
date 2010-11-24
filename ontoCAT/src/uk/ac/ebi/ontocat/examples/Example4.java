@@ -41,6 +41,7 @@ public class Example4 {
 			System.out.println(ot);
 			System.out.println("\tsimilarity to query: " + ot.getContext().getSimilarityScore()
 					+ "%");
+			System.out.println("\tterm source: " + ot.getContext().getServiceType());
 		}
 		// But should be none for CHEBI
 		if (os.searchOntology("CHEBI", "nicotine") == null)
