@@ -101,7 +101,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			// return nothing
 			if (method.getName().equalsIgnoreCase("searchOntology")
 					&& !sortOrder.contains((String) args[0])) {
-				log.debug("Ontology explicitly set outside scope");
+				log.debug((String) args[0] + " ontology explicitly set outside scope");
 				return null;
 			}
 			result = method.invoke(target, args);
@@ -140,7 +140,9 @@ public class SortedSubsetDecorator implements InvocationHandler {
 				result.remove(i);
 		}
 		// sort according to sortOrder
-		Collections.sort(result, new OntologyRankComparator(sortOrder));
+		// Collections.sort(result, new OntologyRankComparator(sortOrder));
+		// sort according to similarity
+		Collections.sort(result);
 		return result;
 	}
 
@@ -169,11 +171,12 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		@Override
 		public int compare(OntologyTerm term0, OntologyTerm term1) {
 			if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder.indexOf(term1
-					.getOntologyAccession())) {
+					.getOntologyAccession()))
 				return -1;
-			} else {
+			if (sortOrder.indexOf(term0.getOntologyAccession()) < sortOrder.indexOf(term1
+					.getOntologyAccession()))
 				return 1;
-			}
+			return 0;
 		}
 	}
 }

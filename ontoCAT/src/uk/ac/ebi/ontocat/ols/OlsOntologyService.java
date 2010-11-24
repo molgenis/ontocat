@@ -143,7 +143,7 @@ public class OlsOntologyService extends AbstractOntologyService implements Ontol
 			// so that it does not show up in context
 			ops.remove(SearchOptions.INCLUDE_PROPERTIES);
 			logger
-					.warn("OLS does not support searching properties in searchAll(), use searchOntology() instead");
+					.debug("OLS does not support searching properties in searchAll(), use searchOntology() instead");
 		}
 		try {
 			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(query, false)
