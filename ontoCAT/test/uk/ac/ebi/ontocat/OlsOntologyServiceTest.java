@@ -4,6 +4,7 @@ package uk.ac.ebi.ontocat;
 import org.junit.BeforeClass;
 
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 
 public class OlsOntologyServiceTest extends AbstractOntologyServiceTest {
 

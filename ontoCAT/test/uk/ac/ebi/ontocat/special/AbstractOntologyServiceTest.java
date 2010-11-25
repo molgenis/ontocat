@@ -1,4 +1,4 @@
-package uk.ac.ebi.ontocat;
+package uk.ac.ebi.ontocat.special;
 
 
 import static org.junit.Assert.assertNotNull;
@@ -15,6 +15,10 @@ import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ac.ebi.ontocat.Ontology;
+import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 public abstract class AbstractOntologyServiceTest {

@@ -21,6 +21,7 @@ import org.junit.Test;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
 
 public class CompositeDecoratorTest extends AbstractOntologyServiceTest {

@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 
 public class BioportalServiceTest extends AbstractOntologyServiceTest {
 

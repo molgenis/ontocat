@@ -1,6 +1,8 @@
-package uk.ac.ebi.ontocat;
+package uk.ac.ebi.ontocat.special;
 
 import junit.framework.TestCase;
+import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 import uk.ac.ebi.ontocat.utils.OntologyParser;

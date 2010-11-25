@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 import uk.ac.ebi.ontocat.virtual.CachedServiceDecorator;
 
 public class CachedDecoratorTest extends AbstractOntologyServiceTest {

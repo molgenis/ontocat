@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.ebi.ontocat.AbstractOntologyServiceTest;
 
 public class ResponseCodesTest {
 

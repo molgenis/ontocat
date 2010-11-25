@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.ontocat.file.FileOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 
 public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 
