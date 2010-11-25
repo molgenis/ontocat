@@ -70,7 +70,10 @@ public final class OntologyLoader {
 			System.exit(1);
 		} catch (java.lang.OutOfMemoryError e) {
 			log.error("Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
+			System.out
+					.println("Ran out of memory. Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
 			log.fatal(e);
+
 			System.exit(1);
 		}
 	}
