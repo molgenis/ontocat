@@ -1,4 +1,4 @@
-package uk.ac.ebi.ontocat;
+package uk.ac.ebi.ontocat.special;
 
 
 import java.util.List;
