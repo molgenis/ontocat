@@ -33,17 +33,6 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	/** Underlying services */
 	private List<OntologyService> ontoServices;
 
-	/** Number of threads to run concurrently */
-	private int nThreads = 5;
-
-	public void setNumberOfThreads(int val) {
-		nThreads = val;
-	}
-
-	public int getNumberOfThreads() {
-		return nThreads;
-	}
-
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(CompositeServiceNoThreads.class);
 

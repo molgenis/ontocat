@@ -17,11 +17,7 @@
 	<fileset dir="bin">
 		<patternset id="test.sources">
 			<include name="**/*Test.class" />
-			<exclude name="**/AbstractOntologyServiceTest*" />
-			<exclude name="**/MediaWikiOntologyServiceTest*" />
-			<exclude name="**/ZoomaTest*" />
-			<exclude name="**/OntologyBatchTest*" />
-			<exclude name="**/OntologyParserTest*" />
+			<exclude name="**/special/*" />
 		</patternset>
 	</fileset>
 
