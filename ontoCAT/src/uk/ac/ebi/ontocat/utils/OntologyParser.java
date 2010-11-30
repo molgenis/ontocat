@@ -6,6 +6,7 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
+import uk.ac.ebi.ontocat.virtual.LocalisedFileService;
 
 import java.io.File;
 import java.net.URI;
@@ -44,8 +45,8 @@ public class OntologyParser {
         try {
 
             // Instantiate a FileOntologyService
-            os = new FileOntologyService(new URI(
-                    "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"));
+            os = LocalisedFileService.getService(new FileOntologyService(new URI(
+                    "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl")));
 
             ontologySource = "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl";
 
@@ -91,7 +92,7 @@ public class OntologyParser {
                 ontologySource = pathToOntology;
 
                 // Instantiate a FileOntologyService
-                os = new FileOntologyService(uri);
+                os = LocalisedFileService.getService(new FileOntologyService(uri));
                 // Use a non-SKOS annotation for synonyms
 
                 for (Ontology ot : os.getOntologies()) {
