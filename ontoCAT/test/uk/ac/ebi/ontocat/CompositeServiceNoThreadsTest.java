@@ -1,6 +1,5 @@
 package uk.ac.ebi.ontocat;
 
-
 import java.net.URI;
 
 import org.junit.BeforeClass;
@@ -17,8 +16,9 @@ public class CompositeServiceNoThreadsTest extends AbstractOntologyServiceTest {
 	public static void setUpBeforeClass() throws Exception {
 		final OntologyService osBP = new BioportalOntologyService();
 		final OntologyService osOLS = new OlsOntologyService();
-		final FileOntologyService osFile = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"));
+		final FileOntologyService osFile = new FileOntologyService(
+				new URI(
+						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl?revision=142"));
 		final FileOntologyService osFile2 = new FileOntologyService(
 				new URI(
 						"https://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
@@ -30,6 +30,5 @@ public class CompositeServiceNoThreadsTest extends AbstractOntologyServiceTest {
 		ONTOLOGY_ACCESSION = "http://www.ebi.ac.uk/efo/";
 		TERM_ACCESSION = "EFO_0000400";
 	}
-
 
 }

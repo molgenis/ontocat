@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -130,6 +132,14 @@ public class CompositeDecorator implements InvocationHandler {
 		Object result = null;
 		ExecutorService ec = Executors.newFixedThreadPool(nThreads);
 
+		// As the very least should return an empty collection
+		if (method.getReturnType() == List.class)
+			result = new ArrayList();
+		if (method.getReturnType() == Map.class)
+			result = new HashMap();
+		if (method.getReturnType() == Set.class)
+			result = new HashSet();
+
 		// Create tasks
 		Collection<InvokeTask> tasks = new ArrayList<InvokeTask>();
 		for (OntologyService os : ontoServices) {
@@ -141,7 +151,6 @@ public class CompositeDecorator implements InvocationHandler {
 		if (method.getName().equalsIgnoreCase("searchAll")
 				|| method.getName().equalsIgnoreCase("getOntologies")) {
 			// searchAll or getOntologies so combine results
-			result = new ArrayList();
 			for (Future<Object> future : ec.invokeAll(tasks)) {
 				try {
 					((List) result).addAll((Collection) future.get());
@@ -153,10 +162,6 @@ public class CompositeDecorator implements InvocationHandler {
 					}
 				}
 			}
-			// final sort for the levenshtein to kick in
-			// and break the internal sorting per ontology source
-			if (method.getName().equalsIgnoreCase("searchAll"))
-				Collections.sort((List<OntologyTerm>) result);
 		} else {
 			// Any valid results will do, don't wait for the others
 			try {
@@ -167,12 +172,14 @@ public class CompositeDecorator implements InvocationHandler {
 				} else {
 					log.error(e + " " + e.getCause().getMessage());
 				}
-				if (method.getReturnType() == List.class)
-					result = Collections.EMPTY_LIST;
-				if (method.getReturnType() == Map.class)
-					result = Collections.EMPTY_MAP;
 			}
 		}
+
+		// final sort for the levenshtein to kick in
+		// and break the internal sorting per ontology source
+		if (method.getName().equalsIgnoreCase("searchAll"))
+			Collections.sort((List<OntologyTerm>) result);
+
 		ec.shutdown();
 		return result;
 	}

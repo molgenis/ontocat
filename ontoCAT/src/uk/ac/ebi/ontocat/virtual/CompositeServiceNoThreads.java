@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +82,8 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
-		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(), list);
+		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(),
+				list);
 	}
 
 	/**
@@ -99,8 +101,8 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
-		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(), Arrays
-				.asList(list));
+		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(),
+				Arrays.asList(list));
 	}
 
 	// here the magic happens
@@ -113,24 +115,22 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
-		Boolean combineResults = false;
 
 		// As the very least should return an empty collection
 		if (method.getReturnType() == List.class)
 			result = new ArrayList();
 		if (method.getReturnType() == Map.class)
 			result = new HashMap();
-
-		// searchAll or getOntologies so combine results
-		if (method.getName().equalsIgnoreCase("searchAll")
-				|| method.getName().equalsIgnoreCase("getOntologies"))
-			combineResults = true;
+		if (method.getReturnType() == Set.class)
+			result = new HashSet();
 
 		// Run tasks sequentially
 		for (OntologyService os : ontoServices) {
 			Object singleResult = method.invoke(os, args);
 
-			if (combineResults)
+			// searchAll or getOntologies so combine results
+			if (method.getName().equalsIgnoreCase("searchAll")
+					|| method.getName().equalsIgnoreCase("getOntologies"))
 				((ArrayList) result).addAll((Collection) singleResult);
 			else if (isValidResult(method, singleResult))
 				return singleResult;
@@ -138,7 +138,7 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 
 		// final sort for the levenshtein to kick in
 		// and break the internal sorting per ontology source
-		if (combineResults && method.getName().equalsIgnoreCase("searchAll"))
+		if (method.getName().equalsIgnoreCase("searchAll"))
 			Collections.sort((List<OntologyTerm>) result);
 		return result;
 	}
@@ -147,7 +147,7 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	 * Examples of invalid results for a particular method which in sequential
 	 * processing results in trying the next ontologyservice in the queue
 	 */
-	private Boolean isValidResult(Method method, Object result){
+	private Boolean isValidResult(Method method, Object result) {
 		if (result == null)
 			return false;
 		if (result instanceof Map && ((Map) result).size() == 0)
@@ -157,8 +157,7 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 		if (result instanceof List) {
 			Integer listSize = ((List) result).size();
 			String methodName = method.getName();
-			if ((listSize == 0)
-					|| (methodName.equalsIgnoreCase("getTermPath") && listSize == 1))
+			if ((listSize == 0) || (methodName.equalsIgnoreCase("getTermPath") && listSize == 1))
 				return false;
 		}
 		return true;
