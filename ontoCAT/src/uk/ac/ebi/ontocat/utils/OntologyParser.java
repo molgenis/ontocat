@@ -40,6 +40,7 @@ public class OntologyParser {
      * Creates instance of OntologyParser for EFO
      */
     public OntologyParser() {
+        
 
         //default is EFO last version
         try {
@@ -54,7 +55,7 @@ public class OntologyParser {
             for (Ontology ot : os.getOntologies())
                 ontologyAccession = ot.getOntologyAccession();//ontology = ot;
 
-            ((FileOntologyService) os).setSynonymSlot("alternative_term");
+            //((FileOntologyService) os).setSynonymSlot("alternative_term");
         }
         catch (Exception e) {
             System.out.println("Sorry, OntologyParser for EFO http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl can't be created.");
@@ -99,7 +100,7 @@ public class OntologyParser {
                     ontologyAccession = ot.getOntologyAccession();//ontology = ot;
                 }
 
-                ((FileOntologyService) os).setSynonymSlot("alternative_term");
+                //((FileOntologyService) os).setSynonymSlot("alternative_term");
 
             } else
                 System.out.println("Sorry, OntologyParser for " + pathToOntology + " can't be created. " +
@@ -814,7 +815,7 @@ public class OntologyParser {
         Ontology ontology = os.getOntology(ontologyAccession);
 
         result = "Accession: " + ontology.getOntologyAccession();
-        result = result + " Version: " + ontology.getVersionNumber();
+        result = result + " Version: " + ontology.getVersionNumber() ;
         result = result + " Label: " + ontology.getLabel();
         result = result + " Abbreviation: " + ontology.getAbbreviation();
         result = result + " Description: " + ontology.getDescription();

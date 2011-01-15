@@ -4,15 +4,13 @@ import junit.framework.TestCase;
 import uk.ac.ebi.ontocat.utils.OntologyBatch;
 import uk.ac.ebi.ontocat.utils.OntologyParser;
 
-import java.util.List;
-
 public class OntologyBatchTest extends TestCase {
     private OntologyBatch ob;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        ob = new OntologyBatch("/Users/nata/IdeaProjects/ontoCAT/ontoCAT-R/inst/extdata");
+        ob = new OntologyBatch();
 
     }
 
@@ -23,9 +21,35 @@ public class OntologyBatchTest extends TestCase {
     }
 
     public void testOntologyBatch() throws Exception {
-        System.out.println("ADD NEW ONTOLOGY (EFO)");
-        ob.addEFO();
-        System.out.println("ADD NEW ONTOLOGY");
+        //System.out.println("ADD NEW ONTOLOGY (EFO)");
+        //ob.addEFO();
+        //System.out.println(ob.searchTerm("thymus"));
+        //OntologyBatch batch = new OntologyBatch(); //getEFOBatch()
+        //ob.addOntology("/Applications/R/ontoCAT/inst/extdata/cell.obo");
+        //for (OntologyTerm term : ob.searchTerm("cell"))
+          //  System.out.println(term.getAccession());
+        //for (String ont: ob.listBioportalOntologies())
+          //  System.out.println(ont);
+        //OntologyParser op = ob.getOntologyParser("2034");
+        //System.out.println(op.getAllTerms());
+        OntologyParser efo = new OntologyParser();
+        System.out.println(efo.getOntologyDescription());
+        //OLS batch <- getEFOBatch()
+        //searchTermInOLS(batch,"cell")
+
+       //  batch <- getOntologyBatch("./ontoCAT/extdata/")
+    ///addEFO(batch)
+
+       //        batch <- getEFOBatch()
+    //addOntology(batch,"./ontoCAT/extdata/cell.obo")
+    //listLoadedOntologies(batch)
+    //searchTermInBatch(batch,"cell")
+
+            
+
+            
+
+        /*System.out.println("ADD NEW ONTOLOGY");
         ob.addOntology("/Users/nata/IdeaProjects/ontoCAT/test/resources/worm.obo");
         System.out.println("LIST LOADED ONTOLOGIES");
 
@@ -44,7 +68,7 @@ public class OntologyBatchTest extends TestCase {
         System.out.println("GET ONTOLOGY PARSER BY ACCESSION");
 
         OntologyParser op = ob.getOntologyParser("http://who.int/bodysystem.owl");
-        System.out.println(op.getAllTermIds());
+        System.out.println(op.getAllTermIds());  */
 
         /*System.out.println("SEARCH IN LOADED");
 
@@ -61,9 +85,9 @@ public class OntologyBatchTest extends TestCase {
     for (OntologyTerm ot : ob.searchTermInBioportal("system"))
         System.out.println(ot);*/
 
-        System.out.println("GET ONTOLOGY PARSER FROM BIOPORTAL:");
-        OntologyParser op2 = ob.getOntologyParser("1055");
-        System.out.println(op2.getRootIds());
+        //System.out.println("GET ONTOLOGY PARSER FROM BIOPORTAL:");
+        //OntologyParser op2 = ob.getOntologyParser("1055");
+        //System.out.println(op2.getRootIds());
 
         //Takes too long time
         /*System.out.println("SEARCH IN OLS");

@@ -27,7 +27,9 @@ public class OntologyBatch {
     private List<OntologyParser> parserList = new ArrayList<OntologyParser>();
     private OntologyService fileService;
     private final Pattern BioportalPattern = Pattern.compile("\\d{4}");
-    private final Pattern OLSPattern = Pattern.compile("[A-Z]{3,4}");
+    private final Pattern OLSPattern = Pattern.compile("[a-zA-Z_]{2,11}");
+    private OntologyService bos = new BioportalOntologyService();
+    private OntologyService los = new OlsOntologyService();
 
 
     /**
@@ -135,7 +137,7 @@ public class OntologyBatch {
     }
 
     /**
-     * Returns list of loaded ontologies
+     * Returns list of locally loaded ontologies
      *
      * @return list of loaded ontologies - accessions
      */
@@ -143,12 +145,37 @@ public class OntologyBatch {
 
         List<String> result = new ArrayList<String>();
 
-        OntologyParser p = parserList.get(1);
-        System.out.println(p.getOntologySource());
-        // List all available ontologies
         for (OntologyParser op : parserList)
             result.add(op.getOntologyAccession());
 
+        return result;
+    }
+
+     /**
+     * Returns list of OLS ontologies
+     *
+     * @return list of OLS ontologies - accessions
+     */
+    public List<String> listOLSOntologies() throws OntologyServiceException {
+        List<String> result = new ArrayList<String>();
+
+        for (Ontology ot : los.getOntologies())
+            result.add(ot.getOntologyAccession());
+        return result;
+    }
+
+
+     /**
+     * Returns list of BioPortal ontologies
+     *
+     * @return list of BioPortal ontologies - accessions
+     */
+    public List<String> listBioportalOntologies() throws OntologyServiceException {
+
+        List<String> result = new ArrayList<String>();
+
+        for (Ontology ot : bos.getOntologies())
+            result.add(ot.getOntologyAccession());
         return result;
     }
 
@@ -180,10 +207,8 @@ public class OntologyBatch {
     public OntologyParser getOntologyParser(String ontologyAccession) throws OntologyServiceException {
 
         if (BioportalPattern.matcher(ontologyAccession).matches()) {
-            OntologyService los = new BioportalOntologyService();
-            return new OntologyParser(los, ontologyAccession);
+            return new OntologyParser(bos, ontologyAccession);
         } else if (OLSPattern.matcher(ontologyAccession).matches()) {
-            OntologyService los = new OlsOntologyService();
             return new OntologyParser(los, ontologyAccession);
         } else {
             for (OntologyParser op : parserList) {
@@ -217,8 +242,6 @@ public class OntologyBatch {
     @SuppressWarnings("serial")
     public List<OntologyTerm> searchTermInOLS(String text) throws OntologyServiceException {
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
-        // Instantiate OLS service
-        OntologyService los = new OlsOntologyService();
 
         for (Ontology o : los.getOntologies()) {
             // Find all terms containing string text
@@ -242,11 +265,9 @@ public class OntologyBatch {
     public List<OntologyTerm> searchTermInBioportal(String text) throws OntologyServiceException {
 
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
-        // Instantiate Bioportal service
-        OntologyService los = new BioportalOntologyService();
 
         // Find all terms containing string text
-        for (OntologyTerm ot : los.searchAll(text, OntologyService.SearchOptions.EXACT,
+        for (OntologyTerm ot : bos.searchAll(text, OntologyService.SearchOptions.EXACT,
                 OntologyService.SearchOptions.INCLUDE_PROPERTIES))
             result.add(ot);
 
@@ -265,12 +286,25 @@ public class OntologyBatch {
 
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
-        OntologyService fullService = CompositeServiceNoThreads.getService(fileService,
+        /*OntologyService fullService = CompositeServiceNoThreads.getService(fileService,
                 new BioportalOntologyService(),
-                new OlsOntologyService());
-
-        for (OntologyTerm ot : fullService.searchAll(text))
+                new OlsOntologyService());  */
+        //Local Batch
+        for (OntologyTerm ot : fileService.searchAll(text))
             result.add(ot);
+
+        //BioPortal
+        for (OntologyTerm ot : bos.searchAll(text, OntologyService.SearchOptions.EXACT,
+                OntologyService.SearchOptions.INCLUDE_PROPERTIES))
+            result.add(ot);
+
+        //OLS
+        for (Ontology o : los.getOntologies()) {
+            // Find all terms containing string text
+            for (OntologyTerm ot : los.searchOntology(o.getOntologyAccession(), text, OntologyService.SearchOptions.EXACT,
+                    OntologyService.SearchOptions.INCLUDE_PROPERTIES))
+                result.add(ot);
+        }
 
         return result;
     }
