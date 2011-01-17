@@ -813,13 +813,14 @@ public class OntologyParser {
 
         String result;
         Ontology ontology = os.getOntology(ontologyAccession);
+        
+        result = "Accession: " + (ontology.getOntologyAccession()!=null ? ontology.getOntologyAccession() : "");
 
-        result = "Accession: " + ontology.getOntologyAccession();
-        result = result + " Version: " + ontology.getVersionNumber() ;
-        result = result + " Label: " + ontology.getLabel();
-        result = result + " Abbreviation: " + ontology.getAbbreviation();
-        result = result + " Description: " + ontology.getDescription();
-        result = result + " Release date: " + ontology.getDateReleased();
+        result = result + (ontology.getVersionNumber()!=null ? " Version: " + ontology.getVersionNumber() : "");
+        result = result + (ontology.getLabel()!=null ? " Label: " + ontology.getLabel() : "");
+        result = result + (ontology.getAbbreviation()!=null ? " Abbreviation: " + ontology.getAbbreviation() : "");
+        result = result + (ontology.getDescription()!=null ? " Description: " + ontology.getDescription() : "");
+        result = result + (ontology.getDateReleased()!=null ? " Release date: " + ontology.getDateReleased() : "");
 
         return result;
 

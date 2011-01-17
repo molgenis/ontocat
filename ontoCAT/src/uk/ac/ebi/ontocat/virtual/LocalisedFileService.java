@@ -40,7 +40,7 @@ public class LocalisedFileService implements InvocationHandler {
 	 * @param list
 	 *            the list
 	 */
-	private LocalisedFileService(FileOntologyService fos) {
+    public LocalisedFileService(FileOntologyService fos) {
 		this.target = fos;
 		this.ontologyAccession = fos.getOntologyUri().toString();
 	}
