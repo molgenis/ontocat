@@ -46,7 +46,10 @@ public class OntocatService
 	@WebMethod
 	public OntologyList getOntologiesXML() throws OntologyServiceException
 	{
-		return new OntologyList(os.getOntologies());
+		logger.debug("getOntologiesXML: begin");
+		OntologyList result = new OntologyList(os.getOntologies());
+		logger.debug("getOntologiesXML: done, returned "+result.ontologies.size());
+		return result;
 	}
 
 	@GET

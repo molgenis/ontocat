@@ -16,6 +16,14 @@ public class Ontology implements Serializable {
 	private String ontologyAccession;
 	private String synonymSlot;
 	private String versionNumber;
+	
+	/**
+	 * No-arg constructor for JAXB
+	 */
+	public Ontology()
+	{
+		
+	}
 
 	public Ontology(String ontologyAccession) {
 		this.ontologyAccession = ontologyAccession;
