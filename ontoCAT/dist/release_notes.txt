@@ -4,8 +4,11 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
-Version . . . / / /
-	Added LocalisedFileService that harmonizes and overwrites ontology accessions for FileOntologyService
+Version 0.9.6.2 8/02/2011
+	Added LocalisedFileService that harmonises and overwrites ontology accessions for FileOntologyService
+	Updated to latest BioPortal REST signature
+	FIX: property search was case sensitive in FileOntologyService
+	FIX: sorting by similarity now includes properties in BioportalOntologyService and FileOntologyService
 
 Version 0.9.6.1 24/11/2010
 	Rolled out similarity enabled search (Levenshtein distance across normalised strings)

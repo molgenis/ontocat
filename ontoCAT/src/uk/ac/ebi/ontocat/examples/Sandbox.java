@@ -7,6 +7,7 @@ import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 
 public class Sandbox {
@@ -20,11 +21,15 @@ public class Sandbox {
 			OntologyServiceException {
 		OntologyService os = new FileOntologyService(
 				new URI(
-						"http://efo.svn.sourceforge.net/svnroot/efo/trunk/src/efoinowl/efo.owl"));
+						"http://www.ebi.ac.uk/efo/efo.owl"));
 
-		for (OntologyTerm ot : os.searchAll("Human",
-				SearchOptions.INCLUDE_PROPERTIES, SearchOptions.EXACT)) {
-			System.out.println(ot);
+		//os = new BioportalOntologyService();
+		
+		String query = "human";
+		
+		for (OntologyTerm ot : os.searchOntology("http://www.ebi.ac.uk/efo/efo.owl", query,
+				SearchOptions.INCLUDE_PROPERTIES)) {
+						System.out.print(ot + "\n\t" );//+ ot.getContext() + "\n");
 		}
 	}
 }
