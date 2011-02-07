@@ -21,6 +21,8 @@ public class SearchBean extends OntologyTerm {
 	private String conceptIdShort;
 	private String preferredName;
 	private String contents;
+	@SuppressWarnings("unused")
+	private String objectType;
 
 	public SearchBean(String ontologyAccession, String termAccession,
 			String label) {

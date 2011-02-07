@@ -95,6 +95,7 @@ public class ConceptBean extends OntologyTerm {
 				if (e.getLabel().equalsIgnoreCase("exact synonym")
 						|| e.getLabel().equalsIgnoreCase("synonym")
 						|| e.getLabel().equalsIgnoreCase("FULL_SYN")
+						|| e.getLabel().equalsIgnoreCase("altLabel")
 						|| e.getLabel().equalsIgnoreCase("SYNONYM Full Form")
 						|| e.getLabel().equalsIgnoreCase("fma:Synonym")) {
 					log.debug("BP returned empty synonym list though there is some");
