@@ -22,7 +22,7 @@ public class Sandbox {
 				new URI(
 						"http://efo.svn.sourceforge.net/svnroot/efo/trunk/src/efoinowl/efo.owl"));
 
-		for (OntologyTerm ot : os.searchAll("human",
+		for (OntologyTerm ot : os.searchAll("Human",
 				SearchOptions.INCLUDE_PROPERTIES, SearchOptions.EXACT)) {
 			System.out.println(ot);
 		}
