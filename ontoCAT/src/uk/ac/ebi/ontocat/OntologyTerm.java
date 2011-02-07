@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
@@ -58,9 +59,10 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		 */
 		@Override
 		public String toString() {
-			return "OntologyTermContext [SimilarityScore=" + SimilarityScore + ", searchOptions="
-					+ Arrays.toString(searchOptions) + ", serviceType=" + getServiceType()
-					+ ", timestamp=" + timestamp + "]";
+			return "OntologyTermContext [SimilarityScore=" + SimilarityScore
+					+ ", valueMatched=" + valueMatched + ", searchOptions="
+					+ Arrays.toString(searchOptions) + ", serviceType="
+					+ getServiceType() + ", timestamp=" + timestamp + "]";
 		}
 
 		/**
@@ -70,6 +72,7 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		private Integer SimilarityScore = null;
 		private SearchOptions[] searchOptions;
 		private OntologyServiceType serviceType = OntologyServiceType.UNKNOWN;
+		private String valueMatched = null;
 
 		/**
 		 * Gets the service type that the ontology term originated from.
@@ -97,12 +100,69 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 			return searchOptions;
 		}
 
-		public void setSimilarityScore(Integer similarityScore) {
+		public Integer getSimilarityScore() {
+			return SimilarityScore;
+		}
+
+		public String getValueMatched() {
+			return valueMatched;
+		}
+
+		private void setValueMatched(String val) {
+			valueMatched = val;
+		}
+
+		/**
+		 * Gets the similarity based on Levenshtein distance between query and
+		 * the text
+		 * 
+		 * @param query
+		 *            the query
+		 * @param text
+		 *            the text
+		 * 
+		 * @return the similarity score between the two input parameters
+		 */
+		public void setSimilarityScore(String query, String text) {
+			setValueMatched(text);
+			if (query.equalsIgnoreCase(text)) {
+				setSimilarityScore(100); // exact match
+			} else {
+				int LD = StringUtils.getLevenshteinDistance(
+						getNormalised(text), getNormalised(query));
+				// at this point LD==0 can only mean an anagram
+				// return 99 match, just so that it has a chance of being
+				// eyeballed at some point and give preference to exact matches
+				if (LD == 0) {
+					setSimilarityScore(99);
+				}
+				int LDnorm = (int) (((query.length() - LD) / (float) query
+						.length()) * 100);
+				setSimilarityScore(LDnorm);
+			}
+		}
+
+		private void setSimilarityScore(Integer similarityScore) {
 			SimilarityScore = similarityScore;
 		}
 
-		public Integer getSimilarityScore() {
-			return SimilarityScore;
+		/**
+		 * Normalises the string by splitting it into characters and alphabet
+		 * sorting on them
+		 * 
+		 * @param in
+		 *            string to be normalised
+		 * 
+		 * @return the normalised string
+		 */
+		private String getNormalised(String in) {
+			char chars[] = in.toLowerCase().toCharArray();
+			Arrays.sort(chars);
+			StringBuilder builder = new StringBuilder();
+			for (char c : chars)
+				builder.append(c);
+
+			return builder.toString();
 		}
 	}
 
@@ -122,7 +182,8 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 * @param label
 	 *            the label
 	 */
-	public OntologyTerm(String ontologyAccession, String termAccession, String label) {
+	public OntologyTerm(String ontologyAccession, String termAccession,
+			String label) {
 		this.setAccession(termAccession);
 		this.setLabel(label);
 		this.setOntologyAccession(ontologyAccession);
@@ -192,8 +253,9 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 */
 	@Override
 	public String toString() {
-		return String.format("OntologyTerm(ontologyAccession=%s, termAccession=%s, label=%s)",
-				getOntologyAccession(), getAccession(), getLabel());
+		return String
+				.format("OntologyTerm(ontologyAccession=%s, termAccession=%s, label=%s)",
+						getOntologyAccession(), getAccession(), getLabel());
 
 	}
 
@@ -206,10 +268,14 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getAccession() == null) ? 0 : getAccession().hashCode());
-		result = prime * result + ((getLabel() == null) ? 0 : getLabel().hashCode());
 		result = prime * result
-				+ ((getOntologyAccession() == null) ? 0 : getOntologyAccession().hashCode());
+				+ ((getAccession() == null) ? 0 : getAccession().hashCode());
+		result = prime * result
+				+ ((getLabel() == null) ? 0 : getLabel().hashCode());
+		result = prime
+				* result
+				+ ((getOntologyAccession() == null) ? 0
+						: getOntologyAccession().hashCode());
 		return result;
 	}
 
@@ -268,8 +334,8 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	private void initalizeOntologyCache() throws OntologyServiceException {
 		if (ontologyCache == null) {
 			ontologyCache = new HashMap<String, Ontology>();
-			OntologyService os = CompositeDecorator.getService(new OlsOntologyService(),
-					new BioportalOntologyService());
+			OntologyService os = CompositeDecorator.getService(
+					new OlsOntologyService(), new BioportalOntologyService());
 
 			for (Ontology o : os.getOntologies()) {
 				ontologyCache.put(o.getOntologyAccession(), o);
@@ -294,8 +360,9 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 			return new Ontology(getOntologyAccession());
 		} else if (getContext().getServiceType() == OntologyServiceType.BIOPORTAL) {
 			// possibly a view, fire an extra query and store in cache
-			ontologyCache.put(getOntologyAccession(), new BioportalOntologyService()
-					.getOntology(getOntologyAccession()));
+			ontologyCache.put(getOntologyAccession(),
+					new BioportalOntologyService()
+							.getOntology(getOntologyAccession()));
 			return ontologyCache.get(getOntologyAccession());
 		}
 		throw new OntologyServiceException("Could not infer ontology!");
@@ -311,9 +378,11 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 
 	@Override
 	public int compareTo(OntologyTerm o) {
-		if (this.getContext().getSimilarityScore() > o.getContext().getSimilarityScore())
+		if (this.getContext().getSimilarityScore() > o.getContext()
+				.getSimilarityScore())
 			return -1;
-		if (this.getContext().getSimilarityScore() < o.getContext().getSimilarityScore())
+		if (this.getContext().getSimilarityScore() < o.getContext()
+				.getSimilarityScore())
 			return 1;
 		return 0;
 	}

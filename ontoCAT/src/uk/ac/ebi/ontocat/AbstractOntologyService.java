@@ -1,6 +1,6 @@
 package uk.ac.ebi.ontocat;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyTerm.OntologyServiceType;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.bioportal.xmlbeans.SearchBean;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
@@ -23,7 +23,8 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
  * 
  */
 public abstract class AbstractOntologyService implements OntologyService {
-	private static final Logger log = Logger.getLogger(AbstractOntologyService.class);
+	private static final Logger log = Logger
+			.getLogger(AbstractOntologyService.class);
 
 	public Map<String, List<String>> getAnnotations(OntologyTerm term)
 			throws OntologyServiceException {
@@ -32,26 +33,26 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return getAnnotations(term.getOntologyAccession(), term.getAccession());
 	}
 
-	public List<OntologyTerm> getChildren(OntologyTerm term) throws OntologyServiceException {
+	public List<OntologyTerm> getChildren(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyList();
 		return getChildren(term.getOntologyAccession(), term.getAccession());
 	}
 
-
-	public List<String> getDefinitions(OntologyTerm term) throws OntologyServiceException {
+	public List<String> getDefinitions(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyList();
 		return getDefinitions(term.getOntologyAccession(), term.getAccession());
 	}
 
-
-	public List<OntologyTerm> getParents(OntologyTerm term) throws OntologyServiceException {
+	public List<OntologyTerm> getParents(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyList();
 		return getParents(term.getOntologyAccession(), term.getAccession());
 	}
-
 
 	public Map<String, List<String>> getRelations(OntologyTerm term)
 			throws OntologyServiceException {
@@ -60,49 +61,54 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return getRelations(term.getOntologyAccession(), term.getAccession());
 	}
 
-
-	public List<OntologyTerm> getRootTerms(Ontology ontology) throws OntologyServiceException {
+	public List<OntologyTerm> getRootTerms(Ontology ontology)
+			throws OntologyServiceException {
 		return getRootTerms(ontology.getOntologyAccession());
 	}
 
-
-	public List<String> getSynonyms(OntologyTerm term) throws OntologyServiceException {
+	public List<String> getSynonyms(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyList();
 		return getSynonyms(term.getOntologyAccession(), term.getAccession());
 	}
 
-
-	public List<OntologyTerm> getTermPath(OntologyTerm term) throws OntologyServiceException {
+	public List<OntologyTerm> getTermPath(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyList();
 		return getTermPath(term.getOntologyAccession(), term.getAccession());
 	}
 
-	public Set<OntologyTerm> getAllChildren(OntologyTerm term) throws OntologyServiceException {
+	public Set<OntologyTerm> getAllChildren(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptySet();
 		return processStack(term, new MyFunctor() {
 			@Override
-			public List<OntologyTerm> call(OntologyTerm term) throws OntologyServiceException {
+			public List<OntologyTerm> call(OntologyTerm term)
+					throws OntologyServiceException {
 				return getChildren(term);
 			}
 		});
 	}
 
-	public Set<OntologyTerm> getAllParents(OntologyTerm term) throws OntologyServiceException {
+	public Set<OntologyTerm> getAllParents(OntologyTerm term)
+			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptySet();
 		return processStack(term, new MyFunctor() {
 			@Override
-			public List<OntologyTerm> call(OntologyTerm term) throws OntologyServiceException {
+			public List<OntologyTerm> call(OntologyTerm term)
+					throws OntologyServiceException {
 				return getParents(term);
 			}
 		});
 	}
 
 	private abstract class MyFunctor {
-		public abstract List<OntologyTerm> call(OntologyTerm term) throws OntologyServiceException;
+		public abstract List<OntologyTerm> call(OntologyTerm term)
+				throws OntologyServiceException;
 	}
 
 	private Set<OntologyTerm> processStack(OntologyTerm seed, MyFunctor f)
@@ -125,21 +131,19 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return result;
 	}
 
-
-	public Set<OntologyTerm> getAllChildren(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	public Set<OntologyTerm> getAllChildren(String ontologyAccession,
+			String termAccession) throws OntologyServiceException {
 		return getAllChildren(getTerm(ontologyAccession, termAccession));
 
 	}
 
-
-	public Set<OntologyTerm> getAllParents(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	public Set<OntologyTerm> getAllParents(String ontologyAccession,
+			String termAccession) throws OntologyServiceException {
 		return getAllParents(getTerm(ontologyAccession, termAccession));
 	}
 
-
-	public Set<OntologyTerm> getAllTerms(String ontologyAccession) throws OntologyServiceException {
+	public Set<OntologyTerm> getAllTerms(String ontologyAccession)
+			throws OntologyServiceException {
 		List<OntologyTerm> rootTerms = getRootTerms(ontologyAccession);
 		Set<OntologyTerm> result = new HashSet<OntologyTerm>();
 		for (OntologyTerm term : rootTerms) {
@@ -161,15 +165,39 @@ public abstract class AbstractOntologyService implements OntologyService {
 	 * 
 	 * @return the list< ontology term>
 	 */
-	protected List<OntologyTerm> injectTermContext(List<OntologyTerm> list, String query,
-			SearchOptions[] searchOptions) {
+	protected List<OntologyTerm> injectTermContext(List<OntologyTerm> list,
+			String query, SearchOptions[] searchOptions) {
+		String valueMatched;
 		for (OntologyTerm ot : list) {
+			// Bioportal's value that matched in search is stored in contents
+			if (ot instanceof SearchBean) {
+				valueMatched = ((SearchBean) ot).getContents();
+			} else {
+				valueMatched = ot.getLabel();
+			}
 			ot.getContext().setSearchOptions(searchOptions);
-			ot.getContext().setSimilarityScore(getSimilarity(query, ot.getLabel()));
+			ot.getContext().setSimilarityScore(query, valueMatched);
 			ot.getContext().setServiceType(getServiceType());
 		}
 		Collections.sort(list);
 		return list;
+	}
+
+	protected List<OntologyTerm> injectTermContext(
+			Map<OntologyTerm, String> map, String query,
+			SearchOptions[] searchOptions) {
+		for (Map.Entry<OntologyTerm, String> entry : map.entrySet()) {
+			OntologyTerm ot = entry.getKey();
+			String valueMatched = entry.getValue();
+
+			ot.getContext().setSearchOptions(searchOptions);
+			ot.getContext().setSimilarityScore(query, valueMatched);
+			ot.getContext().setServiceType(getServiceType());
+		}
+
+		List<OntologyTerm> result = new ArrayList<OntologyTerm>(map.keySet());
+		Collections.sort(result);
+		return result;
 	}
 
 	private OntologyServiceType getServiceType() {
@@ -182,49 +210,4 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return OntologyServiceType.UNKNOWN;
 	}
 
-	/**
-	 * Gets the similarity based on Levenshtein distance between query and the
-	 * text
-	 * 
-	 * @param query
-	 *            the query
-	 * @param text
-	 *            the text
-	 * 
-	 * @return the similarity score between the two input parameters
-	 */
-	private int getSimilarity(String query, String text) {
-		if (query.equalsIgnoreCase(text)) {
-			return 100; // exact match
-		} else {
-			int LD = StringUtils.getLevenshteinDistance(getNormalised(text), getNormalised(query));
-			// at this point LD==0 can only mean an anagram
-			// return 99 match, just so that it has a chance of being
-			// eyeballed at some point and give preference to exact matches
-			if (LD == 0) {
-				return 99;
-			}
-			int LDnorm = (int) (((query.length() - LD) / (float) query.length()) * 100);
-			return LDnorm;
-		}
-	}
-
-	/**
-	 * Normalises the string by splitting it into characters and alphabet
-	 * sorting on them
-	 * 
-	 * @param in
-	 *            string to be normalised
-	 * 
-	 * @return the normalised string
-	 */
-	private String getNormalised(String in) {
-		char chars[] = in.toLowerCase().toCharArray();
-		Arrays.sort(chars);
-		StringBuilder builder = new StringBuilder();
-		for (char c : chars)
-			builder.append(c);
-
-		return builder.toString();
-	}
 }
