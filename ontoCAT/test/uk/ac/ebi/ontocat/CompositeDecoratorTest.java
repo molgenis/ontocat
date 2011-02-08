@@ -67,18 +67,14 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 		try {
 			ec.invokeAll(tasks);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private class RequestTask implements Callable<Object> {
-		private OntologyService os;
-
 		@Override
 		public Object call() throws Exception {
 			new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"));
-
 			return null;
 		}
 
