@@ -4,16 +4,18 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 /**
  * The Class SortedSubsetDecorator. Decorator adding sorting and subsetting
@@ -31,7 +33,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	private Object target;
 
 	/** The sort order. */
-	private List sortOrder;
+	private List<String> sortOrder;
 
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(SortedSubsetDecorator.class);
@@ -41,12 +43,12 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * 
 	 * @param obj
 	 *            the obj
-	 * @param list
-	 *            the list
+	 * @param sortOrder
+	 *            the list of accessions
 	 */
-	private SortedSubsetDecorator(Object obj, List list) {
+	private SortedSubsetDecorator(Object obj, List<String> sortOrder) {
 		target = obj;
-		this.sortOrder = list;
+		this.sortOrder = sortOrder;
 		// reverse the list as the first item
 		// also has the lowest index
 		Collections.reverse(this.sortOrder);
@@ -57,13 +59,13 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * 
 	 * @param obj
 	 *            the obj
-	 * @param list
-	 *            the list
+	 * @param sortOrder
+	 *            the list of accessions
 	 * 
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj, List list) throws OntologyServiceException {
+	private static Object createProxy(Object obj, List<String> sortOrder) throws OntologyServiceException {
 		// If an exception if thrown here, the OntologyService
 		// interface must have changed and you have to modify
 		// the <searchAll> and <searchOntology> strings below
@@ -77,12 +79,12 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			throw new OntologyServiceException(e);
 		}
 		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
-				.getInterfaces(), new SortedSubsetDecorator(obj, list));
+				.getInterfaces(), new SortedSubsetDecorator(obj, sortOrder));
 	}
 
-	public static OntologyService getService(OntologyService os, List list)
+	public static OntologyService getService(OntologyService os, List<String> sortOrder)
 			throws OntologyServiceException {
-		return (OntologyService) SortedSubsetDecorator.createProxy(os, list);
+		return (OntologyService) SortedSubsetDecorator.createProxy(os, sortOrder);
 	}
 
 	// here the magic happens
@@ -107,7 +109,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			result = method.invoke(target, args);
 			// sort the results if the method was searchAll
 			if (method.getName().equalsIgnoreCase("searchAll"))
-				result = searchAllRanked((List<OntologyTerm>) result, sortOrder);
+				result = searchAllRanked((List<OntologyTerm>) result);
 
 		} catch (InvocationTargetException e) {
 			log.error(method.getName() + " throws " + e.getCause());
@@ -132,7 +134,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result, List sortOrder)
+	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result)
 			throws OntologyServiceException {
 		// trim list
 		for (int i = result.size() - 1; i >= 0; i--) {
@@ -140,9 +142,9 @@ public class SortedSubsetDecorator implements InvocationHandler {
 				result.remove(i);
 		}
 		// sort according to sortOrder
-		// Collections.sort(result, new OntologyRankComparator(sortOrder));
+		Collections.sort(result, new OntologyRankComparator());
 		// sort according to similarity
-		Collections.sort(result);
+		// Collections.sort(result);
 		return result;
 	}
 
@@ -150,19 +152,6 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 * The Class OntologyRankComparator.
 	 */
 	private class OntologyRankComparator implements Comparator<OntologyTerm> {
-
-		private List sortOrder;
-
-		/**
-		 * Instantiates a new ontology rank comparator.
-		 * 
-		 * @param list
-		 *            the list
-		 */
-		public OntologyRankComparator(List list) {
-			sortOrder = list;
-		}
-
 		/*
 		 * (non-Javadoc)
 		 * 
