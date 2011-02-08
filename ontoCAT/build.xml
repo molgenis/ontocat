@@ -46,7 +46,7 @@
 		  </delete>
 	</target>
 	
-	<target name="dist" depends="compile, test-html, jar, jar-with-deps, javadoc">
+	<target name="dist" depends="clean-dist,compile, test-html, jar, jar-with-deps, javadoc">
 
 		<zip destfile="dist/${ant.project.name}-${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />
@@ -54,8 +54,8 @@
 			<zipfileset dir="test" prefix="source/test" />
 			<zipfileset dir="lib" prefix="source/lib" />
 			<zipfileset dir="." prefix="source" includes="build.xml" />
-			<zipfileset dir="dist" includes="${ant.project.name}_with_deps_v${version}.jar" />
-			<zipfileset dir="dist" includes="${ant.project.name}_v${version}.jar" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps.jar" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}.jar" />
 			<zipfileset dir="dist" includes="release_notes.txt" />
 			<zipfileset dir="dist" includes="COPYING" />
 			<zipfileset dir="dist" includes="COPYING.LESSER" />
