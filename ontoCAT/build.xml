@@ -151,5 +151,36 @@
 			<report todir="${test.reports}" />
 		</junitreport>
 	</target>
+	
+	<target name="update-sf">
+			<input message="Please enter your username in ontocat@SF"
+			       addproperty="tc.user"
+			       defaultvalue="tadamusiak" />
+			<input message="Please enter your password for ontocat@SF:"
+			       addproperty="tc.pass" />
+		<!-- update the README -->
+			<scp file="dist/release_notes.txt"
+			     trust="true"
+			     verbose="true"
+			     todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/README"
+			     password="${tc.pass}">
+			</scp>
+		
+		<!-- request interactive shell -->
+			<sshexec host="shell.sourceforge.net"
+				 trust="true"
+				 verbose="true"
+				 username="${tc.user},ontocat"
+				 password="${tc.pass}"
+				 command="create" />
+		<!-- move the files around 
+			<sshexec host="shell.sourceforge.net"
+						 trust="true"
+						 verbose="true"
+						 username="${tc.user},ontocat"
+						 password="${tc.pass}"
+						 command="rm /home/frs/project/o/on/ontocat/ontoCAT/release/README" />
+		-->
+		</target>
 
 </project>
