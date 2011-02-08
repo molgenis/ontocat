@@ -1,7 +1,7 @@
 
 # File:        ontocatdb/R/generated/java/app/servlet/source.R
-# Copyright:   GBIC 2000-2,010, all rights reserved
-# Date:        February 24, 2010
+# Copyright:   GBIC 2000-2,011, all rights reserved
+# Date:        February 8, 2011
 #
 # generator:   org.molgenis.generators.R.RApi 3.3.2-testing
 #

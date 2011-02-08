@@ -1,7 +1,7 @@
 
 /* File:        ontocatdb/model/Investigation.java
- * Copyright:   GBIC 2000-2,010, all rights reserved
- * Date:        February 24, 2010
+ * Copyright:   GBIC 2000-2,011, all rights reserved
+ * Date:        February 8, 2011
  * Generator:   org.molgenis.generators.DataTypeGen 3.3.2-testing
  *
  * THIS FILE HAS BEEN GENERATED, PLEASE DO NOT EDIT!
@@ -33,7 +33,7 @@ import ontocatdb.Nameable;
 				results (in ObservedValues). Maps to XGAP/FuGE Investigation, MAGE-TAB
 				experiment and METABASE:Study.
 .
- * @version February 24, 2010 
+ * @version February 8, 2011 
  * @author MOLGENIS generator
  */
 public class Investigation extends org.molgenis.util.AbstractEntity implements Identifiable, Nameable

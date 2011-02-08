@@ -1,7 +1,7 @@
 
 /* File:        ontocatdb/model/Nameable.java
- * Copyright:   GBIC 2000-2,010, all rights reserved
- * Date:        February 24, 2010
+ * Copyright:   GBIC 2000-2,011, all rights reserved
+ * Date:        February 8, 2011
  * Generator:   org.molgenis.generators.DataTypeGen 3.3.2-testing
  *
  * THIS FILE HAS BEEN GENERATED, PLEASE DO NOT EDIT!
@@ -15,7 +15,7 @@ package ontocatdb;
 				sub-classes a meaningful name that need not be unique. This class maps to
 				FuGE::Identifiable (together with Identifiable interface)
 .
- * @version February 24, 2010 
+ * @version February 8, 2011 
  * @author MOLGENIS generator
  */
 public interface Nameable extends org.molgenis.util.Entity

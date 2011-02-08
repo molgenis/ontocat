@@ -1,6 +1,6 @@
 /*
  * Created by: org.molgenis.generators.server.MolgenisServletGen
- * Date: February 24, 2010
+ * Date: February 8, 2011
  */
 
 package app.servlet;

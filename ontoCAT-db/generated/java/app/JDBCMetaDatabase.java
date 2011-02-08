@@ -1,6 +1,6 @@
 /* File:        ontocatdb/model/JDBCDatabase
- * Copyright:   Inventory 2000-2,010, GBIC 2002-2,010, all rights reserved
- * Date:        February 24, 2010
+ * Copyright:   Inventory 2000-2,011, GBIC 2002-2,011, all rights reserved
+ * Date:        February 8, 2011
  * 
  * generator:   org.molgenis.generators.db.JDBCMetaDatabaseGen 3.3.2-testing
  *
