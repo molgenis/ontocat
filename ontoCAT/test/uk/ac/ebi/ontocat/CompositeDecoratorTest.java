@@ -35,7 +35,6 @@ public class CompositeDecoratorTest extends AbstractOntologyServiceTest {
 		final FileOntologyService osFile2 = new FileOntologyService(
 				new URI(
 						"http://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
-		osFile.setSynonymSlot("alternative_term");
 
 		os = CompositeDecorator.getService(osOLS, osBP, osFile, osFile2);
 

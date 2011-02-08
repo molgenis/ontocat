@@ -18,11 +18,10 @@ public class CompositeServiceNoThreadsTest extends AbstractOntologyServiceTest {
 		final OntologyService osOLS = new OlsOntologyService();
 		final FileOntologyService osFile = new FileOntologyService(
 				new URI(
-						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl?revision=142"));
+						"http://efo.svn.sourceforge.net/svnroot/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl?revision=142"));
 		final FileOntologyService osFile2 = new FileOntologyService(
 				new URI(
-						"https://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
-		osFile.setSynonymSlot("alternative_term");
+						"http://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
 
 		os = CompositeServiceNoThreads.getService(osOLS, osBP, osFile, osFile2);
 
