@@ -1,11 +1,16 @@
 <html>
+<head>
+<script type="text/javascript" src="ontocatinput.js"></script>
+<link rel="stylesheet" href="ontocatinput.css" type="text/css" />
 
+
+</head>
 <body>
 
 <h1>Welcome the REST version of OntoCat</h1>
 <h2>What to do with the service:</h2>
 <li>A full list of services is available at
-http://localhost:8080/ontocat/rest?_wadl
+<a href="rest?_wadl">http://localhost:8080/ontocat/rest?_wadl</a>
 <li>For playing around with the server we use <a
 	href="http://code.google.com/p/rest-client/">http://code.google.com/p/rest-client/</a>
 <li>See <a href="http://www.ontocat.org">http://www.ontocat.org</a> for full explanation of the OntoCAT package and other APIs on Java and R.
@@ -13,15 +18,15 @@ http://localhost:8080/ontocat/rest?_wadl
 <h2>Example web interface for searching</h2>
 
 Type in the box below and behind the scenes OntoCAT will search and autocomplete.
-
-
+<br/>
+<select name="ontocatsearch" onfocus="showOntocatInput(this); self.blur(); return false;"></select>
 
 <h2>Frequently asked questions</h2>
 
-<p>Question: the script doesnt run on my machine</p>
+<p>Question: the rest service doesn't run on my web site</p>
 <p>Hint: if you use this service accross domains you can have cross domain
 errors which keep the services from functioning properly (i.e. it is
-best to run the REST api on the same machine as your web app that uses
+best to run the REST api on the same host as your web app that uses
 it).</p>
 </body>
 
