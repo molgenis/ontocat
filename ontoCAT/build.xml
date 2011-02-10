@@ -54,6 +54,7 @@
 			<zipfileset dir="test" prefix="source/test" />
 			<zipfileset dir="lib" prefix="source/lib" />
 			<zipfileset dir="." prefix="source" includes="build.xml" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps-small.jar" />
 			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps.jar" />
 			<zipfileset dir="dist" includes="${ant.project.name}-${version}.jar" />
 			<zipfileset dir="dist" includes="release_notes.txt" />
@@ -90,6 +91,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.11.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-lang-2.4.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/xstream-1.3.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
 		</jar>
 	</target>
 	
@@ -118,6 +120,7 @@
 				-->
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-lang-2.4.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xstream-1.3.1.jar" />
+				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
 			</jar>
 		</target>
 
@@ -158,13 +161,6 @@
 			       defaultvalue="tadamusiak" />
 			<input message="Please enter your password for ontocat@SF:"
 			       addproperty="tc.pass" />
-		<!-- update the README -->
-			<scp file="dist/release_notes.txt"
-			     trust="true"
-			     verbose="true"
-			     todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/README"
-			     password="${tc.pass}">
-			</scp>
 		
 		<!-- request interactive shell -->
 			<sshexec host="shell.sourceforge.net"
@@ -173,14 +169,38 @@
 				 username="${tc.user},ontocat"
 				 password="${tc.pass}"
 				 command="create" />
-		<!-- move the files around 
+		<!-- archive the old files 
 			<sshexec host="shell.sourceforge.net"
-						 trust="true"
-						 verbose="true"
-						 username="${tc.user},ontocat"
-						 password="${tc.pass}"
-						 command="rm /home/frs/project/o/on/ontocat/ontoCAT/release/README" />
+				 trust="true"
+				 verbose="true"
+				 username="${tc.user},ontocat"
+				 password="${tc.pass}"
+				 command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
 		-->
+		<!-- update the README -->
+			<scp file="dist/release_notes.txt"
+			     trust="true"
+			     verbose="true"
+			     todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/README"
+			     password="${tc.pass}">
+			</scp>
+		
+		<!-- copy new release 
+			<scp file="dist/${ant.project.name}-${version}.zip"
+				 trust="true"
+				 verbose="true"
+				 todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/."
+				 password="${tc.pass}">
+			</scp>
+		-->
+		
+		<!-- shutdown interactive shell -->
+				<sshexec host="shell.sourceforge.net"
+					 trust="true"
+					 verbose="true"
+					 username="${tc.user},ontocat"
+					 password="${tc.pass}"
+					 command="shutdown" />
 		</target>
 
 </project>
