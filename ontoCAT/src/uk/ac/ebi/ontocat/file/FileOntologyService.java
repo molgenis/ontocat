@@ -114,8 +114,9 @@ public final class FileOntologyService extends AbstractOntologyService
 	 *            where to load the ontology from, can be local file or URL
 	 * @param ontologyAccession
 	 *            user-defined ontology accession
+	 * @throws OntologyServiceException 
 	 */
-	public FileOntologyService(URI uriOntology, String ontologyAccession) {
+	public FileOntologyService(URI uriOntology, String ontologyAccession) throws OntologyServiceException {
 		OntologyLoader loader = new OntologyLoader(uriOntology);
 		ontology = loader.getOntology();
 		// get all possible URIs in onotlogy
@@ -145,8 +146,9 @@ public final class FileOntologyService extends AbstractOntologyService
 	 * 
 	 * @param uriOntology
 	 *            where to load the ontology from, can be local file or URL
+	 * @throws OntologyServiceException 
 	 */
-	public FileOntologyService(URI uriOntology) {
+	public FileOntologyService(URI uriOntology) throws OntologyServiceException {
 		OntologyLoader loader = new OntologyLoader(uriOntology);
 		ontology = loader.getOntology();
 		// get all possible URIs in onotlogy

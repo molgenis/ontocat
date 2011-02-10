@@ -12,6 +12,8 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+import uk.ac.ebi.ontocat.OntologyServiceException;
+
 // TODO: Auto-generated Javadoc
 /**
  * Contains loading related methods.
@@ -47,8 +49,9 @@ public final class OntologyLoader {
 	 * 
 	 * @param uriOntology
 	 *            ontology to be loaded
+	 * @throws OntologyServiceException 
 	 */
-	public OntologyLoader(URI uriOntology) {
+	public OntologyLoader(URI uriOntology) throws OntologyServiceException {
 		try {
 			// Manager has to be synchronised otherwise parser will
 			// complain: Parsers should load imported ontologies using
@@ -66,15 +69,10 @@ public final class OntologyLoader {
 				ontology = manager.loadOntologyFromOntologyDocument(iri);
 			}
 		} catch (OWLOntologyCreationException e) {
-			log.fatal("The ontology could not be created: " + e.getMessage());
-			System.exit(1);
+			throw new OntologyServiceException("The ontology could not be created: " + e.getMessage());
 		} catch (java.lang.OutOfMemoryError e) {
-			log.error("Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
-			System.out
-					.println("Ran out of memory. Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
-			log.fatal(e);
-
-			System.exit(1);
+			log.fatal("Ran out of memory. Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
+			throw new OntologyServiceException(e.getMessage());
 		}
 	}
 
