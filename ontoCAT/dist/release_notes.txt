@@ -4,6 +4,9 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+Version 0.9.6.3 9/02/2011
+	Removed system.exit() statements that were causing problems in external applications
+
 Version 0.9.6.2 8/02/2011
 	Added LocalisedFileService that harmonises and overwrites ontology accessions for FileOntologyService
 	Updated to latest BioPortal REST signature
