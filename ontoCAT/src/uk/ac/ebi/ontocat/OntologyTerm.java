@@ -130,12 +130,6 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 			} else {
 				int LD = StringUtils.getLevenshteinDistance(
 						getNormalised(text), getNormalised(query));
-				// at this point LD==0 can only mean an anagram
-				// return 99 match, just so that it has a chance of being
-				// eyeballed at some point and give preference to exact matches
-				if (LD == 0) {
-					setSimilarityScore(99);
-				}
 				int LDnorm = (int) (((query.length() - LD) / (float) query
 						.length()) * 100);
 				setSimilarityScore(LDnorm);
@@ -147,8 +141,8 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		}
 
 		/**
-		 * Normalises the string by splitting it into characters and alphabet
-		 * sorting on them
+		 * Normalises the string by lowercasing, splitting it into words on non-alphanumeric
+		 * characters and sorting them alphabetically
 		 * 
 		 * @param in
 		 *            string to be normalised
@@ -156,11 +150,11 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		 * @return the normalised string
 		 */
 		private String getNormalised(String in) {
-			char chars[] = in.toLowerCase().toCharArray();
-			Arrays.sort(chars);
+			String[] words = in.split("[^a-z0-9]");
+			Arrays.sort(words);
 			StringBuilder builder = new StringBuilder();
-			for (char c : chars)
-				builder.append(c);
+			for (String s : words)
+				builder.append(s);
 
 			return builder.toString();
 		}
