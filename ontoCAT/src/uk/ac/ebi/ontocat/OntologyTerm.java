@@ -26,6 +26,11 @@ import uk.ac.ebi.ontocat.virtual.CompositeDecorator;
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The accession. */
 	private String accession;
 
@@ -52,6 +57,11 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	};
 
 	public class OntologyTermContext implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -121,7 +131,6 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		 * @param text
 		 *            the text
 		 * 
-		 * @return the similarity score between the two input parameters
 		 */
 		public void setSimilarityScore(String query, String text) {
 			setValueMatched(text);

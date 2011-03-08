@@ -35,10 +35,6 @@ public class LocalisedFileService implements InvocationHandler {
 	/**
 	 * Instantiates the decorator.
 	 * 
-	 * @param obj
-	 *            the obj
-	 * @param list
-	 *            the list
 	 */
     public LocalisedFileService(FileOntologyService fos) {
 		this.target = fos;
