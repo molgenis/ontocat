@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -103,7 +104,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 
 	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub

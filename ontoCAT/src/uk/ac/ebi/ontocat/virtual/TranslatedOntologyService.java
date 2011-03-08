@@ -2,6 +2,7 @@ package uk.ac.ebi.ontocat.virtual;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -76,7 +77,7 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 	}
 
 	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
 		return os.getRelations(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));

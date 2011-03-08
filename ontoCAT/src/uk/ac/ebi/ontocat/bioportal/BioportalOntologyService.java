@@ -777,7 +777,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
 		throw new UnsupportedOperationException();
 	}

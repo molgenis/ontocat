@@ -4,7 +4,7 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
-Version 0.9.7 ///
+Version 0.9.7 8/3/2011/
 	Added support for individuals/instances/particulars to the FileOntologyService
 
 Version 0.9.6.3 9/02/2011

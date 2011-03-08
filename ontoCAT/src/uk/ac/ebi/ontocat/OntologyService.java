@@ -195,17 +195,16 @@ public interface OntologyService {
 	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, List<String>> getRelations(String ontologyAccession, String termAccession)
+	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
 			throws OntologyServiceException;
 
 	/**
 	 * Return relations for this termAccession.
 	 * 
-	 * @param term
 	 * @return Map of OntologyTerms or an empty map if nothing was found
 	 * @throws OntologyServiceException
 	 */
-	public Map<String, List<String>> getRelations(OntologyTerm term)
+	public Map<String, Set<OntologyTerm>> getRelations(OntologyTerm term)
 			throws OntologyServiceException;
 
 	/**

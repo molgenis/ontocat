@@ -202,9 +202,9 @@ public class FileOntologyService extends AbstractOntologyService
 	 * java.lang.String)
 	 */
 	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession,
+	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		throw new UnsupportedOperationException("Not implemented.");
+		throw new UnsupportedOperationException("Not implemented. Use ReasonedFileOntologyService");
 	}
 
 	/*

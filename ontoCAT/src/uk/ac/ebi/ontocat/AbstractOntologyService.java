@@ -54,7 +54,7 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return getParents(term.getOntologyAccession(), term.getAccession());
 	}
 
-	public Map<String, List<String>> getRelations(OntologyTerm term)
+	public Map<String, Set<OntologyTerm>> getRelations(OntologyTerm term)
 			throws OntologyServiceException {
 		if (term == null)
 			return Collections.emptyMap();

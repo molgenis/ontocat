@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -36,6 +37,10 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 
 	private OWLReasoner reasoner;
 
+	/** The Constant log. */
+	private static final Logger log = Logger
+			.getLogger(ReasonedFileOntologyService.class);
+
 	/**
 	 * @param uriOntology
 	 * @throws OntologyServiceException
@@ -58,29 +63,17 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		// Create a reasoner factory.
 		OWLReasonerFactory reasonerFactory = new Reasoner.ReasonerFactory();
 
-		// We'll now create an instance of an OWLReasoner (the implementation
-		// being provided by HermiT as we're using the HermiT reasoner factory).
-		// The are two categories of
-		// reasoner, Buffering and NonBuffering. In our case, we'll create the
-		// buffering reasoner, which
-		// is the default kind of reasoner. We'll also attach a progress monitor
-		// to the reasoner. To do this we
-		// set up a configuration that knows about a progress monitor.
-
 		// Create a console progress monitor. This will print the reasoner
 		// progress out to the console.
-		ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
-		// Specify the progress monitor via a configuration. We could also
-		// specify other setup parameters in the configuration,
-		// and different reasoners may accept their own
-		// defined parameters this way.
-		OWLReasonerConfiguration config = new SimpleConfiguration(
-				progressMonitor);
-		// Create a reasoner that will reason over our ontology and its imports
-		// closure. Pass in the configuration.
-		reasoner = reasonerFactory.createReasoner(ontology, config);
+		// ConsoleProgressMonitor progressMonitor = new
+		// ConsoleProgressMonitor();
+		// OWLReasonerConfiguration config = new SimpleConfiguration(
+		// progressMonitor);
 
-		// Ask the reasoner to do all the necessary work now
+		// Create a HermiT OWLReasoner
+		reasoner = reasonerFactory.createReasoner(ontology);
+
+		// Ask the reasoner to do all the necessary work
 		reasoner.precomputeInferences();
 
 		// Throw an exception if the ontology is inconsistent
@@ -88,51 +81,104 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 			throw new OntologyServiceException(
 					"Inconsistent ontology according to HermiT reasoner - "
 							+ uriOntology.toString());
-
+		log.info("Classified the ontology " + uriOntology.toString());
 	}
 
-	public Map<String, List<OntologyTerm>> getRelationsX(
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uk.ac.ebi.ontocat.file.FileOntologyService#getRelations(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public Map<String, Set<OntologyTerm>> getRelations(
 			String ontologyAccession, String termAccession)
 			throws OntologyServiceException {
+		return getRelationsShortcut(ontologyAccession, termAccession, null);
+	}
+
+	/**
+	 * Gets the relations, there's a shortcut that can limit the returned
+	 * relations to a single type
+	 * 
+	 * @param ontologyAccession
+	 *            the ontology accession
+	 * @param termAccession
+	 *            the term accession
+	 * @param relation
+	 *            the relation to limit the results to or null otherwise
+	 * @return relations map for a particular term
+	 * @throws OntologyServiceException
+	 *             the ontology service exception
+	 */
+	public Map<String, Set<OntologyTerm>> getRelationsShortcut(
+			String ontologyAccession, String termAccession, String relation)
+			throws OntologyServiceException {
 		// initialise
+		Map<String, Set<OntologyTerm>> result = new HashMap<String, Set<OntologyTerm>>();
 		OWLDataFactory factory = loader.getManager().getOWLDataFactory();
 		Set<OWLObjectProperty> properties = ontology
 				.getObjectPropertiesInSignature(false);
 		OWLEntity ent = getOwlEntity(termAccession);
-		Map<String, List<OntologyTerm>> result = new HashMap<String, List<OntologyTerm>>();
+		// this is only works for all classes now (not individuals)
+		if (!ent.isOWLClass())
+			return Collections.emptyMap();
 
 		// iterate through properties
 		for (OWLObjectProperty prop : properties) {
-			//FIXME: short cut to return only inverse(part_of)
-			if (!getLabel(prop).equalsIgnoreCase("part_of"))
+			OWLObjectProperty inverse = findInverseObjectProperty(prop);
+			// this really only works for inversable properties
+			// so ignore other
+			if (inverse == null)
 				continue;
+
+			// shortcut to return only a particular relation
+			if (relation != null
+					&& !getLabel(inverse).equalsIgnoreCase(relation))
+				continue;
+
+			// create class expression
 			OWLClassExpression relationSomeObject = factory
 					.getOWLObjectSomeValuesFrom(prop, ent.asOWLClass());
+			// and find all subclasses that fulfill it
+			Set<OWLClass> sRelatedClasses = new HashSet<OWLClass>();
+			sRelatedClasses.addAll(reasoner.getSubClasses(relationSomeObject,
+					true).getFlattened());
 
-			Set<OWLClass> set = new HashSet<OWLClass>();
-			set.addAll(reasoner.getSubClasses(relationSomeObject, true)
-					.getFlattened());
-
-			List<OntologyTerm> list = new ArrayList<OntologyTerm>();
-			for (OWLClass cls : set) {
+			// filter out anonymous classes
+			Set<OntologyTerm> sFilteredResult = new HashSet<OntologyTerm>();
+			for (OWLClass cls : sRelatedClasses) {
 				if (cls.isBuiltIn())
 					continue;
-				list.add(getTerm(cls));
+				sFilteredResult.add(getTerm(cls));
 			}
 
-			// find the inverse property for a meaningful label
-			Set<OWLObjectPropertyExpression> inverse = reasoner
-					.getInverseObjectProperties(prop).getEntities();
-			String inverseProperty = "";
-			for (OWLObjectPropertyExpression pe : inverse) {
-				if (pe.isAnonymous())
-					continue;
-				inverseProperty += getLabel(pe.asOWLObjectProperty());
-			}
-			result.put(inverseProperty, list);
+			// inverse property provides a meaningful label
+			result.put(getLabel(inverse), sFilteredResult);
 		}
 
 		return result;
+	}
+
+	/**
+	 * Find inverse object property. This could potentially be a set, but most
+	 * of the time only a single element one, so just return the first.
+	 * 
+	 * @param prop
+	 *            the property to find inverse of
+	 * @return the inverse of the object property passed in as parameter
+	 */
+	private OWLObjectProperty findInverseObjectProperty(OWLObjectProperty prop) {
+		Set<OWLObjectPropertyExpression> inverse = reasoner
+				.getInverseObjectProperties(prop).getEntities();
+		for (OWLObjectPropertyExpression pe : inverse) {
+			if (pe.isAnonymous())
+				continue;
+			// only need the first one
+			return pe.asOWLObjectProperty();
+		}
+		return null;
 	}
 
 	/*
@@ -154,6 +200,8 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		if (ent.isOWLClass()) {
 			for (OWLClass cls : reasoner.getSubClasses(ent.asOWLClass(), true)
 					.getFlattened()) {
+				if (cls.isBuiltIn())
+					continue;
 				list.add(getTerm(cls));
 			}
 		}
@@ -179,6 +227,8 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		if (ent.isOWLClass()) {
 			for (OWLClass cls : reasoner
 					.getSuperClasses(ent.asOWLClass(), true).getFlattened()) {
+				if (cls.isBuiltIn())
+					continue;
 				list.add(getTerm(cls));
 			}
 		}
