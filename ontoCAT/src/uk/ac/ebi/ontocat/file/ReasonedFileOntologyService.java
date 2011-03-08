@@ -6,14 +6,19 @@ package uk.ac.ebi.ontocat.file;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
@@ -86,18 +91,48 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.ac.ebi.ontocat.file.FileOntologyService#getRelations(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
-	public Map<String, List<String>> getRelations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		// TODO Auto-generated method stub
-		return super.getRelations(ontologyAccession, termAccession);
+	public Map<String, List<OntologyTerm>> getRelationsX(
+			String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		// initialise
+		OWLDataFactory factory = loader.getManager().getOWLDataFactory();
+		Set<OWLObjectProperty> properties = ontology
+				.getObjectPropertiesInSignature(false);
+		OWLEntity ent = getOwlEntity(termAccession);
+		Map<String, List<OntologyTerm>> result = new HashMap<String, List<OntologyTerm>>();
+
+		// iterate through properties
+		for (OWLObjectProperty prop : properties) {
+			//FIXME: short cut to return only inverse(part_of)
+			if (!getLabel(prop).equalsIgnoreCase("part_of"))
+				continue;
+			OWLClassExpression relationSomeObject = factory
+					.getOWLObjectSomeValuesFrom(prop, ent.asOWLClass());
+
+			Set<OWLClass> set = new HashSet<OWLClass>();
+			set.addAll(reasoner.getSubClasses(relationSomeObject, true)
+					.getFlattened());
+
+			List<OntologyTerm> list = new ArrayList<OntologyTerm>();
+			for (OWLClass cls : set) {
+				if (cls.isBuiltIn())
+					continue;
+				list.add(getTerm(cls));
+			}
+
+			// find the inverse property for a meaningful label
+			Set<OWLObjectPropertyExpression> inverse = reasoner
+					.getInverseObjectProperties(prop).getEntities();
+			String inverseProperty = "";
+			for (OWLObjectPropertyExpression pe : inverse) {
+				if (pe.isAnonymous())
+					continue;
+				inverseProperty += getLabel(pe.asOWLObjectProperty());
+			}
+			result.put(inverseProperty, list);
+		}
+
+		return result;
 	}
 
 	/*
@@ -117,8 +152,8 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		if (ent == null)
 			return Collections.emptyList();
 		if (ent.isOWLClass()) {
-			for (OWLClass cls : reasoner.getSubClasses(ent.asOWLClass(),
-					true).getFlattened()) {
+			for (OWLClass cls : reasoner.getSubClasses(ent.asOWLClass(), true)
+					.getFlattened()) {
 				list.add(getTerm(cls));
 			}
 		}
@@ -142,14 +177,14 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		if (ent == null)
 			return Collections.emptyList();
 		if (ent.isOWLClass()) {
-			for (OWLClass cls : reasoner.getSuperClasses(ent.asOWLClass(),
-					true).getFlattened()) {
+			for (OWLClass cls : reasoner
+					.getSuperClasses(ent.asOWLClass(), true).getFlattened()) {
 				list.add(getTerm(cls));
 			}
 		}
 		if (ent.isOWLNamedIndividual()) {
-			for (OWLClass cls : reasoner.getTypes(
-					ent.asOWLNamedIndividual(), true).getFlattened()) {
+			for (OWLClass cls : reasoner.getTypes(ent.asOWLNamedIndividual(),
+					true).getFlattened()) {
 				list.add(getTerm(cls));
 			}
 		}

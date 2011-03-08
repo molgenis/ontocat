@@ -108,6 +108,8 @@ public class FileOntologyService extends AbstractOntologyService
 	/** The map with classes */
 	private final Map<String, OWLEntity> cache = new TreeMap<String, OWLEntity>();
 
+	protected OntologyLoader loader;
+
 	/**
 	 * Instantiates a new file ontology service. Allows to set a user-defined
 	 * accession that can be later used for queries.
@@ -134,7 +136,7 @@ public class FileOntologyService extends AbstractOntologyService
 	 * @throws OntologyServiceException
 	 */
 	public FileOntologyService(URI uriOntology) throws OntologyServiceException {
-		OntologyLoader loader = new OntologyLoader(uriOntology);
+		loader = new OntologyLoader(uriOntology);
 		ontology = loader.getOntology();
 		// get all possible URIs in onotlogy
 		// and load classes and individuals into the cache
@@ -624,7 +626,7 @@ public class FileOntologyService extends AbstractOntologyService
 	 * 
 	 * @return the fragment
 	 */
-	private String getFragment(OWLEntity ent) {
+	protected String getFragment(OWLEntity ent) {
 		return getFragment(ent.getIRI().toURI());
 	}
 
@@ -649,7 +651,7 @@ public class FileOntologyService extends AbstractOntologyService
 	 * @return the fragment
 	 * @throws OntologyServiceException
 	 */
-	private String getLabel(OWLEntity ent) throws OntologyServiceException {
+	protected String getLabel(OWLEntity ent) throws OntologyServiceException {
 		// Try the slot label (SKOS or custom)
 		Map<String, List<String>> clsAnnotations = getAnnotations(ent);
 		List<String> labels1 = null;
