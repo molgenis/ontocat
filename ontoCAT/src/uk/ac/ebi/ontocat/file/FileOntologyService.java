@@ -35,17 +35,17 @@ import uk.ac.ebi.ontocat.OntologyTerm;
 /**
  * The Class FileOntologyService. This works on both OBO and OWL files.
  */
-public final class FileOntologyService extends AbstractOntologyService
+public class FileOntologyService extends AbstractOntologyService
 		implements OntologyService {
 	/** The Constant log. */
 	private static final Logger log = Logger
 			.getLogger(FileOntologyService.class.getName());
 
 	/** The ontology. */
-	private final OWLOntology ontology;
+	protected final OWLOntology ontology;
 
 	// Multiple ontology namespaces per OWL file are permitted
-	private Set<String> ontoAccessions = new HashSet<String>();
+	protected Set<String> ontoAccessions = new HashSet<String>();
 
 	/** The slots. */
 	/** The skos:synonym slot. */
@@ -328,7 +328,7 @@ public final class FileOntologyService extends AbstractOntologyService
 		return getTerm(getOwlEntity(termAccession));
 	}
 
-	private OntologyTerm getTerm(OWLEntity ent) throws OntologyServiceException {
+	protected OntologyTerm getTerm(OWLEntity ent) throws OntologyServiceException {
 		if (ent == null)
 			return null;
 		String ontologyAccession = getOntologyAccession(ent);
@@ -577,7 +577,7 @@ public final class FileOntologyService extends AbstractOntologyService
 	// helper function to manage the cache
 	// FIXME: this is potentially unsafe, and should
 	// FIXME: take into account ontology uri + accession, i.e. full URI
-	private OWLEntity getOwlEntity(String termAccession)
+	protected OWLEntity getOwlEntity(String termAccession)
 			throws OntologyServiceException {
 		return cache.get(termAccession);
 	}
