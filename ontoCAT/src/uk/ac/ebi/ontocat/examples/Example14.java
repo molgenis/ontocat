@@ -45,11 +45,9 @@ public class Example14 {
 		// otherwise
 		log.info(os.getParents("efo", "EFO_0003087"));
 
-		// Build partonomy
-		parts = new HashMap<OntologyTerm, Set<OntologyTerm>>();
-
-		// To make it quicker we'll focus on skeleton structure branch
-		// (EFO_0000635)
+		// Build partonomy - to make it quicker we'll focus 
+		// on the skeleton structure branch (EFO_0000806)
+		// to compute whole partonomy try organism part (EFO_0000635)
 		OntologyTerm rootNode = os.getTerm("EFO_0000806");
 
 		// But first lets see all the possible relations for this term
@@ -69,29 +67,7 @@ public class Example14 {
 		Set<OntologyTerm> branch = os.getAllChildren(rootNode);
 		branch.add(rootNode);
 		log.info("Processing partonomy for " + branch.size() + " classes");
-		int counter = 0;
-
-		Stack<OntologyTerm> processQueue = new Stack<OntologyTerm>();
-		processQueue.addAll(branch);
-
-		do {
-			if (++counter % 10 == 0)
-				log.info("Processed " + counter + " so far");
-
-			OntologyTerm ot = processQueue.pop();
-
-			Set<OntologyTerm> classParts = new HashSet<OntologyTerm>(os
-					.getRelationsShortcut(ot.getOntologyAccession(),
-							ot.getAccession(), "has_part").get("has_part"));
-
-			parts.put(ot, classParts);
-
-			// process parts for derived terms
-			// remove the ones the we've seen already
-			classParts.removeAll(parts.keySet());
-			processQueue.addAll(classParts);
-		} while (!processQueue.isEmpty());
-
+		
 		// Visualise recursively
 		System.out.println(rootNode.getLabel());
 		visualise(rootNode, "    ");
@@ -117,7 +93,10 @@ public class Example14 {
 
 		Set<OntologyTerm> isa_children = new HashSet<OntologyTerm>(
 				os.getChildren(currentNode));
-		Set<OntologyTerm> part_children = parts.get(currentNode);
+		Set<OntologyTerm> part_children = new HashSet<OntologyTerm>(os
+				.getRelationsShortcut(currentNode.getOntologyAccession(),
+						currentNode.getAccession(), "has_part").get("has_part"));
+
 
 		// remove has_part children from the asserted isa set
 		isa_children.removeAll(part_children);
