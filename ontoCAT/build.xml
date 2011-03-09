@@ -204,14 +204,14 @@
 				 username="${tc.user},ontocat"
 				 password="${tc.pass}"
 				 command="create" />
-		<!-- archive the old files 
+		<!-- archive the old files -->
 			<sshexec host="shell.sourceforge.net"
 				 trust="true"
 				 verbose="true"
 				 username="${tc.user},ontocat"
 				 password="${tc.pass}"
 				 command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
-		-->
+		
 		<!-- update the README -->
 			<scp file="dist/release_notes.txt"
 			     trust="true"
@@ -220,14 +220,14 @@
 			     password="${tc.pass}">
 			</scp>
 		
-		<!-- copy new release 
+		<!-- copy new release  -->
 			<scp file="dist/${ant.project.name}-${version}.zip"
 				 trust="true"
 				 verbose="true"
 				 todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/."
 				 password="${tc.pass}">
 			</scp>
-		-->
+		
 		
 		<!-- shutdown interactive shell -->
 				<sshexec host="shell.sourceforge.net"

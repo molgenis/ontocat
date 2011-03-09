@@ -4,8 +4,12 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
-Version 0.9.7 8/3/2011/
-	Added support for individuals/instances/particulars to the FileOntologyService
+Version 0.9.7 9/3/2011/
+	Change in OntologyService.getRelations signature from return Map<String, List<String>> 
+	to Map<String,Set<OntologyTerm>>  
+	Added ReasonedFileOntologyService, which uses the HermiT reasoner to infer hierarchy and relations
+	Added support for individuals/instances/particulars to FileOntologyService
+	FIX: OLS.getRelations() now returns a proper result set
 
 Version 0.9.6.3 9/02/2011
 	Removed system.exit() statements that were causing problems in external applications

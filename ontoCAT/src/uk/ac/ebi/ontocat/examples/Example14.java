@@ -62,8 +62,10 @@ public class Example14 {
 			}
 		}
 
-		// Proceed with building a full partonomy
+		// Proceed with building the partonomy
 		// Note that other axes are also possible
+		// and we're using a specific getRelationsShortcut()
+		// to only compute the has_part relations
 		Set<OntologyTerm> branch = os.getAllChildren(rootNode);
 		branch.add(rootNode);
 		log.info("Processing partonomy for " + branch.size() + " classes");
