@@ -5,24 +5,23 @@
   <groupId>uk.ac.ebi</groupId>
   <artifactId>ontoCAT</artifactId>
   <packaging>jar</packaging>
-  <version>0.9.6</version>
+  <version>0.9.7</version>
   <name>ontoCAT</name>
   <url>http://www.ontocat.org</url>
  
-
+   <properties>
+    <skipTests>false</skipTests>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   </properties>
    <build>
-       <sourceDirectory>src</sourceDirectory>
-       <testSourceDirectory>test</testSourceDirectory>
-       
+     
        
     <plugins>
         <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-surefire-plugin</artifactId>
                <version>2.6</version>
-               <configuration>
-                 <skipTests>false</skipTests>
-               </configuration>
+
              </plugin>
         
       <plugin>
@@ -121,22 +120,22 @@
   <distributionManagement>
     <downloadUrl>http://ontocat.sourceforge.net/maven/repo</downloadUrl>
     <repository>
-      <id>ontoCAT-repo</id>
+      <id>ontocat.sf.net</id>
       <name>OntoCAT SF Repository</name>
       <url>
-        scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs/maven/repo
+        scp://shell.sourceforge.net/home/project-web/ontocat/htdocs/maven/repo
       </url>
     </repository>
     <snapshotRepository>
-      <id>ontoCAT-repo</id>
+      <id>ontocat.sf.net</id>
       <name>OntoCAT SF Repository</name>
       <url>
-        scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs/maven/repo
+        scp://shell.sourceforge.net/home/project-web/ontocat/htdocs/maven/repo
       </url>
     </snapshotRepository>
     <site>
       <id>ontocat.sf.net</id>
-      <url>scp://shell.sourceforge.net/home/groups/o/on/ontocat/htdocs</url>
+      <url>scp://shell.sourceforge.net/home/project-web/ontocat/htdocs</url>
     </site>
   </distributionManagement>
 
@@ -165,7 +164,14 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-  </repositories>
+        <repository>
+      <id>owlapi</id>
+      <url>https://owlapi.svn.sourceforge.net/svnroot/owlapi/v3/trunk</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    </repositories>
  
 
   <dependencies>
@@ -194,11 +200,6 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.fluxion</groupId>
-      <artifactId>fluxion-utils</artifactId>
-      <version>1.0-alpha-3</version>
     </dependency>
     <dependency>
       <groupId>jargs</groupId>
@@ -252,16 +253,23 @@
       <artifactId>org.mortbay.jetty</artifactId>
       <version>5.1.12</version>       
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
       <version>2.0.8</version>
+    </dependency>-->
+    <dependency>
+      <groupId>org.semanticweb</groupId>
+      <artifactId>HermiT</artifactId>
+      <version>1.3.3</version>
     </dependency>
-
+    <dependency>
+      <groupId>owlapi</groupId>
+      <artifactId>owlapi</artifactId>
+      <version>3.1.0</version>
+    </dependency>
   </dependencies>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+
 
 </project>
