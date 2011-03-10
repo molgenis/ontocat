@@ -169,7 +169,7 @@
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="true">
+		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="true" tempdir="/tmp">
 			<classpath refid="test.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
