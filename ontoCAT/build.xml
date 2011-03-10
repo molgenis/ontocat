@@ -18,6 +18,7 @@
 		<patternset id="test.sources">
 			<include name="**/*Test.class" />
 			<exclude name="**/special/*" />
+			<exclude name="**/CachedServiceDecorator*" />
 		</patternset>
 	</fileset>
 
@@ -169,7 +170,7 @@
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit fork="no" haltonfailure="yes" printSummary="true" showOutput="true" tempdir="/tmp">
+		<junit fork="no" haltonfailure="yes" printSummary="true" showOutput="false">
 			<classpath refid="test.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
