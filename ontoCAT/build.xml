@@ -18,7 +18,6 @@
 		<patternset id="test.sources">
 			<include name="**/*Test.class" />
 			<exclude name="**/special/*" />
-			<exclude name="**/CachedDecoratorTest*" />
 		</patternset>
 	</fileset>
 
