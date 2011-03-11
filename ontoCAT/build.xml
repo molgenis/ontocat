@@ -36,8 +36,11 @@
 	<target name="compile">
 		<javac srcdir="src:test" destdir="bin" nowarn="on">
 			<classpath refid="test.classpath" />
-	
 		</javac>
+		<!-- deliver config files -->
+	       <copy todir="bin">
+	            <fileset dir="src" excludes="**/*.java"/>
+	        </copy>
 	</target>
 
 	<target name="clean-dist">
