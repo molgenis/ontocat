@@ -3,6 +3,10 @@ package uk.ac.ebi.ontocat.virtual;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -91,6 +95,17 @@ public class CachedServiceDecorator implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
+
+		// As the very least should return an empty collection
+		if (method.getReturnType() == List.class) {
+			result = Collections.emptyList();
+		}
+		if (method.getReturnType() == Map.class) {
+			result = Collections.emptyMap();
+		}
+		if (method.getReturnType() == Set.class) {
+			result = Collections.emptySet();
+		}
 
 		// try {
 		// // add the result to cache if it's not there already
