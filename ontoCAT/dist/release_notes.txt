@@ -4,6 +4,10 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+Version 0.9.7.1 11/3/2011/
+	Some internal refactoring of ReasonedFileOntologyService and example
+	Renamed ReasonedFileOntologyService.getRelationsShortcut to getSpecificRelation
+	 
 Version 0.9.7 9/3/2011/
 	Change in OntologyService.getRelations signature from return Map<String, List<String>> 
 	to Map<String,Set<OntologyTerm>>  
