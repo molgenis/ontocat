@@ -4,6 +4,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -13,9 +17,9 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 /**
  * The Class CachedServiceDecorator. Decorator adding two caching layers to any
@@ -94,6 +98,17 @@ public class CachedServiceDecorator implements InvocationHandler {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
 
+		// As the very least should return an empty collection
+		if (method.getReturnType() == List.class) {
+			result = Collections.emptyList();
+		}
+		if (method.getReturnType() == Map.class) {
+			result = Collections.emptyMap();
+		}
+		if (method.getReturnType() == Set.class) {
+			result = Collections.emptySet();
+		}
+
 		try {
 			// add the result to cache if it's not there already
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
@@ -117,8 +132,9 @@ public class CachedServiceDecorator implements InvocationHandler {
 
 	private String ArgsToKey(Object[] args) throws OntologyServiceException {
 		String s = "";
-		if (args == null)
+		if (args == null) {
 			return "";
+		}
 		for (Object arg : args) {
 			if (arg instanceof String) {
 				s += "|" + (String) arg;
@@ -131,7 +147,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 			} else {
 				log.fatal("Unrecognised parameter in cached call. Could not create key!");
 				throw new OntologyServiceException(new Exception(
-						"Unrecognised parameter in cached call."));
+				"Unrecognised parameter in cached call."));
 			}
 		}
 		return s;
