@@ -122,7 +122,9 @@ public class CachedServiceDecorator implements InvocationHandler {
 				EternalCache.put(el);
 			}
 			// get the result from cache
-			result = ServiceCache.get(cacheKey).getValue();
+			if (ServiceCache.get(cacheKey) != null) {
+				result = ServiceCache.get(cacheKey).getValue();
+			}
 
 		} catch (InvocationTargetException e) {
 			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
