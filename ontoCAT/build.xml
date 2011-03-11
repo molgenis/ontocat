@@ -246,7 +246,7 @@
 	<property name="hudson.user" value="tadamusiak" />
 	<property name="hudson.pass" value="${env.SFPASS}" />
 	<target name="hudson-to-sf">
-		<echo message="the pass is ${hudson.pass}"/>
+		<echo message="the pass is ${env.SFPASS}"/>
 			<!-- request interactive shell -->
 				<sshexec host="shell.sourceforge.net"
 					 trust="true"
