@@ -36,7 +36,7 @@ public class Example14 {
 		// Get parents of atrial myocardium (EFO_0003087)
 		// This is a defined class and it would not work
 		// otherwise
-		System.out.println("Parents of a defined class atrial myocardium:");
+		System.out.println("Parent of defined class atrial myocardium:");
 		System.out.println(os.getParents("efo", "EFO_0003087"));
 
 		// Build a tree of relations (including partonomy)
@@ -46,10 +46,10 @@ public class Example14 {
 		OntologyTerm startNode = os.getTerm("EFO_0000806");
 
 		// But first lets see all the possible relations for the starting term
+		System.out.println("\nDirect relations for term: "
+				+ startNode.getLabel() + "...");
 		Map<String, Set<OntologyTerm>> result = os.getRelations(startNode);
 
-		System.out
-		.println("Direct relations for term: " + startNode.getLabel());
 		for (Entry<String, Set<OntologyTerm>> entry : result.entrySet()) {
 			System.out.println("\n\t" + entry.getKey());
 			for (OntologyTerm ot : entry.getValue()) {
@@ -63,8 +63,8 @@ public class Example14 {
 		Set<OntologyTerm> branch = os.getAllChildren(startNode);
 		branch.add(startNode);
 		System.out
-		.println("Building exhaustive tree, estimated size more than "
-				+ branch.size() + " classes");
+		.println("\nBuilding exhaustive relations tree, estimated size more than "
+				+ branch.size() + " classes\n");
 
 		// Visualise recursively
 		System.out.println(startNode.getLabel());
@@ -84,32 +84,44 @@ public class Example14 {
 	 */
 	private static void visualise(OntologyTerm currentNode, String tab)
 	throws OntologyServiceException {
-		String partPadding = addPadding("has_part", "-");
-		String isaPadding = addPadding("", "-");
-		String newTab = addPadding(tab, "");
+		String isaPadding = pad("", "-");
+		String newTab = pad(tab, " ");
 
-		Set<OntologyTerm> isa_children = new HashSet<OntologyTerm>(
+		Set<OntologyTerm> isaChildren = new HashSet<OntologyTerm>(
 				os.getChildren(currentNode));
-		Set<OntologyTerm> part_children = new HashSet<OntologyTerm>(os
-				.getSpecificRelation(currentNode.getOntologyAccession(),
-						currentNode.getAccession(), "has_part"));
+		// Note you could use ReasonedOntologyService.getSpecificRelation
+		// to focus only on a specific axis (e.g. has_part)
+		Map<String, Set<OntologyTerm>> mOtherChildren = os.getRelations(
+				currentNode.getOntologyAccession(), currentNode.getAccession());
 
-		// remove has_part children from the asserted isa set
-		isa_children.removeAll(part_children);
+		// remove isa children inferred by the reasoner
+		// under a structure defined specifically to capture a relationship
+		// example skeleton structure, or skeleton disease
+		// these will be shown with the original relationship in the next step
+		for (Set<OntologyTerm> sOtherChildren : mOtherChildren.values()) {
+			isaChildren.removeAll(sOtherChildren);
+		}
 
-		for (OntologyTerm term : isa_children) {
+		// print isa children
+		for (OntologyTerm term : isaChildren) {
 			System.out.println(tab + isaPadding + term.getLabel());
 			visualise(term, newTab);
 		}
-		for (OntologyTerm term : part_children) {
-			System.out.println(tab + partPadding + term.getLabel());
-			visualise(term, newTab);
+		// print other children
+		for (Entry<String, Set<OntologyTerm>> e : mOtherChildren
+				.entrySet()) {
+			for (OntologyTerm ot : e.getValue()){
+				System.out.println(tab + pad(e.getKey(), "-") + ot.getLabel());
+				visualise(ot, newTab);
+			}
 		}
 	}
 
-	private static String addPadding(String s, String string) {
-		return string + string
-		+ String.format("%1$-" + (20 - s.length()) + "s", string) + s
-		+ string + string;
+	public static String pad(String str, String padChar) {
+		StringBuilder padded = new StringBuilder(padChar + padChar + str);
+		while (padded.length() < 27) {
+			padded.append(padChar);
+		}
+		return padded.toString();
 	}
 }
