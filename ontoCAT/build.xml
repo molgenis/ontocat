@@ -36,6 +36,9 @@
 	<target name="compile">
 		<javac srcdir="src:test" destdir="bin" nowarn="on">
 			<classpath refid="test.classpath" />
+			<include name="**/ehcache.xml"/>
+			<include name="**/ehcache.xsd"/>
+			<include name="**/log4j.properties"/>
 		</javac>
 	</target>
 
