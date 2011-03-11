@@ -4,38 +4,9 @@ import junit.framework.Assert;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
-import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
-import uk.ac.ebi.ontocat.virtual.CachedServiceDecorator;
-
-public class HudsonTest extends AbstractOntologyServiceTest {
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		CachedServiceDecorator.clearCache();
-		os = HudsonDecorator.getService(new BioportalOntologyService());
-		// GO accession
-		ONTOLOGY_ACCESSION = "1070";
-	}
-
-	private long t1;
-	private long t2;
-
-	@Before
-	public void runBeforeEveryTest() {
-		t1 = System.nanoTime();
-	}
-
-	@After
-	public void runAfterEveryTest() {
-		t2 = System.nanoTime();
-		log.info("Query took " + ((t2 - t1) * 1e-6) + " ms\t");
-	}
+public class HudsonTest {
 
 	@Test
 	public void instantiateTest() {
