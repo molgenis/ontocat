@@ -1,27 +1,22 @@
 package uk.ac.ebi.ontocat;
 
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
-public class HudsonTest {
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
+import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
+import uk.ac.ebi.ontocat.virtual.CachedServiceDecorator;
 
-	private static Cache EternalCache;
+public class HudsonTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		// Initialise the cache singleton
-		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
-		CacheManager manager = CacheManager.create(HudsonTest.class
-				.getResource(
-				"ehcache.xml"));
-		Cache ServiceCache = manager.getCache("OntologyServiceCache");
-		EternalCache = manager.getCache("EternalServiceCache");
+		CachedServiceDecorator.clearCache();
+		os = HudsonDecorator.getService(new BioportalOntologyService());
+		// GO accession
+		ONTOLOGY_ACCESSION = "1070";
 	}
 
 	private long t1;
@@ -35,11 +30,7 @@ public class HudsonTest {
 	@After
 	public void runAfterEveryTest() {
 		t2 = System.nanoTime();
-	}
-
-	@Test
-	public void testMe() {
-		System.out.println("testMe");
+		log.info("Query took " + ((t2 - t1) * 1e-6) + " ms\t");
 	}
 
 }
