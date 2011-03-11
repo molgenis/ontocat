@@ -98,6 +98,9 @@ public class HudsonDecorator implements InvocationHandler {
 		CacheManager m = CacheManager.create(getClass().getResource(
 		"ehcache.xml"));
 		System.out.println("m: " + m);
+		System.out.println("diskstorepath " + m.getDiskStorePath());
+		System.out.println("statu " + m.getStatus());
+
 		Cache c = m.getCache("OntologyServiceCache");
 		System.out.println("c: " + c);
 
