@@ -127,12 +127,12 @@ public class CachedServiceDecorator implements InvocationHandler {
 			}
 
 		} catch (InvocationTargetException e) {
-			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
-				result = EternalCache.get(cacheKey).getValue();
-				log.warn("Accessing eternal cache for " + cacheKey);
-			} else {
-				throw new OntologyServiceException(e);
-			}
+			// if (EternalCache != null && EternalCache.get(cacheKey) != null) {
+			// result = EternalCache.get(cacheKey).getValue();
+			// log.warn("Accessing eternal cache for " + cacheKey);
+			// } else {
+			throw new OntologyServiceException(e);
+			// }
 		}
 		return result;
 	}
