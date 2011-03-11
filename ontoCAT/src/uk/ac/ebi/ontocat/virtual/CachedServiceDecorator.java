@@ -1,21 +1,19 @@
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 
 /**
  * The Class CachedServiceDecorator. Decorator adding two caching layers to any
@@ -94,31 +92,32 @@ public class CachedServiceDecorator implements InvocationHandler {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
 
-		try {
-			// add the result to cache if it's not there already
-			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
-				Element el = new Element(cacheKey, method.invoke(target, args));
-				ServiceCache.put(el);
-				EternalCache.put(el);
-			}
-			// get the result from cache
-			result = ServiceCache.get(cacheKey).getValue();
-
-		} catch (InvocationTargetException e) {
-			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
-				result = EternalCache.get(cacheKey).getValue();
-				log.warn("Accessing eternal cache for " + cacheKey);
-			} else {
-				throw new OntologyServiceException(e);
-			}
-		}
+		// try {
+		// // add the result to cache if it's not there already
+		// if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
+		// Element el = new Element(cacheKey, method.invoke(target, args));
+		// ServiceCache.put(el);
+		// EternalCache.put(el);
+		// }
+		// // get the result from cache
+		// result = ServiceCache.get(cacheKey).getValue();
+		//
+		// } catch (InvocationTargetException e) {
+		// if (EternalCache != null && EternalCache.get(cacheKey) != null) {
+		// result = EternalCache.get(cacheKey).getValue();
+		// log.warn("Accessing eternal cache for " + cacheKey);
+		// } else {
+		// throw new OntologyServiceException(e);
+		// }
+		// }
 		return result;
 	}
 
 	private String ArgsToKey(Object[] args) throws OntologyServiceException {
 		String s = "";
-		if (args == null)
+		if (args == null) {
 			return "";
+		}
 		for (Object arg : args) {
 			if (arg instanceof String) {
 				s += "|" + (String) arg;
@@ -131,7 +130,7 @@ public class CachedServiceDecorator implements InvocationHandler {
 			} else {
 				log.fatal("Unrecognised parameter in cached call. Could not create key!");
 				throw new OntologyServiceException(new Exception(
-						"Unrecognised parameter in cached call."));
+				"Unrecognised parameter in cached call."));
 			}
 		}
 		return s;
