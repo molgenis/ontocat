@@ -38,9 +38,9 @@
 			<classpath refid="test.classpath" />
 		</javac>
 		<!-- deliver config files -->
-	       <copy todir="bin">
-	            <fileset dir="src" excludes="**/*.java"/>
-	        </copy>
+	     <copy todir="bin">
+	        <fileset dir="src" excludes="**/*.java"/>
+	     </copy>
 	</target>
 
 	<target name="clean-dist">
@@ -241,5 +241,50 @@
 					 password="${tc.pass}"
 					 command="shutdown" />
 		</target>
+	
+	
+	<property name="hudson.user" value="tadamusiak" />
+	<property name="hudson.pass" value="${env.SFPASS}" />
+	<target name="hudson-to-sf">
+			<!-- request interactive shell -->
+				<sshexec host="shell.sourceforge.net"
+					 trust="true"
+					 verbose="true"
+					 username="${hudson.user},ontocat"
+					 password="${hudson.pass}"
+					 command="create" />
+			<!-- archive the old files 
+				<sshexec host="shell.sourceforge.net"
+					 trust="true"
+					 verbose="true"
+					 username="${hudson.user},ontocat"
+					 password="${hudson.pass}"
+					 command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
+			-->
+			<!-- update the README -->
+				<scp file="dist/release_notes.txt"
+				     trust="true"
+				     verbose="true"
+				     todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/README"
+				     password="${hudson.pass}">
+				</scp>
+			
+			<!-- copy new release  -->
+				<scp file="dist/${ant.project.name}-${version}.zip"
+					 trust="true"
+					 verbose="true"
+					 todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/ontocat-snapshot.zip"
+					 password="${hudson.pass}">
+				</scp>
+			
+			
+			<!-- shutdown interactive shell -->
+					<sshexec host="shell.sourceforge.net"
+						 trust="true"
+						 verbose="true"
+						 username="${hudson.user},ontocat"
+						 password="${hudson.pass}"
+						 command="shutdown" />
+			</target>
 
 </project>
