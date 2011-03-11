@@ -15,11 +15,7 @@ import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.Ontology;
-import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
-import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 
 /**
  * The Class CachedServiceDecorator. Decorator adding two caching layers to any
@@ -110,13 +106,15 @@ public class HudsonDecorator implements InvocationHandler {
 		}
 
 		try {
-			// add the result to cache if it's not there already
+			System.out
+			.println("add the result to cache if it's not there already");
+			log.info("logger not working?");
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
 				Element el = new Element(cacheKey, method.invoke(target, args));
 				ServiceCache.put(el);
 				EternalCache.put(el);
 			}
-			// get the result from cache
+			System.out.println("get the result from cache");
 			result = ServiceCache.get(cacheKey).getValue();
 
 		} catch (InvocationTargetException e) {
