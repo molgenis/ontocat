@@ -6,12 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
-
 
 /**
  * Example 13
@@ -19,7 +16,6 @@ import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
  * Shows how to instantiate the reasoned file service and build partonomy
  */
 public class Example14 {
-	private static final Logger log = Logger.getLogger(Example14.class);
 	private static ReasonedFileOntologyService os;
 
 	/**
@@ -40,16 +36,20 @@ public class Example14 {
 		// Get parents of atrial myocardium (EFO_0003087)
 		// This is a defined class and it would not work
 		// otherwise
-		log.info(os.getParents("efo", "EFO_0003087"));
+		System.out.println("Parents of a defined class atrial myocardium:");
+		System.out.println(os.getParents("efo", "EFO_0003087"));
 
-		// Build partonomy - to make it quicker we'll focus
+		// Build a tree of relations (including partonomy)
+		// To make it quicker we'll focus
 		// on the skeleton structure branch (EFO_0000806)
-		// to compute whole partonomy try organism part (EFO_0000635)
+		// to compute a larger tree try organism part (EFO_0000635)
 		OntologyTerm startNode = os.getTerm("EFO_0000806");
 
-		// But first lets see all the possible relations for this term
+		// But first lets see all the possible relations for the starting term
 		Map<String, Set<OntologyTerm>> result = os.getRelations(startNode);
 
+		System.out
+		.println("Direct relations for term: " + startNode.getLabel());
 		for (Entry<String, Set<OntologyTerm>> entry : result.entrySet()) {
 			System.out.println("\n\t" + entry.getKey());
 			for (OntologyTerm ot : entry.getValue()) {
@@ -57,13 +57,14 @@ public class Example14 {
 			}
 		}
 
-		// Proceed with building the partonomy
-		// Note that other axes are also possible
-		// and we're using a specific getRelationsShortcut()
-		// to only compute the has_part relations
+		// Proceed with building the tree
+		// Note you can also focus on a specific relation (e.g. has_part)
+		// and it would be quicker
 		Set<OntologyTerm> branch = os.getAllChildren(startNode);
 		branch.add(startNode);
-		log.info("Processing partonomy for " + branch.size() + " classes");
+		System.out
+		.println("Building exhaustive tree, estimated size more than "
+				+ branch.size() + " classes");
 
 		// Visualise recursively
 		System.out.println(startNode.getLabel());
@@ -83,16 +84,15 @@ public class Example14 {
 	 */
 	private static void visualise(OntologyTerm currentNode, String tab)
 	throws OntologyServiceException {
-		String partPadding = "|---has_part--- ";
-		String isaPadding = "|-------------- ";
-		String newTab = tab
-		+ String.format("%1$-" + partPadding.length() + "s", "");
+		String partPadding = addPadding("has_part", "-");
+		String isaPadding = addPadding("", "-");
+		String newTab = addPadding(tab, "");
 
 		Set<OntologyTerm> isa_children = new HashSet<OntologyTerm>(
 				os.getChildren(currentNode));
 		Set<OntologyTerm> part_children = new HashSet<OntologyTerm>(os
-				.getRelationsShortcut(currentNode.getOntologyAccession(),
-						currentNode.getAccession(), "has_part").get("has_part"));
+				.getSpecificRelation(currentNode.getOntologyAccession(),
+						currentNode.getAccession(), "has_part"));
 
 		// remove has_part children from the asserted isa set
 		isa_children.removeAll(part_children);
@@ -105,5 +105,11 @@ public class Example14 {
 			System.out.println(tab + partPadding + term.getLabel());
 			visualise(term, newTab);
 		}
+	}
+
+	private static String addPadding(String s, String string) {
+		return string + string
+		+ String.format("%1$-" + (20 - s.length()) + "s", string) + s
+		+ string + string;
 	}
 }
