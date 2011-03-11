@@ -52,6 +52,7 @@ public class HudsonDecorator implements InvocationHandler {
 	private HudsonDecorator(Object obj) {
 		target = obj;
 		// Initialise the cache singleton
+		System.out.println("Instantiating cache");
 		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
 		CacheManager manager = CacheManager.create(getClass().getResource("ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
@@ -93,6 +94,12 @@ public class HudsonDecorator implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
+
+		CacheManager m = CacheManager.create(getClass().getResource(
+		"ehcache.xml"));
+		System.out.println("m: " + m);
+		Cache c = m.getCache("OntologyServiceCache");
+		System.out.println("c: " + c);
 
 		// As the very least should return an empty collection
 		if (method.getReturnType() == List.class) {
