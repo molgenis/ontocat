@@ -1,6 +1,7 @@
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +40,8 @@ public class CachedServiceDecorator implements InvocationHandler {
 	private Object target;
 
 	/** The Constant log. */
-	private static final Logger log = Logger.getLogger(CachedServiceDecorator.class);
+	private static final Logger log = Logger
+	.getLogger(CachedServiceDecorator.class);
 
 	private static Cache ServiceCache;
 	private static Cache EternalCache;
@@ -55,7 +58,8 @@ public class CachedServiceDecorator implements InvocationHandler {
 		target = obj;
 		// Initialise the cache singleton
 		System.setProperty("net.sf.ehcache.enableShutdownHook", "true");
-		CacheManager manager = CacheManager.create(getClass().getResource("ehcache.xml"));
+		CacheManager manager = CacheManager.create(getClass().getResource(
+		"ehcache.xml"));
 		ServiceCache = manager.getCache("OntologyServiceCache");
 		EternalCache = manager.getCache("EternalServiceCache");
 	}
@@ -75,12 +79,14 @@ public class CachedServiceDecorator implements InvocationHandler {
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj) throws OntologyServiceException {
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
-				.getInterfaces(), new CachedServiceDecorator(obj));
+	private static Object createProxy(Object obj)
+	throws OntologyServiceException {
+		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
+				.getClass().getInterfaces(), new CachedServiceDecorator(obj));
 	}
 
-	public static OntologyService getService(OntologyService os) throws OntologyServiceException {
+	public static OntologyService getService(OntologyService os)
+	throws OntologyServiceException {
 		return (OntologyService) CachedServiceDecorator.createProxy(os);
 	}
 
@@ -92,7 +98,8 @@ public class CachedServiceDecorator implements InvocationHandler {
 	 * java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args)
+	throws Throwable {
 		Object result = null;
 		String cacheKey = method.getName() + ArgsToKey(args);
 
@@ -107,24 +114,24 @@ public class CachedServiceDecorator implements InvocationHandler {
 			result = Collections.emptySet();
 		}
 
-		// try {
-		// // add the result to cache if it's not there already
-		// if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
-		// Element el = new Element(cacheKey, method.invoke(target, args));
-		// ServiceCache.put(el);
-		// EternalCache.put(el);
-		// }
-		// // get the result from cache
-		// result = ServiceCache.get(cacheKey).getValue();
-		//
-		// } catch (InvocationTargetException e) {
-		// if (EternalCache != null && EternalCache.get(cacheKey) != null) {
-		// result = EternalCache.get(cacheKey).getValue();
-		// log.warn("Accessing eternal cache for " + cacheKey);
-		// } else {
-		// throw new OntologyServiceException(e);
-		// }
-		// }
+		try {
+			// add the result to cache if it's not there already
+			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
+				Element el = new Element(cacheKey, method.invoke(target, args));
+				ServiceCache.put(el);
+				EternalCache.put(el);
+			}
+			// get the result from cache
+			result = ServiceCache.get(cacheKey).getValue();
+
+		} catch (InvocationTargetException e) {
+			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
+				result = EternalCache.get(cacheKey).getValue();
+				log.warn("Accessing eternal cache for " + cacheKey);
+			} else {
+				throw new OntologyServiceException(e);
+			}
+		}
 		return result;
 	}
 

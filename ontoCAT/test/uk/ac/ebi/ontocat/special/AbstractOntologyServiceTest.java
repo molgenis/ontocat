@@ -1,6 +1,7 @@
 package uk.ac.ebi.ontocat.special;
 
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public abstract class AbstractOntologyServiceTest {
 	public final void testGetOntologies() throws OntologyServiceException {
 		printCurrentTest();
 		List<Ontology> list = os.getOntologies();
+		assertNotNull("Null returned!", list);
 		assertNotSame("Empty list returned!", 0, list.size());
 		for (Ontology oe : list) {
 			println(oe);
