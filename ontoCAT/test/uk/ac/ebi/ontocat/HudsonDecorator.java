@@ -106,23 +106,16 @@ public class HudsonDecorator implements InvocationHandler {
 		}
 
 		try {
-			System.out
-			.println("add the result to cache if it's not there already");
-			System.out.println("sc: " + ServiceCache);
-			System.out.println("ck: " + cacheKey);
-			System.out.println("scgck: " + ServiceCache.get(cacheKey));
-
+			// add the result to cache if it's not there already
 			if (ServiceCache != null && ServiceCache.get(cacheKey) == null) {
-				System.out.println("Adding to the cache now.");
 				Element el = new Element(cacheKey, method.invoke(target, args));
-				System.out.println("The element is " + el);
 				ServiceCache.put(el);
 				EternalCache.put(el);
 			}
-			System.out.println("get the result from cache");
-			System.out.println("that result is " + ServiceCache.get(cacheKey));
-			result = ServiceCache.get(cacheKey).getValue();
-			System.out.println("got the result from cache");
+			// get the result from cache
+			if (ServiceCache != null) {
+				result = ServiceCache.get(cacheKey).getValue();
+			}
 
 		} catch (InvocationTargetException e) {
 			if (EternalCache != null && EternalCache.get(cacheKey) != null) {
