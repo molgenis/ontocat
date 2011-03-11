@@ -183,21 +183,6 @@
 			</batchtest>
 		</junit>
 	</target>
-	
-	<target name="test-hudson" >
-		<delete dir="${test.reports}" />
-		<mkdir dir="${test.reports}" />
-		<echo>Running junit tests...</echo>
-		<junit fork="no" haltonfailure="yes" printSummary="true" showOutput="false">
-			<classpath refid="test.classpath" />
-			<formatter type="xml" usefile="true" />
-			<batchtest fork="yes" todir="${test.reports}">
-				<fileset dir="bin">
-					<include name="**/*HudsonTest*.class"/>
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
 
 	<target name="test-html" depends="test">
 		<echo>Generating html report...</echo>
