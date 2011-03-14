@@ -57,23 +57,21 @@ public class Example14 {
 			}
 		}
 
-		// Proceed with building the tree
-		// Note you can also focus on a specific relation (e.g. has_part)
-		// and it would be quicker
+		// Proceed with building the partonomy tree
+		// Here focusing on a specific relation makes it quicker
+		// but see visualiseAll() for a full tree
 		Set<OntologyTerm> branch = os.getAllChildren(startNode);
 		branch.add(startNode);
 		System.out
 		.println("\nBuilding exhaustive relations tree, estimated size more than "
 				+ branch.size() + " classes\n");
 
-		// Visualise recursively
 		System.out.println(startNode.getLabel());
-		visualise(startNode, "    ");
-
+		visualise_partonomy(startNode, "    ");
 	}
 
 	/**
-	 * Simple recursive visualisation from the top node
+	 * Simple recursive visualisation of partonomy starting from the top node
 	 * 
 	 * @param currentNode
 	 *            the current node
@@ -82,10 +80,47 @@ public class Example14 {
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private static void visualise(OntologyTerm currentNode, String tab)
+	private static void visualise_partonomy(OntologyTerm currentNode, String tab)
+	throws OntologyServiceException {
+		String partPadding = pad("has_part", "-");
+		String isaPadding = pad("", "-");
+		String newTab = tab + pad("", " ");
+
+		Set<OntologyTerm> isa_children = new HashSet<OntologyTerm>(
+				os.getChildren(currentNode));
+		Set<OntologyTerm> part_children = new HashSet<OntologyTerm>(
+				os.getSpecificRelation(currentNode.getOntologyAccession(),
+						currentNode.getAccession(), "has_part"));
+
+		// remove has_part children from the asserted isa set
+		isa_children.removeAll(part_children);
+
+		for (OntologyTerm term : isa_children) {
+			System.out.println(tab + isaPadding + term.getLabel());
+			visualise_partonomy(term, newTab);
+		}
+		for (OntologyTerm term : part_children) {
+			System.out.println(tab + partPadding + term.getLabel());
+			visualise_partonomy(term, newTab);
+		}
+	}
+
+	/**
+	 * Simple recursive visualisation of all relationships from the top node
+	 * NOTE: this is rather slow
+	 * 
+	 * @param currentNode
+	 *            the current node
+	 * @param tab
+	 *            the tab
+	 * @throws OntologyServiceException
+	 *             the ontology service exception
+	 */
+	@SuppressWarnings("unused")
+	private static void visualiseAll(OntologyTerm currentNode, String tab)
 	throws OntologyServiceException {
 		String isaPadding = pad("", "-");
-		String newTab = pad(tab, " ");
+		String newTab = tab + pad("", " ");
 
 		Set<OntologyTerm> isaChildren = new HashSet<OntologyTerm>(
 				os.getChildren(currentNode));
@@ -105,21 +140,20 @@ public class Example14 {
 		// print isa children
 		for (OntologyTerm term : isaChildren) {
 			System.out.println(tab + isaPadding + term.getLabel());
-			visualise(term, newTab);
+			visualiseAll(term, newTab);
 		}
 		// print other children
-		for (Entry<String, Set<OntologyTerm>> e : mOtherChildren
-				.entrySet()) {
-			for (OntologyTerm ot : e.getValue()){
+		for (Entry<String, Set<OntologyTerm>> e : mOtherChildren.entrySet()) {
+			for (OntologyTerm ot : e.getValue()) {
 				System.out.println(tab + pad(e.getKey(), "-") + ot.getLabel());
-				visualise(ot, newTab);
+				visualiseAll(ot, newTab);
 			}
 		}
 	}
 
 	public static String pad(String str, String padChar) {
 		StringBuilder padded = new StringBuilder(padChar + padChar + str);
-		while (padded.length() < 27) {
+		while (padded.length() < 15) {
 			padded.append(padChar);
 		}
 		return padded.toString();
