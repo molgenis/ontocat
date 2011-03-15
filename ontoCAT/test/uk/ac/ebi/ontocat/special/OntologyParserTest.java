@@ -14,7 +14,7 @@ public class OntologyParserTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        op = new OntologyParser("/Users/nata/IdeaProjects/ontoCAT/ontoCAT-R/inst/extdata/cell.obo");
+        op = new OntologyParser();     //"/Users/nata/IdeaProjects/ontoCAT/ontoCAT-R/inst/extdata/cell.obo"
     }
 
     @Override
@@ -24,6 +24,29 @@ public class OntologyParserTest extends TestCase {
     }
 
     public void testOntologyParser() throws Exception {
+
+        if (op != null){
+        System.out.println("ONTOLOGY'S RELATION NAMES:");
+        for (String relation : op.getOntologyRelationNames()){
+            System.out.println(relation);
+        }
+
+        OntologyTerm term = op.getTermById("EFO_0000806");
+
+        System.out.println("TERM'S \""+ term.getLabel() + "\" RELATION NAMES:");
+                for (String relation : op.getTermRelationNames(term)){
+                    System.out.println(relation);
+                }
+
+        System.out.println("TERM'S \""+ term.getLabel() +"\" RELATIONS (is_location_of_disease):");
+                for (OntologyTerm ot : op.getTermRelations(term,"is_location_of_disease")){
+                    System.out.println(ot.getLabel());
+                }
+
+        System.out.println("TERM'S \""+ term.getLabel() +"\" PARTONOMY:");
+                op.showTermPartonomy(term);
+
+        OntologyTerm termFail = op.getTermById("AA_0000502");
 
         System.out.println("SEARCH TERM:");
         for (OntologyTerm ot : op.searchTerm("electrically"))
@@ -57,26 +80,24 @@ public class OntologyParserTest extends TestCase {
         for (String st : op.getEFOBranchRootIds())
             System.out.println(st);
 
-        OntologyTerm term = op.getTermById("CL_0000502");
 
-        OntologyTerm termFail = op.getTermById("AA_0000502");
 
 
         System.out.println("GET TERM CHILDREN:");
-        for (OntologyTerm ot : op.getTermChildren(term.getAccession()))
+        for (OntologyTerm ot : op.getTermChildrenById(term.getAccession()))
             System.out.println(ot);
 
 
         System.out.println("GET ALL TERM CHILDREN:");
-        for (OntologyTerm ot : op.getAllTermChildren(term.getAccession()))
+        for (OntologyTerm ot : op.getAllTermChildrenById(term.getAccession()))
             System.out.println(ot);
 
         System.out.println("GET TERM PARENTS:");
-        for (OntologyTerm ot : op.getTermParents(term.getAccession()))
+        for (OntologyTerm ot : op.getTermParentsById(term.getAccession()))
             System.out.println(ot);
 
         System.out.println("GET ALL TERM PARENTS:");
-        for (OntologyTerm ot : op.getAllTermParents(term.getAccession()))
+        for (OntologyTerm ot : op.getAllTermParentsById(term.getAccession()))
             System.out.println(ot);
 
         System.out.println("GET TERM NAME BY ID:");
@@ -156,6 +177,8 @@ public class OntologyParserTest extends TestCase {
         for (OntologyTerm ot : bop2.getRoots())
             System.out.println(ot.getAccession());
         System.out.println(bop2.getOntologyDescription());
+
+    }
 
     }
 

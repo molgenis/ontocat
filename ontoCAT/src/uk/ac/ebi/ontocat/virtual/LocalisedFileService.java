@@ -1,18 +1,17 @@
 package uk.ac.ebi.ontocat.virtual;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
-
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Dynamically swaps all the ontologyAccessions on returned terms to the
@@ -44,10 +43,9 @@ public class LocalisedFileService implements InvocationHandler {
 	/**
 	 * Creates the proxy.
 	 * 
-	 * @param obj
+	 * @param fos
 	 *            the obj
-	 * @param list
-	 *            the list
+	 *
 	 * 
 	 * @return the object
 	 * @throws OntologyServiceException
