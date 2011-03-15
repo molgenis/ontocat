@@ -23,6 +23,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 
@@ -32,7 +33,8 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * 
  * @author Tomasz Adamusiak
  */
-public class ReasonedFileOntologyService extends FileOntologyService {
+public class ReasonedFileOntologyService extends FileOntologyService implements
+		OntologyService {
 
 	/** The reasoner. */
 	private OWLReasoner reasoner;
@@ -51,7 +53,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 
 	/** The Constant log. */
 	private static final Logger log = Logger
-	.getLogger(ReasonedFileOntologyService.class);
+			.getLogger(ReasonedFileOntologyService.class);
 
 	/**
 	 * Instantiates a new reasoned file ontology service.
@@ -62,7 +64,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 	 *             the ontology service exception
 	 */
 	public ReasonedFileOntologyService(URI uriOntology)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		super(uriOntology);
 		instantiateReasoner(uriOntology);
 	}
@@ -78,7 +80,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 	 *             the ontology service exception
 	 */
 	public ReasonedFileOntologyService(URI uriOntology, String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		super(uriOntology, ontologyAccession);
 		instantiateReasoner(uriOntology);
 	}
@@ -92,7 +94,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 	 *             the ontology service exception
 	 */
 	private void instantiateReasoner(URI uriOntology)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		// Create a reasoner factory.
 		OWLReasonerFactory reasonerFactory = new Reasoner.ReasonerFactory();
 
@@ -113,7 +115,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 		if (!reasoner.isConsistent()) {
 			throw new OntologyServiceException(
 					"Inconsistent ontology according to HermiT reasoner - "
-					+ uriOntology.toString());
+							+ uriOntology.toString());
 		}
 		log.info("Classified the ontology " + uriOntology.toString());
 
@@ -186,7 +188,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 
 		// create class expression
 		OWLClassExpression relationSomeObject = factory
-		.getOWLObjectSomeValuesFrom(inverse, clsQueried);
+				.getOWLObjectSomeValuesFrom(inverse, clsQueried);
 		// and find all subclasses that fulfil it
 		Set<OWLClass> sRelatedClasses = new HashSet<OWLClass>();
 		sRelatedClasses.addAll(reasoner.getSubClasses(relationSomeObject, true)
@@ -252,7 +254,7 @@ public class ReasonedFileOntologyService extends FileOntologyService {
 	 */
 	private OWLObjectProperty findInverseObjectProperty(OWLObjectProperty prop) {
 		Set<OWLObjectPropertyExpression> inverse = reasoner
-		.getInverseObjectProperties(prop).getEntities();
+				.getInverseObjectProperties(prop).getEntities();
 		for (OWLObjectPropertyExpression pe : inverse) {
 			if (pe.isAnonymous()) {
 				continue;
