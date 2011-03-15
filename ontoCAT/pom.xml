@@ -5,7 +5,7 @@
   <groupId>uk.ac.ebi</groupId>
   <artifactId>ontoCAT</artifactId>
   <packaging>jar</packaging>
-  <version>0.9.7</version>
+  <version>0.9.7.2</version>
   <name>ontoCAT</name>
   <url>http://www.ontocat.org</url>
  
