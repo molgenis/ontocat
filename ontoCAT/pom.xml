@@ -200,7 +200,7 @@
     <!-- Required Build Plugins -->
     <profiles>
     <profile>
-      <id>small</id>
+      <id>small-jar</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -231,7 +231,38 @@
       </build>
     </profile>
     <profile>
-      <id>jar</id>
+      <id>bioconductor-jar</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <finalName>ontocat</finalName>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                 <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                 <configuration>
+
+                    <descriptors>
+
+                        <descriptor>assemble_bioconductor.xml</descriptor>
+                     </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>full-jar</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
