@@ -23,9 +23,9 @@ import java.nio.channels.FileLock;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -43,7 +43,9 @@ import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
  * store to sync up process while they wait for new data to become available. <br>
  * A typical scenario involves running the script with a start node set to
  * initalise the queue. Then running multiple process (note that number of
- * processes has to be set). And finally running generate to collate results.
+ * actually running processes has to be set, so that everything finishes once
+ * all the process hit the waiting queue, i.e. no more new data is being
+ * generated). And finally running generate to collate results.
  */
 public class Example15 {
 	private static OntologyService os;
@@ -52,8 +54,8 @@ public class Example15 {
 	private static File qFile;
 	private static int maxTasks;
 	private static File bFile;
-	// not exactly unique, guid maybe better
-	private static int myPID = new Random().nextInt(9999999);
+	// in lieu of an actual process id
+	private static UUID myPID = UUID.randomUUID();
 	private static File dFile;
 	private static final Logger log = Logger.getLogger(Example15.class);
 
@@ -277,14 +279,14 @@ public class Example15 {
 		ras.close();
 	}
 
-	static int getPID() {
+	static UUID getPID() {
 		return myPID;
 	}
 
 	private static int getNumberWaiting() throws IOException,
 	ClassNotFoundException {
 		// deserialize queue
-		Set<Integer> result = null;
+		Set<UUID> result = null;
 
 		// lock
 		RandomAccessFile ras = new RandomAccessFile(bFile, "rw");
@@ -295,17 +297,17 @@ public class Example15 {
 		// deserialise
 		ObjectInputStream ois = new ObjectInputStream(
 				Channels.newInputStream(channel));
-		result = (Set<Integer>) ois.readObject();
+		result = (Set<UUID>) ois.readObject();
 
 		lock.release();
 		ras.close();
 		return result.size();
 	}
 
-	private static boolean isAtBarrier(Integer code) throws IOException,
+	private static boolean isAtBarrier(UUID uuid) throws IOException,
 	ClassNotFoundException {
 		// deserialize queue
-		Set<Integer> result = null;
+		Set<UUID> result = null;
 
 		// lock
 		RandomAccessFile ras = new RandomAccessFile(bFile, "rw");
@@ -316,15 +318,15 @@ public class Example15 {
 		// deserialise
 		ObjectInputStream ois = new ObjectInputStream(
 				Channels.newInputStream(channel));
-		result = (Set<Integer>) ois.readObject();
+		result = (Set<UUID>) ois.readObject();
 
 		lock.release();
 		ras.close();
 
-		return result.contains(code);
+		return result.contains(uuid);
 	}
 
-	private static void addToBarrier(Integer code) throws IOException,
+	private static void addToBarrier(UUID uuid) throws IOException,
 	ClassNotFoundException {
 		// deserialize queue
 		// lock
@@ -336,13 +338,13 @@ public class Example15 {
 		// deserialise
 		ObjectInputStream ois = new ObjectInputStream(
 				Channels.newInputStream(channel));
-		Set<Integer> set = (Set<Integer>) ois.readObject();
+		Set<UUID> set = (Set<UUID>) ois.readObject();
 		// log.info("Deserialized the queue successfully " +
 		// processQueue.size());
 
 		ras.seek(0);
 		// add new
-		set.add(code);
+		set.add(uuid);
 
 		// serialise back
 		// might want to do an else
@@ -367,7 +369,7 @@ public class Example15 {
 
 		ObjectOutputStream oos = new ObjectOutputStream(
 				Channels.newOutputStream(channel));
-		oos.writeObject(new HashSet<Integer>());
+		oos.writeObject(new HashSet<UUID>());
 		oos.flush();
 		// log.info("Serialized the queue successfully " + processQueue.size());
 
