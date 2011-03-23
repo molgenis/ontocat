@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -82,7 +84,72 @@ OntologyService {
 	public ReasonedFileOntologyService(URI uriOntology, String ontologyAccession)
 	throws OntologyServiceException {
 		super(uriOntology, ontologyAccession);
+		injectInverseObjectProperties();
 		instantiateReasoner(uriOntology);
+	}
+
+	private void injectInverseObjectProperties()
+	throws OntologyServiceException {
+		factory = loader.getManager().getOWLDataFactory();
+		Map<String, OWLObjectProperty> propertyCache = new HashMap<String, OWLObjectProperty>();
+
+		// cache the properties
+		for (OWLObjectProperty rel : ontology.getObjectPropertiesInSignature()) {
+			propertyCache.put(getLabel(rel), rel);
+		}
+
+		// manually define the corresponding inverses
+		// based on the relation ontology
+		Map<String, String> ROinverses = new HashMap<String, String>();
+		ROinverses.put("part_of", "has_part");
+		ROinverses.put("has_part", "part_of");
+		ROinverses.put("integral_part_of", "has_integral_part");
+		ROinverses.put("has_integral_part", "integral_part_of");
+		ROinverses.put("proper_part_of", "has_proper_part");
+		ROinverses.put("has_proper_part", "proper_part_of");
+		ROinverses.put("located_in", "location_of");
+		ROinverses.put("location_of", "located_in");
+		ROinverses.put("improper_part_of", "has_improper_part");
+		ROinverses.put("has_improper_part", "improper_part_of");
+		ROinverses.put("agent_in", "has_agent");
+		ROinverses.put("has_agent", "agent_in");
+		ROinverses.put("participates_in", "has_participant");
+		ROinverses.put("has_participant", "participates_in");
+		ROinverses.put("precedes", "preceded_by");
+		ROinverses.put("preceded_by", "precedes");
+		ROinverses.put("derived_into", "derives_from");
+		ROinverses.put("derives_from", "derived_into");
+		ROinverses.put("transformation_of", "transformed_into");
+		ROinverses.put("transformed_into", "transformation_of");
+		ROinverses.put("contained_in", "contains");
+		ROinverses.put("contains", "contained_in");
+
+		// get inverse axioms
+		Set<OWLInverseObjectPropertiesAxiom> axiomsToAdd = new HashSet<OWLInverseObjectPropertiesAxiom>();
+		for (Entry<String, OWLObjectProperty> e : propertyCache.entrySet()) {
+			OWLObjectProperty forward = e.getValue();
+			// make sure we have an inverse defined for it
+			if (ROinverses.containsKey(e.getKey())) {
+				String inverseLabel = ROinverses.get(e.getKey());
+				// and the inverse property exists in the ontology
+				if (propertyCache.containsKey(inverseLabel)) {
+					OWLObjectProperty inverse = propertyCache.get(inverseLabel);
+					OWLInverseObjectPropertiesAxiom inverseAxiom = factory
+					.getOWLInverseObjectPropertiesAxiom(forward,
+							inverse);
+					axiomsToAdd.add(inverseAxiom);
+				} else {
+					log.warn("The inverse object property " + inverseLabel
+							+ " for "
+							+ e.getKey()
+							+ " was not found in the ontology");
+				}
+
+			}
+		}
+		// add all the inverse axioms
+		loader.getManager().addAxioms(ontology, axiomsToAdd);
+
 	}
 
 	/**
@@ -114,10 +181,12 @@ OntologyService {
 		// Throw an exception if the ontology is inconsistent
 		if (!reasoner.isConsistent()) {
 			throw new OntologyServiceException(
-					"Inconsistent ontology according to HermiT reasoner - "
-					+ uriOntology.toString());
+					"Inconsistent ontology according to HermiT reasoner - " + uriOntology
+					.toString());
 		}
 		log.info("Classified the ontology " + uriOntology.toString());
+
+		// Inject inverses if they're missing
 
 		// Cache the properties for relations
 		factory = loader.getManager().getOWLDataFactory();
@@ -147,7 +216,6 @@ OntologyService {
 		if (!ent.isOWLClass()) {
 			return Collections.emptyMap();
 		}
-
 
 		// initialise
 		Map<String, Set<OntologyTerm>> result = new HashMap<String, Set<OntologyTerm>>();
