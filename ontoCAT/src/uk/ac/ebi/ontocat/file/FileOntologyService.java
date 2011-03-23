@@ -22,7 +22,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import uk.ac.ebi.ontocat.AbstractOntologyService;
@@ -36,10 +35,10 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * The Class FileOntologyService. This works on both OBO and OWL files.
  */
 public class FileOntologyService extends AbstractOntologyService
-		implements OntologyService {
+implements OntologyService {
 	/** The Constant log. */
 	private static final Logger log = Logger
-			.getLogger(FileOntologyService.class.getName());
+	.getLogger(FileOntologyService.class.getName());
 
 	/** The ontology. */
 	protected final OWLOntology ontology;
@@ -121,9 +120,9 @@ public class FileOntologyService extends AbstractOntologyService
 	 * @throws OntologyServiceException
 	 */
 	public FileOntologyService(URI uriOntology, String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		this(uriOntology);
-		
+
 		// add the user defined one
 		ontoAccessions.add(ontologyAccession);
 	}
@@ -142,7 +141,7 @@ public class FileOntologyService extends AbstractOntologyService
 		// and load classes and individuals into the cache
 		for (OWLEntity ent : ontology.getSignature()) {
 			if (ent.isOWLClass() || ent.isOWLNamedIndividual()){
-				cache.put(getFragment(ent), ent);	
+				cache.put(getFragment(ent), ent);
 			}
 			try {
 				ontoAccessions.add(getOntologyAccession(ent));
@@ -176,7 +175,7 @@ public class FileOntologyService extends AbstractOntologyService
 			{
 				String ontologyAccession = ontology.getOntologyID().toString();
 				ontologyAccession = ontologyAccession.replaceFirst("^<", "")
-						.replaceFirst(">$", "");
+				.replaceFirst(">$", "");
 				add(new Ontology(ontologyAccession));
 			}
 		};
@@ -189,9 +188,10 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public Ontology getOntology(String ontologyAccession)
-			throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+	throws OntologyServiceException {
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return null;
+		}
 		return getOntologies().get(0);
 	}
 
@@ -214,17 +214,17 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
-			throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+	throws OntologyServiceException {
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyList();
+		}
 		List<OntologyTerm> rootTerms = new ArrayList<OntologyTerm>();
 		for (OWLEntity ent : cache.values()) {
 			// class without parents, looks like root
-			// TODO: add reasoner, otherwise fails for defined classes
-			// TODO: test if reasoner works with OBO ontologies
+			// needs reasoner, otherwise fails for defined classes
 			if (ent.isOWLClass()) {
 				OWLClass cls = ent.asOWLClass();
-				if (cls.getSuperClasses(ontology).size() == 0
+				if (getParents(getTerm(ent)).size() == 0
 						&& !getAnnotations(cls).containsKey("is_obsolete")) {
 					rootTerms.add(getTerm(cls));
 				}
@@ -242,8 +242,9 @@ public class FileOntologyService extends AbstractOntologyService
 	@Override
 	public List<String> getSynonyms(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyList();
+		}
 
 		Map<String, List<String>> annots = getAnnotations(ontologyAccession,
 				termAccession);
@@ -260,8 +261,9 @@ public class FileOntologyService extends AbstractOntologyService
 	@Override
 	public List<String> getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyList();
+		}
 
 		Map<String, List<String>> annots = getAnnotations(ontologyAccession,
 				termAccession);
@@ -281,8 +283,9 @@ public class FileOntologyService extends AbstractOntologyService
 
 		for (String name : Names) {
 			temp = annots.get(name);
-			if (temp != null)
+			if (temp != null) {
 				result.addAll(dropQuotes(temp));
+			}
 		}
 
 		return new ArrayList<String>(result);
@@ -312,10 +315,11 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		if (ontologyAccession != null
-				&& !ontoAccessions.contains(ontologyAccession))
+				&& !ontoAccessions.contains(ontologyAccession)) {
 			return null;
+		}
 		return getTerm(termAccession);
 	}
 
@@ -326,13 +330,14 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public OntologyTerm getTerm(String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return getTerm(getOwlEntity(termAccession));
 	}
 
 	protected OntologyTerm getTerm(OWLEntity ent) throws OntologyServiceException {
-		if (ent == null)
+		if (ent == null) {
 			return null;
+		}
 		String ontologyAccession = getOntologyAccession(ent);
 		String termAccession = getFragment(ent);
 		String label = getLabel(ent);
@@ -340,7 +345,7 @@ public class FileOntologyService extends AbstractOntologyService
 	}
 
 	private String getOntologyAccession(OWLEntity ent)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		Pattern pattern = Pattern.compile("^.*[//#]{1}");
 		Matcher matcher = pattern.matcher(ent.toStringID());
 		if (matcher.find()) {
@@ -365,8 +370,9 @@ public class FileOntologyService extends AbstractOntologyService
 		// seed the list with this term
 		OntologyTerm term = getTerm(ontologyAccession, termAccession);
 		termPath.add(term);
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return termPath;
+		}
 		// get its parents and iterate over first parent
 		List<OntologyTerm> parents = getParents(ontologyAccession,
 				termAccession);
@@ -387,14 +393,17 @@ public class FileOntologyService extends AbstractOntologyService
 		return termPath;
 	}
 
+	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.EMPTY_LIST;
+		}
 		ArrayList<OntologyTerm> list = new ArrayList<OntologyTerm>();
 		OWLEntity ent = getOwlEntity(termAccession);
-		if (ent == null)
+		if (ent == null) {
 			return Collections.EMPTY_LIST;
+		}
 		if (ent.isOWLClass()) {
 			for (OWLClassExpression desc : ent.asOWLClass().getSubClasses(
 					ontology)) {
@@ -415,12 +424,14 @@ public class FileOntologyService extends AbstractOntologyService
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.EMPTY_LIST;
+		}
 		ArrayList<OntologyTerm> list = new ArrayList<OntologyTerm>();
 		OWLEntity ent = getOwlEntity(termAccession);
-		if (ent == null)
+		if (ent == null) {
 			return Collections.EMPTY_LIST;
+		}
 		if (ent.isOWLClass()) {
 			for (OWLClassExpression desc : ent.asOWLClass().getSuperClasses(
 					ontology)) {
@@ -449,7 +460,7 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public Set<OntologyTerm> getAllTerms(String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		Set<OntologyTerm> result = new HashSet<OntologyTerm>();
 		for (OWLEntity ent : cache.values()) {
 			result.add(getTerm(ent));
@@ -482,8 +493,9 @@ public class FileOntologyService extends AbstractOntologyService
 	@Override
 	public String makeLookupHyperlink(String ontologyAccession,
 			String termAccession) {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return null;
+		}
 		try {
 			return getOwlEntity(termAccession).toStringID();
 		} catch (OntologyServiceException e) {
@@ -499,7 +511,7 @@ public class FileOntologyService extends AbstractOntologyService
 	 */
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		List<SearchOptions> ops = new ArrayList<SearchOptions>(
 				Arrays.asList(options));
 		Map<OntologyTerm, String> terms = new HashMap<OntologyTerm, String>();
@@ -571,8 +583,9 @@ public class FileOntologyService extends AbstractOntologyService
 	public List<OntologyTerm> searchOntology(String ontologyAccession,
 			String query, SearchOptions... options)
 			throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyList();
+		}
 		return searchAll(query, options);
 	}
 
@@ -580,7 +593,7 @@ public class FileOntologyService extends AbstractOntologyService
 	// FIXME: this is potentially unsafe, and should
 	// FIXME: take into account ontology uri + accession, i.e. full URI
 	protected OWLEntity getOwlEntity(String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return cache.get(termAccession);
 	}
 
@@ -592,22 +605,25 @@ public class FileOntologyService extends AbstractOntologyService
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
-		if (!ontoAccessions.contains(ontologyAccession))
+		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyMap();
+		}
 		return getAnnotations(getOwlEntity(termAccession));
 	}
 
 	private Map<String, List<String>> getAnnotations(OWLEntity ent) {
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
-		if (ent == null)
+		if (ent == null) {
 			return Collections.emptyMap();
+		}
 		for (OWLAnnotation annot : ent.getAnnotations(ontology)) {
 			String key = getFragment(annot.getProperty().getIRI().toURI());
 			List<String> value = null;
-			if (metadata.containsKey(key))
+			if (metadata.containsKey(key)) {
 				value = metadata.get(key);
-			else
+			} else {
 				value = new ArrayList<String>();
+			}
 			// get an ArrayList from value to add another annotation
 			List<String> arr = value;
 			arr.add(((OWLLiteral) annot.getValue()).getLiteral());
@@ -635,8 +651,9 @@ public class FileOntologyService extends AbstractOntologyService
 		// EFO)
 		Pattern pattern = Pattern.compile("[^//#=]*$");
 		Matcher matcher = pattern.matcher(uri.toString());
-		if (matcher.find())
+		if (matcher.find()) {
 			return matcher.group();
+		}
 		return null;
 	}
 
@@ -662,13 +679,15 @@ public class FileOntologyService extends AbstractOntologyService
 		}
 
 		if (labels1 != null) {
-			if (labels1.size() != 1)
+			if (labels1.size() != 1) {
 				log.warn("Multple labels found on " + ent);
+			}
 			return labels1.get(0);
 			// Try the rdfs:label if no results from slotLabel
 		} else if (labels2 != null) {
-			if (labels2.size() != 1)
+			if (labels2.size() != 1) {
 				log.warn("Multple labels found on " + ent);
+			}
 			return labels2.get(0);
 			// try fragment
 		} else {

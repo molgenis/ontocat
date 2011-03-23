@@ -34,7 +34,7 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * @author Tomasz Adamusiak
  */
 public class ReasonedFileOntologyService extends FileOntologyService implements
-		OntologyService {
+OntologyService {
 
 	/** The reasoner. */
 	private OWLReasoner reasoner;
@@ -53,7 +53,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 
 	/** The Constant log. */
 	private static final Logger log = Logger
-			.getLogger(ReasonedFileOntologyService.class);
+	.getLogger(ReasonedFileOntologyService.class);
 
 	/**
 	 * Instantiates a new reasoned file ontology service.
@@ -64,7 +64,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 	 *             the ontology service exception
 	 */
 	public ReasonedFileOntologyService(URI uriOntology)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		super(uriOntology);
 		instantiateReasoner(uriOntology);
 	}
@@ -80,7 +80,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 	 *             the ontology service exception
 	 */
 	public ReasonedFileOntologyService(URI uriOntology, String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		super(uriOntology, ontologyAccession);
 		instantiateReasoner(uriOntology);
 	}
@@ -94,7 +94,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 	 *             the ontology service exception
 	 */
 	private void instantiateReasoner(URI uriOntology)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// Create a reasoner factory.
 		OWLReasonerFactory reasonerFactory = new Reasoner.ReasonerFactory();
 
@@ -115,7 +115,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 		if (!reasoner.isConsistent()) {
 			throw new OntologyServiceException(
 					"Inconsistent ontology according to HermiT reasoner - "
-							+ uriOntology.toString());
+					+ uriOntology.toString());
 		}
 		log.info("Classified the ontology " + uriOntology.toString());
 
@@ -147,6 +147,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 		if (!ent.isOWLClass()) {
 			return Collections.emptyMap();
 		}
+
 
 		// initialise
 		Map<String, Set<OntologyTerm>> result = new HashMap<String, Set<OntologyTerm>>();
@@ -188,7 +189,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 
 		// create class expression
 		OWLClassExpression relationSomeObject = factory
-				.getOWLObjectSomeValuesFrom(inverse, clsQueried);
+		.getOWLObjectSomeValuesFrom(inverse, clsQueried);
 		// and find all subclasses that fulfil it
 		Set<OWLClass> sRelatedClasses = new HashSet<OWLClass>();
 		sRelatedClasses.addAll(reasoner.getSubClasses(relationSomeObject, true)
@@ -254,7 +255,7 @@ public class ReasonedFileOntologyService extends FileOntologyService implements
 	 */
 	private OWLObjectProperty findInverseObjectProperty(OWLObjectProperty prop) {
 		Set<OWLObjectPropertyExpression> inverse = reasoner
-				.getInverseObjectProperties(prop).getEntities();
+		.getInverseObjectProperties(prop).getEntities();
 		for (OWLObjectPropertyExpression pe : inverse) {
 			if (pe.isAnonymous()) {
 				continue;
