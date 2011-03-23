@@ -4,6 +4,10 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+Version 0.9.7.3 23/03/2011
+	FIX: ReasonedFileOntologyService was incorrectly calculating root terms
+	FIX: ReasonedFileOntologyService now also computes relationships for OBO ontologies
+	
 Version 0.9.7.2 15/03/2011
 	FIX: ReasonedFileOntologyService was missing the OntologyService interface implementation
 	preventing it from being decorated
