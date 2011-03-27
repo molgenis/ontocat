@@ -2,21 +2,16 @@ package uk.ac.ebi.ontocat.examples;
 
 import jargs.gnu.CmdLineParser;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -57,6 +52,8 @@ public class Example15 {
 	// in lieu of an actual process id
 	private static UUID myPID = UUID.randomUUID();
 	private static File dFile;
+	private static File sFile;
+	private static File cFile;
 	private static final Logger log = Logger.getLogger(Example15.class);
 
 	/**
@@ -74,15 +71,10 @@ public class Example15 {
 		CmdLineParser.Option oStartNode = parser.addStringOption('s',
 		"startnode");
 		CmdLineParser.Option oThreads = parser.addIntegerOption('t', "threads");
-		CmdLineParser.Option oGenerate = parser.addBooleanOption('g',
-		"generate");
 
 		String startNode = null;
-		Boolean bGenerate = false;
 		try {
 			parser.parse(args);
-			bGenerate = (Boolean) parser.getOptionValue(oGenerate,
-					Boolean.FALSE);
 			uOntology = new URI((String) parser.getOptionValue(oUri));
 			startNode = (String) parser.getOptionValue(oStartNode);
 			maxTasks = (Integer) parser.getOptionValue(oThreads);
@@ -91,88 +83,37 @@ public class Example15 {
 		}
 
 		// set up
-		if (!bGenerate) {
-			do {
-				try {
-					os = new ReasonedFileOntologyService(uOntology, "efo");
-				} catch (Exception e) {
-					// this is bound to fail if >10 processes will try
-					// to access the same resource, catch the exception
-					// and retry
-					log.debug("Service creation failed. Retrying. " + e
-							.getMessage());
-					Thread.sleep(500);
-				}
-			} while (os == null);
-		}
+		do {
+			try {
+				os = new ReasonedFileOntologyService(uOntology, "efo");
+			} catch (Exception e) {
+				// this is bound to fail if >10 processes will try
+				// to access the same resource, catch the exception
+				// and retry
+				log.debug("Service creation failed. Retrying.");
+				Thread.sleep(500);
+			}
+		} while (os == null);
 		System.out.println(getPID());
 
 		// Get a file channel for the file
 		qFile = new File("queue.txt");
 		bFile = new File("barrier.txt");
-		dFile = new File("dot.txt");
+		dFile = new File("ontocat.dot");
+		sFile = new File("ontocat.sif");
+		cFile = new File("seen_cache.txt");
 
 		// initialise phase
 		if (startNode != null) {
-
 			OntologyTerm ot = os.getTerm(startNode);
 			processQueue = new Stack<OntologyTerm>();
 			processQueue.push(ot);
 			serializeQueue();
 			resetBarrier();
-		} else if (bGenerate)
-		{
-			FileInputStream fstream = new FileInputStream(dFile);
-			// Get the object of DataInputStream
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					fstream));
-			String strLine;
-			String dot = "";
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				dot += strLine;
-			}
-			fstream.close();
-
-			System.out.println(dot);
-			downloadFile(dot, "dot");
-			downloadFile(dot, "neato");
-			downloadFile(dot, "twopi");
-		}
-		else{
+		} else {
 			processNodes();
 		}
 
-	}
-
-	public static void downloadFile(String dot, String format)
-	throws IOException {
-		String postData = "cht=gv:" + format
-		+ "&chl=digraph{"
-		+ dot
-		+ "}";
-
-		URL url = new URL("https://chart.googleapis.com/chart");
-		URLConnection conn = url.openConnection();
-		conn.setDoOutput(true);
-		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		wr.write(postData);
-		wr.flush();
-		wr.close();
-
-		java.io.BufferedInputStream in = new java.io.BufferedInputStream(
-				conn.getInputStream());
-		java.io.FileOutputStream fos = new java.io.FileOutputStream(
-				"tree_" + format
-				+ ".png");
-		java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
-		byte[] data = new byte[1024];
-		int x = 0;
-		while ((x = in.read(data, 0, 1024)) >= 0) {
-			bout.write(data, 0, x);
-		}
-		bout.close();
-		in.close();
 	}
 
 	private static void serializeQueue() throws IOException {
@@ -241,9 +182,25 @@ public class Example15 {
 		ras.close();
 	}
 
+	private static void writeSIF(String s) throws IOException {
+		// lock
+		RandomAccessFile ras = new RandomAccessFile(sFile, "rw");
+		FileChannel channel = ras.getChannel();
+		FileLock lock = channel.lock();
+		ras.seek(ras.length());
+
+		// deserialise
+		Writer writer = Channels.newWriter(channel, "UTF-8");
+		PrintWriter pw = new PrintWriter(writer, true);
+
+		pw.println(s);
+
+		lock.release();
+		ras.close();
+	}
+
 	private static void addTermsToQueue(Set<OntologyTerm> terms)
-	throws IOException, ClassNotFoundException, SecurityException
-	{
+	throws IOException, ClassNotFoundException, SecurityException {
 		if (terms.isEmpty()) {
 			return;
 		}
@@ -256,16 +213,25 @@ public class Example15 {
 		FileChannel channel = ras.getChannel();
 		FileLock lock = channel.lock();
 
-		// deserialise
+		// deserialise queue
 		ObjectInputStream ois = new ObjectInputStream(
 				Channels.newInputStream(channel));
 		processQueue = (Stack<OntologyTerm>) ois.readObject();
-		// log.info("Deserialized the queue successfully " +
-		// processQueue.size());
+
+		// deserialise seen
+		ObjectInputStream cis = new ObjectInputStream(
+				new FileInputStream(cFile));
+		Set<OntologyTerm> seenCache = (Set<OntologyTerm>) cis.readObject();
+		cis.close();
 
 		ras.seek(0);
-		// add new
-		processQueue.addAll(terms);
+		// add new unseen to queue
+		for (OntologyTerm ot : terms) {
+			if (!seenCache.contains(ot)) {
+				processQueue.add(ot);
+				seenCache.add(ot);
+			}
+		}
 
 		// serialise back
 		// might want to do an else
@@ -273,6 +239,11 @@ public class Example15 {
 				Channels.newOutputStream(channel));
 		oos.writeObject(processQueue);
 		oos.flush();
+
+		ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(
+				cFile));
+		fos.writeObject(seenCache);
+		fos.close();
 		// log.info("Serialized the queue successfully " + processQueue.size());
 
 		lock.release();
@@ -371,7 +342,11 @@ public class Example15 {
 				Channels.newOutputStream(channel));
 		oos.writeObject(new HashSet<UUID>());
 		oos.flush();
-		// log.info("Serialized the queue successfully " + processQueue.size());
+
+		ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(
+				cFile));
+		fos.writeObject(new HashSet<OntologyTerm>());
+		fos.close();
 
 		lock.release();
 		ras.close();
@@ -443,6 +418,8 @@ public class Example15 {
 					// dot += dotPart;
 					System.out.println(dotPart);
 					writeDOT(dotPart);
+					writeSIF(term.getLabel() + "\tisa\t"
+							+ currentNode.getLabel());
 				}
 				addTermsToQueue(isaChildren);
 
@@ -460,6 +437,10 @@ public class Example15 {
 						// dot += dotPart;
 						System.out.println(dotPart);
 						writeDOT(dotPart);
+						writeSIF(currentNode.getLabel() + "\t"
+								+ e.getKey()
+								+ "\t"
+								+ term.getLabel());
 					}
 					addTermsToQueue(e.getValue());
 				}
@@ -481,8 +462,7 @@ public class Example15 {
 			} else {
 				int taskNo = getNumberWaiting() + 1;
 				log.debug(String.format(
-						getPID() + " %d task(s) waiting for new data",
-						taskNo));
+						getPID() + " %d task(s) waiting for new data", taskNo));
 
 				addToBarrier(getPID());
 				while (isAtBarrier(getPID()) && (getNumberWaiting() != maxTasks)) {
@@ -490,8 +470,7 @@ public class Example15 {
 				}
 
 				log.debug(String.format(
-						getPID() + " Task %d released for new data",
-						taskNo));
+						getPID() + " Task %d released for new data", taskNo));
 
 			}
 
