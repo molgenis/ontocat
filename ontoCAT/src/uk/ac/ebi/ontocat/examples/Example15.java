@@ -230,6 +230,8 @@ public class Example15 {
 		Set<OntologyTerm> seenCache = (Set<OntologyTerm>) cis.readObject();
 		cis.close();
 
+		log.info(String.format("Seen %d terms so far", seenCache.size()));
+
 		ras.seek(0);
 		// add new unseen to queue
 		for (OntologyTerm ot : terms) {
