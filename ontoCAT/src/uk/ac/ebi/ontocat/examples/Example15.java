@@ -108,7 +108,7 @@ public class Example15 {
 			OntologyTerm ot = os.getTerm(startNode);
 			processQueue = new Stack<OntologyTerm>();
 			processQueue.push(ot);
-			serializeQueue();
+			initialiseQueue();
 			resetBarrier();
 		} else {
 			processNodes();
@@ -116,7 +116,7 @@ public class Example15 {
 
 	}
 
-	private static void serializeQueue() throws IOException {
+	private static void initialiseQueue() throws IOException {
 		RandomAccessFile ras = new RandomAccessFile(qFile, "rw");
 		ras.seek(0);
 		FileChannel channel = ras.getChannel();
@@ -127,6 +127,12 @@ public class Example15 {
 		oos.writeObject(processQueue);
 		lock.release();
 		ras.close();
+
+		ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(
+				cFile));
+		fos.writeObject(new HashSet<OntologyTerm>());
+		fos.close();
+
 		log.info("Serialized the queue successfully " + processQueue.size());
 	}
 
@@ -342,11 +348,6 @@ public class Example15 {
 				Channels.newOutputStream(channel));
 		oos.writeObject(new HashSet<UUID>());
 		oos.flush();
-
-		ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(
-				cFile));
-		fos.writeObject(new HashSet<OntologyTerm>());
-		fos.close();
 
 		lock.release();
 		ras.close();
