@@ -1,17 +1,19 @@
 package uk.ac.ebi.ontocat.virtual;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+
 import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Dynamically swaps all the ontologyAccessions on returned terms to the
@@ -35,7 +37,7 @@ public class LocalisedFileService implements InvocationHandler {
 	 * Instantiates the decorator.
 	 * 
 	 */
-    public LocalisedFileService(FileOntologyService fos) {
+	public LocalisedFileService(FileOntologyService fos) {
 		this.target = fos;
 		this.ontologyAccession = fos.getOntologyUri().toString();
 	}
@@ -56,7 +58,7 @@ public class LocalisedFileService implements InvocationHandler {
 	}
 
 	public static OntologyService getService(FileOntologyService fos)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 
 		return (OntologyService) LocalisedFileService.createProxy(fos);
 	}
@@ -79,7 +81,8 @@ public class LocalisedFileService implements InvocationHandler {
 
 	/**
 	 * Examples of invalid results for a particular method which in sequential
-	 * processing results in trying the next ontologyservice in the queue
+	 * processing results in trying the next ontologyservice in the queue NOTE:
+	 * Where's the above note coming from?
 	 */
 	private void injectAccession(Object result) {
 		// Possible result object involving objects with ontologyAccession
@@ -87,7 +90,9 @@ public class LocalisedFileService implements InvocationHandler {
 
 		// OntologyTerm
 		if (result instanceof OntologyTerm) {
-			((OntologyTerm) result).setOntologyAccession(ontologyAccession);
+			OntologyTerm ot = (OntologyTerm) result;
+			ot.setOntologyAccession(ontologyAccession);
+			ot.setAccession(ot.getAccession().replace("owlapi", ""));
 
 			// Ontology
 		} else if (result instanceof Ontology) {
@@ -102,6 +107,7 @@ public class LocalisedFileService implements InvocationHandler {
 				if (list.get(0) instanceof OntologyTerm) {
 					for (OntologyTerm ot : ((List<OntologyTerm>) result)) {
 						ot.setOntologyAccession(ontologyAccession);
+						ot.setAccession(ot.getAccession().replace("owlapi", ""));
 					}
 
 					// List<Ontology>
@@ -118,9 +124,27 @@ public class LocalisedFileService implements InvocationHandler {
 				if (set.toArray()[0] instanceof OntologyTerm) {
 					for (OntologyTerm ot : ((Set<OntologyTerm>) result)) {
 						ot.setOntologyAccession(ontologyAccession);
+						ot.setAccession(ot.getAccession().replace("owlapi", ""));
 					}
 				}
 
+			}
+			// Map<String,Set<OntologyTerm>
+		} else if (result instanceof Map<?, ?>) {
+			Map<?, ?> map = ((Map<?, ?>) result);
+			if (map.size() != 0) {
+				for (Object o : map.values()) {
+					if (o instanceof Set<?>) {
+						Set<?> set = ((Set<?>) o);
+						if (set.size() != 0 && set.toArray()[0] instanceof OntologyTerm) {
+							for (OntologyTerm ot : ((Set<OntologyTerm>) set)) {
+								ot.setOntologyAccession(ontologyAccession);
+								ot.setAccession(ot.getAccession().replace(
+										"owlapi", ""));
+							}
+						}
+					}
+				}
 			}
 		}
 	}
