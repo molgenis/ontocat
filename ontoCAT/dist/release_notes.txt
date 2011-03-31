@@ -4,6 +4,9 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+Version 0.9.7.4 31/03/2011
+	The owlapi prefix is now removed from OBO term accessions when using the ReasonedFileOntologyService
+
 Version 0.9.7.3 23/03/2011
 	FIX: ReasonedFileOntologyService was incorrectly calculating root terms
 	FIX: ReasonedFileOntologyService now also computes relationships for OBO ontologies
