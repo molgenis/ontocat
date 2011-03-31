@@ -22,10 +22,10 @@ public class ReasonedOBOTest extends AbstractOntologyServiceTest {
 	public static void setUpBeforeClass() throws Exception {
 		// using LocalisedFileService removes the pesky owlapi prefixes
 		os = LocalisedFileService
-				.getService(new ReasonedFileOntologyService(
+		.getService(new ReasonedFileOntologyService(
 				new URI(
 				"http://www.geneontology.org/GO_slims/goslim_generic.obo"),
-						"GOslim"));
+		"GOslim"));
 
 		ONTOLOGY_ACCESSION = "GOslim";
 		TERM_ACCESSION = "GO_0005622";
@@ -68,7 +68,9 @@ public class ReasonedOBOTest extends AbstractOntologyServiceTest {
 		for (Entry<String, Set<OntologyTerm>> e : map.entrySet()) {
 			System.out.println(e.getKey());
 			for (OntologyTerm s : e.getValue()) {
-				System.out.println("\t" + s.getLabel());
+				System.out.println("\t" + s.getAccession()
+						+ "\t"
+						+ s.getLabel());
 			}
 		}
 	}
