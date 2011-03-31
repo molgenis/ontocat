@@ -137,6 +137,7 @@ implements OntologyService {
 	public FileOntologyService(URI uriOntology) throws OntologyServiceException {
 		loader = new OntologyLoader(uriOntology);
 		ontology = loader.getOntology();
+
 		// get all possible URIs in onotlogy
 		// and load classes and individuals into the cache
 		for (OWLEntity ent : ontology.getSignature()) {
@@ -594,6 +595,9 @@ implements OntologyService {
 	// FIXME: take into account ontology uri + accession, i.e. full URI
 	protected OWLEntity getOwlEntity(String termAccession)
 	throws OntologyServiceException {
+		if (!cache.containsKey(termAccession)) {
+			return cache.get("owlapi" + termAccession);
+		}
 		return cache.get(termAccession);
 	}
 
