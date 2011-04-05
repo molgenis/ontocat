@@ -2,7 +2,7 @@
 <project default="dist" name="ontocat" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.7.4" />
+	<property name="version" value="0.9.7.5" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -80,7 +80,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/junit-4.8.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/xpp3_min-1.1.4c.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-1.8.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/owlapi-3.1.0/owlapi-bin.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/owlapi-3.2.2/owlapi-bin.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/ols-client.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/axis.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxrpc.jar" />
@@ -114,7 +114,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/junit-4.8.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/xpp3_min-1.1.4c.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-1.8.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/owlapi-3.1.0/owlapi-bin.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/owlapi-3.2.2/owlapi-bin.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/ols-client.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/axis.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxrpc.jar" />
@@ -144,7 +144,7 @@
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/log4j-1.2.15.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xpp3_min-1.1.4c.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/opencsv-1.8.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/owlapi-3.1.0/owlapi-bin.jar" />
+				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/owlapi-3.2.2/owlapi-bin.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ols-client.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/axis.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/jaxrpc.jar" />

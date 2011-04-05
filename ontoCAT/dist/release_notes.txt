@@ -4,6 +4,15 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+
+Version 0.9.7.5 05/03/2011
+	UPDATE: Updated the OWL API dependency to 3.2.2, which removed the need to fix
+	the "owlapi" prefixes in OBO ontologies, but the OBO parser now incorrectly
+	loads the object property IRIs, which required a different fix.
+	FIX: Added an override for the arbitrary limit in the SAXParser of 64k entity expansions
+	when using RDFXMLParser (error message: The parser has encountered more than "64,000" 
+	entity expansions)
+	
 Version 0.9.7.4 31/03/2011
 	The owlapi prefix is now removed from OBO term accessions when using the ReasonedFileOntologyService
 
@@ -43,7 +52,7 @@ Version 0.9.6.1 24/11/2010
 	Fix for "The ontology could not be created:" error in FileOntologyService
 
 Version 0.9.6 15/11/2010
-	Updated OWL API dependence to 3.1
+	Updated OWL API dependency to 3.1
 	On creation of FileOntologyService you can specify a user-defined ontology accession
 	New utils package containing some convenience methods for the R ontocat package
 	BioportalOntologyService.getOntologies() also lists the views
