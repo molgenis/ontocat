@@ -14,18 +14,16 @@ import org.junit.Test;
 
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
 import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
-import uk.ac.ebi.ontocat.virtual.LocalisedFileService;
 
 public class ReasonedOBOTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// using LocalisedFileService removes the pesky owlapi prefixes
-		os = LocalisedFileService
-		.getService(new ReasonedFileOntologyService(
+		os = new ReasonedFileOntologyService(
 				new URI(
 				"http://www.geneontology.org/GO_slims/goslim_generic.obo"),
-		"GOslim"));
+		"GOslim");
 
 		ONTOLOGY_ACCESSION = "GOslim";
 		TERM_ACCESSION = "GO_0005622";
