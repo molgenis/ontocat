@@ -92,7 +92,6 @@ public class LocalisedFileService implements InvocationHandler {
 		if (result instanceof OntologyTerm) {
 			OntologyTerm ot = (OntologyTerm) result;
 			ot.setOntologyAccession(ontologyAccession);
-			ot.setAccession(ot.getAccession().replace("owlapi", ""));
 
 			// Ontology
 		} else if (result instanceof Ontology) {
@@ -107,7 +106,6 @@ public class LocalisedFileService implements InvocationHandler {
 				if (list.get(0) instanceof OntologyTerm) {
 					for (OntologyTerm ot : ((List<OntologyTerm>) result)) {
 						ot.setOntologyAccession(ontologyAccession);
-						ot.setAccession(ot.getAccession().replace("owlapi", ""));
 					}
 
 					// List<Ontology>
@@ -124,7 +122,6 @@ public class LocalisedFileService implements InvocationHandler {
 				if (set.toArray()[0] instanceof OntologyTerm) {
 					for (OntologyTerm ot : ((Set<OntologyTerm>) result)) {
 						ot.setOntologyAccession(ontologyAccession);
-						ot.setAccession(ot.getAccession().replace("owlapi", ""));
 					}
 				}
 
@@ -139,8 +136,6 @@ public class LocalisedFileService implements InvocationHandler {
 						if (set.size() != 0 && set.toArray()[0] instanceof OntologyTerm) {
 							for (OntologyTerm ot : ((Set<OntologyTerm>) set)) {
 								ot.setOntologyAccession(ontologyAccession);
-								ot.setAccession(ot.getAccession().replace(
-										"owlapi", ""));
 							}
 						}
 					}
