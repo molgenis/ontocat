@@ -51,7 +51,6 @@
 	</target>
 	
 	<target name="dist" depends="clean-dist, compile, test-html, jar, jar-with-deps, jar-with-deps-small, javadoc">
-
 		<zip destfile="dist/${ant.project.name}-${version}.zip">
 			<zipfileset dir="doc" prefix="docs" />
 			<zipfileset dir="src" prefix="source/src" />
@@ -67,6 +66,22 @@
 		</zip>
 	</target>
 
+	<target name="dist-no-test" depends="clean-dist, compile, jar, jar-with-deps, jar-with-deps-small, javadoc">
+		<zip destfile="dist/${ant.project.name}-${version}.zip">
+			<zipfileset dir="doc" prefix="docs" />
+			<zipfileset dir="src" prefix="source/src" />
+			<zipfileset dir="test" prefix="source/test" />
+			<zipfileset dir="lib" prefix="source/lib" />
+			<zipfileset dir="." prefix="source" includes="build.xml" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps-small.jar" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps.jar" />
+			<zipfileset dir="dist" includes="${ant.project.name}-${version}.jar" />
+			<zipfileset dir="dist" includes="release_notes.txt" />
+			<zipfileset dir="dist" includes="COPYING" />
+			<zipfileset dir="dist" includes="COPYING.LESSER" />
+		</zip>
+	</target>
+	
 	<target name="jar-with-deps">
 		<jar destfile="dist/${ant.project.name}-${version}-with-deps.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
