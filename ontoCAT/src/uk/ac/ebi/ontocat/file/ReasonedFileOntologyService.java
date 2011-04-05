@@ -22,8 +22,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.util.OWLEntityURIConverter;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
@@ -84,9 +86,22 @@ OntologyService {
 	public ReasonedFileOntologyService(URI uriOntology, String ontologyAccession)
 	throws OntologyServiceException {
 		super(uriOntology, ontologyAccession);
+		// FIXME: Apply the URI conversion strategy to fix
+		// the OWL API 3.2.2 object property issue
+		// this fixes the uris and merges the duplicated
+		// object properties
+
+		Set<OWLOntology> ontologies = new HashSet<OWLOntology>();
+		ontologies.add(ontology);
+		OWLEntityURIConverter converter = new OWLEntityURIConverter(
+				loader.getManager(), ontologies,
+				new FixBrokenObjectPropertiesIRIStrategy());
+		loader.getManager().applyChanges(converter.getChanges());
+
 		injectInverseObjectProperties();
 		instantiateReasoner(uriOntology);
 	}
+
 
 	private void injectInverseObjectProperties()
 	throws OntologyServiceException {

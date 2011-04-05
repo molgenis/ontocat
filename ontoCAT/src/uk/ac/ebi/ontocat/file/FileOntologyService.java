@@ -595,9 +595,6 @@ implements OntologyService {
 	// FIXME: take into account ontology uri + accession, i.e. full URI
 	protected OWLEntity getOwlEntity(String termAccession)
 	throws OntologyServiceException {
-		if (!cache.containsKey(termAccession)) {
-			return cache.get("owlapi" + termAccession);
-		}
 		return cache.get(termAccession);
 	}
 
