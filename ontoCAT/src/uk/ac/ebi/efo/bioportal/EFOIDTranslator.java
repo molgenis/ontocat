@@ -43,7 +43,7 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 		temp.add(new BioportalMapping("^NCBITaxon:", "(NCBITaxon:.*)", "1132", "NCBITaxon:2"));
 		temp.add(new BioportalMapping("^MO_", "(MO_.*)", "1131", "MO_565"));
 		temp.add(new BioportalMapping("^ICD9", "ICD9.*:([0-9[\\-\\.]]*)", "1101",
-				"ICD9CM_1988:04.03"));
+		"ICD9CM_1988:04.03"));
 		temp.add(new BioportalMapping("^NCI(?! Meta)|^C\\d+", "(C\\d+)", "1032", "NCI C3235"));
 		temp.add(new BioportalMapping("^PATO:", "(PATO:\\d+)", "1107", "PATO:0001323"));
 		temp.add(new BioportalMapping("^OBI_", "(OBI_.*)", "1123", "OBI_0400105"));
@@ -61,7 +61,7 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 		temp.add(new BioportalMapping("^UO:", "(UO:\\d+)", "1112", "UO:0000044"));
 		temp.add(new BioportalMapping("^SNOMEDCT", "1353", "SNOMEDCT_2005_01_31:196743006"));
 		// CL has different letters in identifiers
-		temp.add(new BioportalMapping("^CL:", "1006", "CL:0000127"));
+		temp.add(new BioportalMapping("^CL:", "(CL:\\d+)", "1006", "CL:0000384"));
 		temp.add(new BioportalMapping("^CHEBI:", "(CHEBI:\\d+)", "1007", "CHEBI:2365"));
 		temp.add(new BioportalMapping("^GO:", "(GO:\\d+)", "1070", "GO:0009318"));
 		// Can't resolve PO at the moment as it has been 'unloaded' -> see
@@ -93,7 +93,7 @@ public class EFOIDTranslator implements OntologyIdTranslator {
 	// directly though
 	@Override
 	public String getTranslatedOntologyAccession(String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return getOntologyAccFromTermAcc(ontologyAccession);
 	}
 
