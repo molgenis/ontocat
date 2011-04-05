@@ -23,7 +23,8 @@ import uk.ac.ebi.ontocat.OntologyServiceException;
 public final class OntologyLoader {
 
 	/** The Constant log. */
-	private static final Logger log = Logger.getLogger(OntologyLoader.class.getName());
+	private static final Logger log = Logger.getLogger(OntologyLoader.class
+			.getName());
 
 	/** The Constant manager. */
 	// NOTE: this does no longer use the singleton, as it would complain
@@ -49,7 +50,7 @@ public final class OntologyLoader {
 	 * 
 	 * @param uriOntology
 	 *            ontology to be loaded
-	 * @throws OntologyServiceException 
+	 * @throws OntologyServiceException
 	 */
 	public OntologyLoader(URI uriOntology) throws OntologyServiceException {
 		try {
@@ -57,19 +58,16 @@ public final class OntologyLoader {
 			// complain: Parsers should load imported ontologies using
 			// the makeImportLoadRequest method.
 			synchronized (manager) {
-				// Try to remove this ontology first
-				// For some reason obo ontologies are duplicated
-				// hogging memory, though documentation says otherwise
-				// ----------
-				// have not tested it in OWL API 3
-				// possibly not needed anymore
-				// also cannot remove ontology by URI anymore
-				// manager.removeOntology(uriOntology);
+				// Very important otherwise RDFXMLParser
+				// fails with SAXParseException: The parser has encountered more
+				// / than "64,000" entity expansions
+				System.setProperty("entityExpansionLimit", "100000000");
 				IRI iri = IRI.create(uriOntology);
 				ontology = manager.loadOntologyFromOntologyDocument(iri);
 			}
 		} catch (OWLOntologyCreationException e) {
-			throw new OntologyServiceException("The ontology could not be created: " + e.getMessage());
+			throw new OntologyServiceException(
+					"The ontology could not be created: " + e.getMessage());
 		} catch (java.lang.OutOfMemoryError e) {
 			log.fatal("Ran out of memory. Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
 			throw new OntologyServiceException(e.getMessage());
