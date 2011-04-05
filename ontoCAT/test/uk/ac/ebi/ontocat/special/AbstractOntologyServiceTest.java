@@ -73,7 +73,8 @@ public abstract class AbstractOntologyServiceTest {
 		printCurrentTest();
 		List<OntologyTerm> list = os.getRootTerms(ONTOLOGY_ACCESSION);
 		assertNotSame("Empty list returned!", 0, list.size());
-		Assert.assertTrue("Too many root terms returned", list.size() < 4);
+		// in an uninferred view defined classes come up as root terms
+		// Assert.assertTrue("Too many root terms returned", list.size() < 4);
 		assertNotSame("Empty list returned!", 0, list.size());
 		for (OntologyTerm ot : list) {
 			println(ot);
