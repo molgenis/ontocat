@@ -151,7 +151,7 @@ public class OntologyBatch {
         return result;
     }
 
-     /**
+    /**
      * Returns list of OLS ontologies
      *
      * @return list of OLS ontologies - accessions
@@ -165,7 +165,7 @@ public class OntologyBatch {
     }
 
 
-     /**
+    /**
      * Returns list of BioPortal ontologies
      *
      * @return list of BioPortal ontologies - accessions

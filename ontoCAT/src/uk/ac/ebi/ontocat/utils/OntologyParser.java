@@ -4,11 +4,13 @@ import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
 import uk.ac.ebi.ontocat.virtual.LocalisedFileService;
 
-import java.io.File;
+import java.io.*;
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 
@@ -45,7 +47,7 @@ public class OntologyParser {
         //default is EFO last version
         try {
 
-            this.os = EFOParser.getEFO().os;
+            this.os = EFOSingleton.getEFO().os;
 
             ontologySource = "http://www.ebi.ac.uk/efo/efo.owl";
 
@@ -69,7 +71,7 @@ public class OntologyParser {
      */
     public OntologyParser(String pathToOntology) {
 
-        boolean correctResource = false;
+        int correctResource = 0;
 
         try {
 
@@ -77,39 +79,69 @@ public class OntologyParser {
             URI uri = null;
 
             if (file.exists()) {
-                uri = file.toURI();
-                correctResource = true;
+                correctResource = 1;
+                if (file.length() >= 5500000) {
+                    correctResource = 2;
+                    System.out.println("File size is too large. Ontology " + pathToOntology +
+                            " will be loaded as it is without reasoning.");
+                }
+                //System.out.println(file.length());
             } else {
                 //UrlValidator urlValidator = new UrlValidator();
                 //if (urlValidator.isValid(pathToOntology)) {
-                    uri = new URI(pathToOntology);
-                    correctResource = true;
-                //}
-            }
+                file = new File("temp.txt");
+                URL url = new URL(pathToOntology);
 
-            if (correctResource) {
+	            BufferedReader in = new BufferedReader(
+				new InputStreamReader(
+				url.openStream()));
+                BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+	                bw.write(inputLine);
+                in.close();
+
+                correctResource = 1;
+                if (file.length() >= 5500000)  {
+                    correctResource = 2;
+                    System.out.println("File size is too large. Ontology " + pathToOntology +
+                            " will be loaded as it is without reasoning.");
+                }
+
+            }
+            uri = file.toURI();
+
+            if (correctResource > 0) {
                 ontologySource = pathToOntology;
 
                 if (ontologySource.equals("http://www.ebi.ac.uk/efo/efo.owl"))
-                   this.os = EFOParser.getEFO().os;
+                    this.os = EFOSingleton.getEFO().os;
 
                 else
+                  if (correctResource == 1)
                     os = LocalisedFileService.getService
                             (new ReasonedFileOntologyService(uri));
+                  else
+                    os = LocalisedFileService.getService
+                            (new FileOntologyService(uri));
+
+
+
 
                 for (Ontology ot : os.getOntologies()) {
                     ontologyAccession = ot.getOntologyAccession();//ontology = ot;
                 }
 
+                status = true;
                 //((FileOntologyService) os).setSynonymSlot("alternative_term");
 
             } else
-                System.out.println("Sorry, can't create Ontology object for file " + pathToOntology + "." +
+                System.out.println("Sorry, can't create Ontology object for file \"" + pathToOntology + "\"." +
                         "The ontology file doesn't exist.");
 
-            status = true;
+
         } catch (Exception e) {
-            System.out.println("Sorry, can't create Ontology object. Please, check ontology's URI: "  + pathToOntology + ".");
+            System.out.println("Sorry, can't create Ontology object. Please, check ontology's URI: " + pathToOntology + ".");
             status = false;
         }
 
@@ -126,12 +158,12 @@ public class OntologyParser {
         this.os = os;
         this.ontologyAccession = ontologyAccession;
         try {
-            if (!this.os.getRootTerms(this.ontologyAccession).isEmpty()){
+            if (!this.os.getRootTerms(this.ontologyAccession).isEmpty()) {
                 //
             }
             status = true;
         } catch (Exception e) {
-            System.out.println("Sorry, can't create Ontology object for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't create Ontology object for ontology \"" + ontologyAccession + "\".");
             status = false;
         }
     }
@@ -174,11 +206,19 @@ public class OntologyParser {
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
         try {
-            for (OntologyTerm ot : os.searchAll(text))
-                result.add(ot);
+
+            for (OntologyTerm ot : os.getAllTerms(ontologyAccession)) {
+                if (ot.getLabel().contains(text)) {
+                    result.add(ot);
+                } else for (String alt : os.getSynonyms(ot))
+                    if (alt.contains(text)) {
+                        result.add(ot);
+                        break;
+                    }
+            }
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find terms containing '" + text + "' for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find terms containing \"" + text + "\" in ontology \"" + ontologyAccession + "\".");
 
         }
 
@@ -209,7 +249,7 @@ public class OntologyParser {
                     }
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't find terms containing '" + prefix + "' for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find terms containing prefix \"" + prefix + "\" in ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -257,7 +297,7 @@ public class OntologyParser {
             for (OntologyTerm ot : os.getAllTerms(ontologyAccession))
                 result.add(ot.getAccession());
         } catch (Exception e) {
-            System.out.println("Sorry, can't get all terms for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't get all terms for ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -284,7 +324,7 @@ public class OntologyParser {
                 result.add(n.getAccession());
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't get root terms for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't get root terms for ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -302,7 +342,7 @@ public class OntologyParser {
         try {
             result = os.getRootTerms(ontologyAccession);
         } catch (Exception e) {
-            System.out.println("Sorry, can't get root terms for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't get root terms for ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -324,7 +364,7 @@ public class OntologyParser {
                     result.add(n.getAccession());
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't get EFO branch root terms for ontology" + ontologyAccession + ".");
+            System.out.println("Sorry, can't get EFO branch root terms for ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -344,7 +384,7 @@ public class OntologyParser {
                     result.add(n);
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't get EFO branch root terms for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't get EFO branch root terms for ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -374,7 +414,7 @@ public class OntologyParser {
             for (OntologyTerm ot : os.getChildren(term))
                 result.add(ot);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term '" + accession + "' in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -392,7 +432,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermChildren(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<OntologyTerm>();
         }
     }
@@ -412,7 +452,7 @@ public class OntologyParser {
             for (OntologyTerm ot : os.getParents(term))
                 result.add(ot);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term '" + accession + "' in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -429,7 +469,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermParents(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<OntologyTerm>();
         }
     }
@@ -449,7 +489,7 @@ public class OntologyParser {
             for (OntologyTerm ot : os.getAllChildren(ontologyAccession, term.getAccession()))
                 result.add(ot);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term '" + accession + "' in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -467,7 +507,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getAllTermChildren(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<OntologyTerm>();
         }
 
@@ -488,7 +528,7 @@ public class OntologyParser {
             for (OntologyTerm ot : os.getAllParents(ontologyAccession, term.getAccession()))
                 result.add(ot);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -505,7 +545,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getAllTermParents(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<OntologyTerm>();
         }
     }
@@ -528,7 +568,7 @@ public class OntologyParser {
 
             result.add(term);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -546,7 +586,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermAndAllChildren(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<OntologyTerm>();
         }
     }
@@ -574,7 +614,7 @@ public class OntologyParser {
 
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -598,7 +638,7 @@ public class OntologyParser {
 
             result = term.getLabel();
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -620,7 +660,7 @@ public class OntologyParser {
             for (String definition : os.getDefinitions(term))
                 result.add(definition);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -642,7 +682,7 @@ public class OntologyParser {
             for (String synonym : os.getSynonyms(term))
                 result.add(synonym);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -660,7 +700,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermNameById(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return "";
         }
     }
@@ -675,7 +715,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermDefinitions(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<String>();
         }
     }
@@ -690,7 +730,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return getTermSynonyms(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return new ArrayList<String>();
         }
     }
@@ -718,7 +758,7 @@ public class OntologyParser {
             result = (node != null);
         } catch (Exception e) {
             //Nothing
-}
+        }
 
         return result;
     }
@@ -740,7 +780,7 @@ public class OntologyParser {
                 if (ot.equals(term))
                     result = true;
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -757,7 +797,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return isRoot(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return false;
         }
     }
@@ -781,7 +821,7 @@ public class OntologyParser {
 
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
@@ -797,7 +837,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             return isEFOBranchRoot(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
             return false;
         }
 
@@ -834,7 +874,7 @@ public class OntologyParser {
             }
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -849,7 +889,7 @@ public class OntologyParser {
     public void showHierarchyDownToTerm(OntologyTerm term) {
 
         if (term == null || term.getAccession() == null)
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
         else {
             showHierarchyDownToTerm(term.getAccession());
         }
@@ -880,7 +920,7 @@ public class OntologyParser {
             }
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -894,7 +934,7 @@ public class OntologyParser {
     public void showPathsToTerm(OntologyTerm term) {
 
         if (term == null || term.getAccession() == null)
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
         else {
             showPathsToTerm(term.getAccession());
         }
@@ -929,7 +969,7 @@ public class OntologyParser {
             result = result + (ontology.getDescription() != null ? " Description: " + ontology.getDescription() : "");
             result = result + (ontology.getDateReleased() != null ? " Release date: " + ontology.getDateReleased() : "");
         } catch (Exception e) {
-            System.out.println("Sorry, can't find description for ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find description for ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -977,7 +1017,7 @@ public class OntologyParser {
                 result.add(entry.getKey());
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't find relations in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find relations in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -997,7 +1037,7 @@ public class OntologyParser {
         if (term != null && term.getAccession() != null)
             result = getTermRelationNames(term.getAccession());
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
 
         }
 
@@ -1030,7 +1070,7 @@ public class OntologyParser {
             }
 
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -1054,12 +1094,12 @@ public class OntologyParser {
 
             startNode = os.getTerm(accession);
         } catch (Exception e) {
-            System.out.println("Sorry, can't find term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
 
-        try{
+        try {
 
             Map<String, Set<OntologyTerm>> relations = os.getRelations(startNode);
 
@@ -1067,13 +1107,13 @@ public class OntologyParser {
 
                 if (!entry.getValue().isEmpty() && entry.getKey().equals(relation)) {
                     for (OntologyTerm ot : entry.getValue()) {
-				        result.add(ot);
-			        }
+                        result.add(ot);
+                    }
                 }
 
             }
         } catch (Exception e) {
-            System.out.println("Sorry, can't find relation '" + relation + "' for term '" + accession + "' in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find relation \"" + relation + "\" for term \"" + accession + "\" in ontology \"" + ontologyAccession + "\".");
 
 
         }
@@ -1084,18 +1124,18 @@ public class OntologyParser {
     /**
      * Returns terms that are in specified relation with term of interest
      *
-     * @param term Ontology Term to find relations with
-     * @param relation  that term has to have
+     * @param term     Ontology Term to find relations with
+     * @param relation that term has to have
      * @return list of terms
      */
     public List<OntologyTerm> getTermRelations(OntologyTerm term, String relation) {
 
         List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 
-        if (term != null && term.getAccession() != null )
-            result = getTermRelations(term.getAccession(),relation);
+        if (term != null && term.getAccession() != null)
+            result = getTermRelations(term.getAccession(), relation);
         else {
-            System.out.println("Sorry, can't find requested term in ontology " + ontologyAccession + ".");
+            System.out.println("Sorry, can't find requested term in ontology \"" + ontologyAccession + "\".");
 
         }
         return result;
