@@ -44,12 +44,13 @@ gsub("GO_*", "GO:", c(lapply(getTermAndAllChildrenById(go,toString(gsub("GO:*", 
 )))
 
 # Create a list of hypergeometric p-values
-pvals = as.array(sapply(names(genes.by.GOID), function(x)
+pvals = as.array(sapply(1:length(genes.by.GOID), function(x)
     phyper(overlaps[[x]]-1,
     size.by.GOID[[x]],
     length(all.GOIDs) - size.by.GOID[[x]],
     length(unique(selection[,1])),
     lower.tail=FALSE)))
+names(pvals) =  names(genes.by.GOID)
 
 # Get the most enriched categories:
 pvals[order(pvals)][1:10]
