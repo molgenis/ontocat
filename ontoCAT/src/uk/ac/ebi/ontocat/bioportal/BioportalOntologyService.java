@@ -24,8 +24,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.transform.Source;
@@ -61,7 +63,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  * @author Tomasz Adamusiak, Morris Swertz
  */
 public class BioportalOntologyService extends AbstractOntologyService implements OntologyService,
-		Serializable {
+Serializable {
 
 	/** The query url. */
 	private URL queryURL;
@@ -84,28 +86,28 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	// transformations that strip surrounding xml markup
 	/** The Constant xsltBEAN. */
 	private static final String xsltBEAN = "<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'"
-			+ " version='1.0'>"
-			+ "<xsl:output method='xml' encoding='UTF-8'/>"
-			+ "<xsl:template match='/'>"
-			+ "<xsl:copy-of select='//data/classBean'/>"
-			+ "<xsl:copy-of select='//data/ontologyBean'/>"
-			+ "<xsl:copy-of select='//searchResultList'/>"
-			+ "<xsl:copy-of select='/success/data/list'/>"
-			+ "<xsl:copy-of select='//classBeanResultList'/>"
-			+ "</xsl:template>"
-			+ "</xsl:stylesheet>";
+		+ " version='1.0'>"
+		+ "<xsl:output method='xml' encoding='UTF-8'/>"
+		+ "<xsl:template match='/'>"
+		+ "<xsl:copy-of select='//data/classBean'/>"
+		+ "<xsl:copy-of select='//data/ontologyBean'/>"
+		+ "<xsl:copy-of select='//searchResultList'/>"
+		+ "<xsl:copy-of select='/success/data/list'/>"
+		+ "<xsl:copy-of select='//classBeanResultList'/>"
+		+ "</xsl:template>"
+		+ "</xsl:stylesheet>";
 
 	/** The Constant xsltSUCCESS. */
 	private static final String xsltSUCCESS = "<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform'"
-			+ " version='1.0'>"
-			+ "<xsl:output method='xml' encoding='UTF-8'/>"
-			+ "<xsl:template match='/'>"
-			+ "<success>"
-			+ "<xsl:copy-of select='success/accessedResource'/>"
-			+ "<xsl:copy-of select='success/accessDate'/>"
-			+ "<xsl:copy-of select='success/data/page/numPages'/>"
-			+ "</success>"
-			+ "</xsl:template>" + "</xsl:stylesheet>";
+		+ " version='1.0'>"
+		+ "<xsl:output method='xml' encoding='UTF-8'/>"
+		+ "<xsl:template match='/'>"
+		+ "<success>"
+		+ "<xsl:copy-of select='success/accessedResource'/>"
+		+ "<xsl:copy-of select='success/accessDate'/>"
+		+ "<xsl:copy-of select='success/data/page/numPages'/>"
+		+ "</success>"
+		+ "</xsl:template>" + "</xsl:stylesheet>";
 
 	/** The Constant urlBASE. */
 	private static final String urlBASE = "http://rest.bioontology.org/bioportal/";
@@ -137,8 +139,10 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		// CustomMapperTest.testCanBeUsedToOmitUnexpectedElements()
 		// http://svn.xstream.codehaus.org/browse/xstream/trunk/xstream/src/test/com/thoughtworks/acceptance/CustomMapperTest.java?r=HEAD
 		xstream = new XStream() {
+			@Override
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new MapperWrapper(next) {
+					@Override
 					public boolean shouldSerializeMember(Class definedIn, String fieldName) {
 						if (definedIn != Object.class){
 							return super.shouldSerializeMember(definedIn,fieldName);
@@ -183,22 +187,22 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 *             the ontology service exception
 	 */
 	private void processConceptUrl(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processServiceURL("virtual/ontology/", ontologyAccession, termAccession);
 	}
 
 	private void processChildrenUrl(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processServiceURL("virtual/children/", ontologyAccession, termAccession);
 	}
 
 	private void processParentsUrl(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processServiceURL("virtual/parents/", ontologyAccession, termAccession);
 	}
 
 	private void processPathUrl(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processServiceURL("virtual/rootpath/", ontologyAccession, termAccession);
 	}
 
@@ -211,7 +215,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 			try {
 				new URL(termAccession);
 				throw new UnsupportedOperationException(
-						"Currentlly URL concept ids not supported for hierarchy services");
+				"Currentlly URL concept ids not supported for hierarchy services");
 			} catch (MalformedURLException e) {
 				// it's not a URL so do nothing
 			}
@@ -221,7 +225,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	private void processServiceURL(String signature, String ontologyID, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			if (!termAccession.equals("") && temporarayBioportalFix(signature, termAccession)) {
 				termAccession = "?conceptid=" + URLEncoder.encode(termAccession, "UTF-8");
@@ -241,7 +245,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	}
 
 	private void processGetAllURL(String ontologyAccession, Integer pageSize, Integer pageNum)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			this.queryURL = new URL(urlBASE + "virtual/ontology/" + ontologyAccession
 					+ "/all?pagesize=" + pageSize + "&pagenum=" + pageNum + urlAddOn);
@@ -295,7 +299,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		try {
 			query = URLEncoder.encode(query, "UTF-8");
 			String subtreeSetting = "&subtreerootconceptid="
-					+ URLEncoder.encode(termAccession, "UTF-8");
+				+ URLEncoder.encode(termAccession, "UTF-8");
 			this.queryURL = new URL(urlBASE + "search/" + query + "/?maxnumhits=10000000"
 					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
 					+ ontologyAccession + subtreeSetting);
@@ -313,12 +317,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		List<SearchOptions> al = new ArrayList<SearchOptions>(Arrays.asList(options));
 		if (al.contains(SearchOptions.INCLUDE_PROPERTIES)) {
 			val += "&includeproperties=1";
-		} else
+		} else {
 			val += "&includeproperties=0";
+		}
 		if (al.contains(SearchOptions.EXACT)) {
 			val += "&isexactmatch=1";
-		} else
+		} else {
 			val += "&isexactmatch=0";
+		}
 
 		return val;
 	}
@@ -372,12 +378,13 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	 *             the ontology service exception
 	 */
 	private void searchConceptIDThroughLabel(String ontologyAccession, String secondaryTermAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processSearchUrl(ontologyAccession, secondaryTermAccession,
 				SearchOptions.INCLUDE_PROPERTIES);
 		// bioportal id for the concept found or exception thrown already
-		if (this.getSearchResults().size() == 0)
+		if (this.getSearchResults().size() == 0) {
 			throw new OntologyServiceException("Term not found");
+		}
 		processConceptUrl(ontologyAccession, this.getSearchResults().get(0).getAccession());
 	}
 
@@ -390,7 +397,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	private void transformRESTXML() throws OntologyServiceException {
 		try {
 			// buffer rest output
-			String buffer = readInputStreamAsString(loadURL());
+			String buffer = getCachedQuery();
 			TransformerFactory transFact = TransformerFactory.newInstance();
 			// transform to results ConceptBean, SearchResultListBean,
 			// classBeanResultList
@@ -412,6 +419,32 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 		}
 
 	}
+
+	// Caches the immediate results of an internal REST query
+	// for subsequent queries. Example term + synonyms + definitions
+	private String getCachedQuery() throws OntologyServiceException {
+		String result = queryCache.get(queryURL);
+
+		if (result == null) {
+			result = readInputStreamAsString(loadURL());
+			queryCache.put(queryURL, result);
+		}
+
+		return result;
+	}
+
+	// A LRU Cache implementation that removes the stale
+	// elements of the map limiting its size to a hundred
+	// most recently used elements
+	private LinkedHashMap<URL, String> queryCache = new LinkedHashMap<URL, String>() {
+		private static final long serialVersionUID = 1L;
+		private static final int MAX_ENTRIES = 100;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<URL, String> arg) {
+			return size() > MAX_ENTRIES;
+		}
+	};
 
 	/**
 	 * Read input stream as string.
@@ -482,9 +515,10 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 				// alternatively could implement this via
 				// HttpURLConnection.getResponseCode()
 				if (!e.getMessage().contains("HTTP response code: 400")
-						&& !e.getMessage().contains("No parents"))
+						&& !e.getMessage().contains("No parents")) {
 					log.error("Possible problems on BioPortal side - " + e + " on "
 							+ queryURL.toString());
+				}
 
 				throw new OntologyServiceException(e);
 			}
@@ -623,14 +657,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// warning this uses and undocumented feature!
 		// need the no search version, so that the ontology is not searched for
 		// root
 		// in second pass on fail (takes too much time)
 		ConceptBean cb = (ConceptBean) getTermNoSearch(ontologyAccession, "root");
-		if (cb == null)
+		if (cb == null) {
 			return Collections.emptyList();
+		}
 		return (List<OntologyTerm>) injectOntologyAccession(cb.getChildren(), ontologyAccession);
 	}
 
@@ -638,8 +673,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> searchOntology(String ontologyAccession, String query,
 			SearchOptions... options) throws OntologyServiceException {
 		// confirm the ontology exists
-		if (getOntology(ontologyAccession) == null)
+		if (getOntology(ontologyAccession) == null) {
 			return Collections.emptyList();
+		}
 		// search it
 		processSearchUrl(ontologyAccession, query, options);
 		return injectTermContext(getSearchResults(), query, options);
@@ -648,8 +684,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	public List<OntologyTerm> searchSubtree(String ontologyAccession, String termAccession,
 			String query, SearchOptions... options) throws OntologyServiceException {
 		// confirm the ontology exists
-		if (getOntology(ontologyAccession) == null)
+		if (getOntology(ontologyAccession) == null) {
 			return Collections.emptyList();
+		}
 		// search it
 		processSearchUrl(ontologyAccession, termAccession, query, options);
 		return injectTermContext(getSearchResults(), query, options);
@@ -657,14 +694,14 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		processSearchUrl(null, query, options);
 		return injectTermContext(getSearchResults(), query, options);
 	}
 
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			processConceptUrl(ontologyAccession, termAccession);
 		} catch (OntologyServiceException e) { // try to catch the first one?
@@ -681,7 +718,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	// used by the getRootTerms
 	private OntologyTerm getTermNoSearch(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			processConceptUrl(ontologyAccession, termAccession);
 		} catch (OntologyServiceException e) { // try to catch the first one?
@@ -695,8 +732,9 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	@Override
 	public OntologyTerm getTerm(String termAccession) throws OntologyServiceException {
 		List<OntologyTerm> list = searchAll(termAccession);
-		if (list.size() == 0)
+		if (list.size() == 0) {
 			return null;
+		}
 		OntologyTerm term = list.get(0);
 		return getTerm(term.getOntologyAccession(), term.getAccession());
 
@@ -704,17 +742,18 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		OntologyTerm ot = getTerm(ontologyAccession, termAccession);
-		if (ot == null)
+		if (ot == null) {
 			return Collections.emptyMap();
+		}
 		return ((ConceptBean) ot).getAnnotations();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			processChildrenUrl(ontologyAccession, termAccession);
 		} catch (OntologyServiceException e) {
@@ -727,7 +766,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		try {
 			processParentsUrl(ontologyAccession, termAccession);
 		} catch (OntologyServiceException e) {
@@ -740,14 +779,15 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 	@SuppressWarnings("unchecked")
 	private Collection<OntologyTerm> injectOntologyAccession(Collection<OntologyTerm> list,
 			String ontologyAccession) throws OntologyServiceException {
-		for (OntologyTerm ot : list)
+		for (OntologyTerm ot : list) {
 			ot.setOntologyAccession(ontologyAccession);
+		}
 		return list;
 	}
 
 	@Override
 	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// PARSE THE XML OUTPUT
 		try {
 			processPathUrl(ontologyAccession, termAccession);
@@ -778,7 +818,7 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -808,19 +848,21 @@ public class BioportalOntologyService extends AbstractOntologyService implements
 
 	@Override
 	public List<String> getSynonyms(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		OntologyTerm ot = getTerm(ontologyAccession, termAccession);
-		if (ot == null)
+		if (ot == null) {
 			return Collections.emptyList();
+		}
 		return ((ConceptBean) ot).getSynonyms();
 	}
 
 	@Override
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		OntologyTerm ot = getTerm(ontologyAccession, termAccession);
-		if (ot == null)
+		if (ot == null) {
 			return Collections.emptyList();
+		}
 		return ((ConceptBean) ot).getDefinitions();
 	}
 

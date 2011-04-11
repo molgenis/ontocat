@@ -67,8 +67,9 @@ public class ConceptBean extends OntologyTerm {
 	public Map<String, List<String>> getAnnotations() {
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
 		for (EntryBean e : relations) {
-			if (e.getList() != null)
+			if (e.getList() != null) {
 				metadata.put(e.getLabel(), e.getList());
+			}
 		}
 		return metadata;
 	}
@@ -97,7 +98,8 @@ public class ConceptBean extends OntologyTerm {
 						|| e.getLabel().equalsIgnoreCase("FULL_SYN")
 						|| e.getLabel().equalsIgnoreCase("altLabel")
 						|| e.getLabel().equalsIgnoreCase("SYNONYM Full Form")
-						|| e.getLabel().equalsIgnoreCase("fma:Synonym")) {
+						|| e.getLabel().equalsIgnoreCase("fma:Synonym")
+						|| e.getLabel().endsWith("alternative_term")) {
 					log.debug("BP returned empty synonym list though there is some");
 					return e.getList();
 				}
@@ -117,6 +119,7 @@ public class ConceptBean extends OntologyTerm {
 		} else {
 			for (EntryBean e : relations) {
 				if (e.getLabel().toLowerCase().startsWith("def")
+						|| e.getLabel().endsWith("definition")
 						&& !e.getLabel().equalsIgnoreCase("definition source")
 						&& !e.getLabel().equalsIgnoreCase("definition editor")) {
 					log.debug("BP returned empty definitions list though there is some");
