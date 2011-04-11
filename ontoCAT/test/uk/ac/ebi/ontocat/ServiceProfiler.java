@@ -1,17 +1,13 @@
 package uk.ac.ebi.ontocat;
 
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.OntologyService;
-import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
-import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 public class ServiceProfiler {
@@ -24,12 +20,11 @@ public class ServiceProfiler {
 	 * @throws URISyntaxException
 	 */
 	public static void main(String[] args) throws OntologyServiceException,
-			URISyntaxException {
-		System.out.println("OS current temporary directory is "
-				+ System.getProperty("java.io.tmpdir"));
+	URISyntaxException {
+
 		ArrayList<String> randomStrings = new ArrayList<String>();
-		for (int i = 0; i < 1000; i++) {
-			Random r = new Random();
+		Random r = new Random();
+		for (int i = 0; i < 100; i++) {
 			randomStrings.add(Long.toString(Math.abs(r.nextLong()), 36));
 		}
 
@@ -38,31 +33,19 @@ public class ServiceProfiler {
 		long t2;
 		OntologyService osOLS = new OlsOntologyService();
 		OntologyService osBP = new BioportalOntologyService();
-		OntologyService osOWL = new FileOntologyService(new URI(
-				"http://www.ebi.ac.uk/efo"));
-		// Use a non-SKOS annotation for synonyms
-		((FileOntologyService) osOWL).setSynonymSlot("alternative_term");
+
 
 		for (int i = 0; i < 100; i++) {
 			t1 = System.nanoTime();
 			osOLS.searchAll(randomStrings.get(i));
 			t2 = System.nanoTime();
 			logger.info("OLS\t" + ((t2 - t1) * 1e-6) + "\t");
-			// + ((OlsOntologyService) osOLS).extRequestTime);
 
-			// t1 = System.nanoTime();
-			// try {
-			// osBP.searchAll(randomStrings.get(i));
-			// } catch (Exception e) {
-			// }
-			// t2 = System.nanoTime();
-			// logger.info("BP\t" + ((t2 - t1) * 1e-6) + "\t"
-			// + ((BioportalOntologyService) osBP).extRequestTime);
-
-			// t1 = System.nanoTime();
-			// osOWL.searchAll(randomStrings.get(i));
-			// t2 = System.nanoTime();
-			// logger.info("OWL\t" + ((t2 - t1) * 1e-6));
+			t1 = System.nanoTime();
+			osBP.searchAll(randomStrings.get(i));
+			t2 = System.nanoTime();
+			logger.info("BP\t" + ((t2 - t1) * 1e-6)
+					+ "\t");
 		}
 	}
 }
