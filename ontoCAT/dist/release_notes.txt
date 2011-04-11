@@ -5,6 +5,11 @@ Deferred for future releases:
 	Add getUri method to OntologyTerm
 
 
+Version 0.9.7.6 //
+	FIX: Manual fix for EFO synonyms and definitions to be parsable through BioPortal
+	Added an internal cache to BioportalOntologyService that stores the results of
+	a 100 recent queries	
+
 Version 0.9.7.5 05/03/2011
 	UPDATE: Updated the OWL API dependency to 3.2.2, which removed the need to fix
 	the "owlapi" prefixes in OBO ontologies, but the OBO parser now incorrectly
