@@ -64,6 +64,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  */
 public class BioportalOntologyService extends AbstractOntologyService implements OntologyService,
 Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** The query url. */
 	private URL queryURL;
@@ -142,6 +143,7 @@ Serializable {
 			@Override
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new MapperWrapper(next) {
+					@SuppressWarnings("rawtypes")
 					@Override
 					public boolean shouldSerializeMember(Class definedIn, String fieldName) {
 						if (definedIn != Object.class){
@@ -191,15 +193,19 @@ Serializable {
 		processServiceURL("virtual/ontology/", ontologyAccession, termAccession);
 	}
 
-	private void processChildrenUrl(String ontologyAccession, String termAccession)
-	throws OntologyServiceException {
-		processServiceURL("virtual/children/", ontologyAccession, termAccession);
-	}
-
-	private void processParentsUrl(String ontologyAccession, String termAccession)
-	throws OntologyServiceException {
-		processServiceURL("virtual/parents/", ontologyAccession, termAccession);
-	}
+	// No getting hierarchy straight from concept bean
+	//
+	// private void processChildrenUrl(String ontologyAccession, String
+	// termAccession)
+	// throws OntologyServiceException {
+	// processServiceURL("virtual/children/", ontologyAccession, termAccession);
+	// }
+	//
+	// private void processParentsUrl(String ontologyAccession, String
+	// termAccession)
+	// throws OntologyServiceException {
+	// processServiceURL("virtual/parents/", ontologyAccession, termAccession);
+	// }
 
 	private void processPathUrl(String ontologyAccession, String termAccession)
 	throws OntologyServiceException {
@@ -750,33 +756,28 @@ Serializable {
 		return ((ConceptBean) ot).getAnnotations();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
 	throws OntologyServiceException {
-		try {
-			processChildrenUrl(ontologyAccession, termAccession);
-		} catch (OntologyServiceException e) {
-			return Collections.EMPTY_LIST;
-		}
-		return (List<OntologyTerm>) injectOntologyAccession(
-				(List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
-	throws OntologyServiceException {
-		try {
-			processParentsUrl(ontologyAccession, termAccession);
-		} catch (OntologyServiceException e) {
+		OntologyTerm ot = getTerm(ontologyAccession, termAccession);
+		if (ot == null) {
 			return Collections.emptyList();
 		}
 		return (List<OntologyTerm>) injectOntologyAccession(
-				(List<OntologyTerm>) getBeanFromQuery(), ontologyAccession);
+				((ConceptBean) ot).getChildren(), ontologyAccession);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
+	throws OntologyServiceException {
+		OntologyTerm ot = getTerm(ontologyAccession, termAccession);
+		if (ot == null) {
+			return Collections.emptyList();
+		}
+		return (List<OntologyTerm>) injectOntologyAccession(
+				((ConceptBean) ot).getParents(), ontologyAccession);
+	}
+
 	private Collection<OntologyTerm> injectOntologyAccession(Collection<OntologyTerm> list,
 			String ontologyAccession) throws OntologyServiceException {
 		for (OntologyTerm ot : list) {

@@ -8,7 +8,10 @@ Deferred for future releases:
 Version 0.9.7.6 //
 	FIX: Manual fix for EFO synonyms and definitions to be parsable through BioPortal
 	Added an internal cache to BioportalOntologyService that stores the results of
-	a 100 recent queries	
+	a 100 recent queries
+	Modified the way BioportalOntologyService accesses hierarchy to reuse conceptbean
+	rather than calling parents/children signatures, which results in an improvement
+	in speed
 
 Version 0.9.7.5 05/03/2011
 	UPDATE: Updated the OWL API dependency to 3.2.2, which removed the need to fix
