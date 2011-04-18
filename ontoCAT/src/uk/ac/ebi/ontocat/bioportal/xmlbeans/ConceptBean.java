@@ -80,7 +80,16 @@ public class ConceptBean extends OntologyTerm {
 				return e.getConceptBeans();
 			}
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
+	}
+
+	public List<OntologyTerm> getParents() {
+		for (EntryBean e : relations) {
+			if (e.getLabel().equalsIgnoreCase("Superclass")) {
+				return e.getConceptBeans();
+			}
+		}
+		return Collections.emptyList();
 	}
 
 	/*
