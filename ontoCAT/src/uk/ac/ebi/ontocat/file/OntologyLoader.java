@@ -63,11 +63,20 @@ public final class OntologyLoader {
 				// / than "64,000" entity expansions
 				System.setProperty("entityExpansionLimit", "100000000");
 				IRI iri = IRI.create(uriOntology);
+				try {
 				ontology = manager.loadOntologyFromOntologyDocument(iri);
+				} catch (OWLOntologyCreationException e) {
+					log.warn("Ontology could not be created. Waiting 30s and retrying once. " + uriOntology.toString() + e.getMessage());
+					Thread.sleep(30000);
+					ontology = manager.loadOntologyFromOntologyDocument(iri);
+				}
+				
 			}
+		} catch (InterruptedException e) {
+			throw new OntologyServiceException(e);
 		} catch (OWLOntologyCreationException e) {
 			throw new OntologyServiceException(
-					"The ontology could not be created: " + e.getMessage());
+					"Ontology could not be created for " + uriOntology.toString() + e.getMessage());
 		} catch (java.lang.OutOfMemoryError e) {
 			log.fatal("Ran out of memory. Try a bigger heap size, e.g. VM arguments -Xms512M -Xmx512M");
 			throw new OntologyServiceException(e.getMessage());
