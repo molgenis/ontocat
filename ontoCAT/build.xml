@@ -2,7 +2,7 @@
 <project default="dist" name="ontocat" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.7.5" />
+	<property name="version" value="0.9.7.6" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -188,7 +188,7 @@
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false">
+		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
 			<classpath refid="test.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
