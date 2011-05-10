@@ -1,4 +1,6 @@
 #Gene enrichment test by using ontoCAT R package
+#Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.1.3.tar.gz
+
 library(RCurl)
 library(rjson)
 
