@@ -3,15 +3,18 @@ package uk.ac.ebi.ontocat.examples;
 import jargs.gnu.CmdLineParser.IllegalOptionValueException;
 import jargs.gnu.CmdLineParser.UnknownOptionException;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
 
 public class Sandbox {
@@ -29,18 +32,29 @@ public class Sandbox {
 	OntologyServiceException, IllegalOptionValueException,
 	UnknownOptionException {
 
-		URI uri = new File(
-		"C:\\Documents and Settings\\tomasz\\Desktop\\gene_ontology_ext_slim.obo")
-		.toURI();
-		OntologyService os = new ReasonedFileOntologyService(uri, "go");
-		log.info("Loaded GO with " + os.getAllTerms(null).size()
-				+ " classes");
+		OntologyService os = new ReasonedFileOntologyService(
+				URI.create("http://www.ebi.ac.uk/efo"), "efo");
+		Set<OntologyTerm> organisms = os.getAllChildren("efo", "OBI_0100026");
+		log.info("Organism has " + organisms.size()
+				+ " children");
 
-		OntologyTerm root = os.getRootTerms("go").get(0);
-		OntologyTerm term = os.getTerm("GO_0000977");
-		log.info("root is " + root);
-		log.info("term is " + term);
-		log.info(os.getRelations(term));
+		OntologyService bpOS = new BioportalOntologyService();
+		for (OntologyTerm t : organisms) {
+			if (!t.getAccession().contains("NCBITaxon")) {
+				String termLabel = t.getLabel();
+				List<OntologyTerm> taxonhits = Collections.emptyList();
+				try {
+					taxonhits = bpOS.searchOntology("1132",
+							termLabel);
+				} catch (OntologyServiceException e) {
+				}
+				if (taxonhits.size() != 0) {
+					System.out.println(t + " matched NCBITaxon "
+							+ taxonhits.get(0));
+				}
+
+			}
+		}
 
 	}
 
