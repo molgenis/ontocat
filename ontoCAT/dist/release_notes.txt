@@ -4,6 +4,8 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
+Version 0.9.7.7 //2011
+	FIX: ReasonedFileOntologyService basic constructor was not instantiating properly
 
 Version 0.9.7.6 26/04/2011
 	FIX: Manual fix for EFO synonyms and definitions to be parsable through BioPortal

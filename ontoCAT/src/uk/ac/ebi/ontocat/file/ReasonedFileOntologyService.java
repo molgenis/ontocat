@@ -70,7 +70,7 @@ OntologyService {
 	public ReasonedFileOntologyService(URI uriOntology)
 	throws OntologyServiceException {
 		super(uriOntology);
-		instantiateReasoner(uriOntology);
+		runCommonInstantiationCode(uriOntology);
 	}
 
 	/**
@@ -86,22 +86,28 @@ OntologyService {
 	public ReasonedFileOntologyService(URI uriOntology, String ontologyAccession)
 	throws OntologyServiceException {
 		super(uriOntology, ontologyAccession);
-		// FIXME: Apply the URI conversion strategy to fix
-		// the OWL API 3.2.2 object property issue
-		// this fixes the uris and merges the duplicated
-		// object properties
+		runCommonInstantiationCode(uriOntology);
+	}
 
+	private void runCommonInstantiationCode(URI uriOntology)
+	throws OntologyServiceException {
+		fixPropertiesURIs();
+		injectInverseObjectProperties();
+		instantiateReasoner(uriOntology);
+	}
+
+	// FIXME: Apply the URI conversion strategy to fix
+	// the OWL API 3.2.2 object property issue
+	// this fixes the uris and merges the duplicated
+	// object properties
+	private void fixPropertiesURIs() {
 		Set<OWLOntology> ontologies = new HashSet<OWLOntology>();
 		ontologies.add(ontology);
 		OWLEntityURIConverter converter = new OWLEntityURIConverter(
 				loader.getManager(), ontologies,
 				new FixBrokenObjectPropertiesIRIStrategy());
 		loader.getManager().applyChanges(converter.getChanges());
-
-		injectInverseObjectProperties();
-		instantiateReasoner(uriOntology);
 	}
-
 
 	private void injectInverseObjectProperties()
 	throws OntologyServiceException {
