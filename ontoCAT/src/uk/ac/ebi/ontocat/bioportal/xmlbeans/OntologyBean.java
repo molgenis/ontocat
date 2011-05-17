@@ -60,6 +60,7 @@ public class OntologyBean extends Ontology {
 	private String downloadLocation;
 	private String authorSlot;
 	private String isMetadataOnly;
+	private String userAcl;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);

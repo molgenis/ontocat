@@ -6,6 +6,7 @@ Deferred for future releases:
 
 Version 0.9.7.7 //2011
 	FIX: ReasonedFileOntologyService basic constructor was not instantiating properly
+	UPDATE: Updated BioPortal's OntologyBean signature with userAcl field
 
 Version 0.9.7.6 26/04/2011
 	FIX: Manual fix for EFO synonyms and definitions to be parsable through BioPortal

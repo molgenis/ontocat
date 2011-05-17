@@ -150,7 +150,8 @@ Serializable {
 							return super.shouldSerializeMember(definedIn,fieldName);
 						} else {
 							log.warn("Ignoring unexpected field <" + fieldName
-									+ "> in BioPortal xml output");
+									+ "> in BioPortal xml output from "
+									+ queryURL);
 							return false;
 						}
 					}
