@@ -4,8 +4,12 @@ OntoCAT Java API Release Notes
 Deferred for future releases:
 	Add getUri method to OntologyTerm
 
-Version 0.9.7.7 //2011
-	FIX: ReasonedFileOntologyService basic constructor was not instantiating properly
+Version 0.9.7.7 17/05/2011
+	FIX: ReasonedFileOntologyService basic constructor was not being instantiated properly
+	FIX: Another work-around for OWL API 3.2.2 introducing invalid object properties
+	URIs and messing up with the reasoner. The new approach relies on removing unused 
+	object properties rather than merging as it is difficult to predict which properties
+	to merge with OBO namespace introducing another unknown into the object propery URI
 	UPDATE: Updated BioPortal's OntologyBean signature with userAcl field
 
 Version 0.9.7.6 26/04/2011
