@@ -23,15 +23,13 @@ package uk.ac.ebi.ontocat.examples;
 import jargs.gnu.CmdLineParser.IllegalOptionValueException;
 import jargs.gnu.CmdLineParser.UnknownOptionException;
 
-import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
 
 public class Sandbox {
@@ -50,28 +48,14 @@ public class Sandbox {
 	UnknownOptionException {
 
 		OntologyService os = new ReasonedFileOntologyService(
-				new File(
-				"C:\\work\\EFO\\EFO on bar\\ExperimentalFactorOntology\\ExFactorInOWL\\releasecandidate\\efo_release_candidate.owl")
-				.toURI(), "efo");
-		Set<OntologyTerm> organisms = os.getAllChildren("efo", "OBI_0100026");
-		log.info("Organism has " + organisms.size()
-				+ " children");
+				URI.create("http://www.geneontology.org/GO_slims/goslim_generic.obo"));
 
-		for (OntologyTerm t : organisms) {
-			if (!t.getAccession().contains("NCBITaxon")) {
-				System.out.println(t.getLabel() + "\t"
-						+ t.getAccession());
-				for (String syn : os.getSynonyms(t)) {
-					System.out.println(syn + "\t"
-							+ t.getAccession());
-				}
-			}
+		log.info(os.getTerm("GO_0000003"));
+		if (os.getTerm("GO:0000003") == null) {
+			log.warn("NULL");
 		}
 
 	}
 
-	public static String getURI(OntologyTerm term) {
-		return "http://purl.org/obo/owl/CL#" + term.getAccession();
-		// return ((ConceptBean) term).getFullId();
-	}
+
 }

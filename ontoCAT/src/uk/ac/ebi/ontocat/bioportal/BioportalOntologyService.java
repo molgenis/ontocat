@@ -134,22 +134,23 @@ Serializable {
 	/**
 	 * Instantiates a new bioportal service.
 	 * 
-	 * @param email
-	 *            the email
+	 * @param apikey
+	 *            the apikey required by BioPortal for REST queries
 	 */
-	public BioportalOntologyService(String email) {
+	public BioportalOntologyService(String apikey) {
 		// Now map the xml to the java beans
 		// FIXME level?
-		urlAddOn = "&email=" + email + "&level=1";
+		urlAddOn = "&apikey=" + apikey
+		+ "&level=1";
 		configureXstream();
 	}
 
 	/**
-	 * Shorthand that uses ontocat-svn email to instantiate the service
+	 * Shorthand that uses ontocat apikey l to instantiate the service
 	 * 
 	 */
 	public BioportalOntologyService() {
-		this("ontocat-svn@lists.sourceforge.net");
+		this("c6ae1b27-9f86-4e3c-9dcf-087e1156eabe");
 	}
 
 	private void configureXstream() {

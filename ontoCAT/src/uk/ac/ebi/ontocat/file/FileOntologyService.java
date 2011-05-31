@@ -611,7 +611,13 @@ implements OntologyService {
 	// FIXME: take into account ontology uri + accession, i.e. full URI
 	protected OWLEntity getOwlEntity(String termAccession)
 	throws OntologyServiceException {
-		return cache.get(termAccession);
+		OWLEntity result = cache.get(termAccession);
+		if (result == null){
+			// try replacing : with _ as per the OBO Foundry
+			// id policy http://www.obofoundry.org/id-policy.shtml
+			result = cache.get(termAccession.replace(":", "_"));
+		}
+		return result;
 	}
 
 	/*

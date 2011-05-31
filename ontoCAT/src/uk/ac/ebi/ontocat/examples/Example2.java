@@ -36,6 +36,10 @@ public class Example2 {
 
 	public static void main(String[] args) throws OntologyServiceException {
 		// Instantiate BioPortal service
+		// Note that this uses ontocat's default apkikey
+		// but you can pass your private apikey into the service
+		// by using the alternative constructor
+		// new BioportalOntologyServcie( "your apkiey" );
 		OntologyService os = new BioportalOntologyService();
 
 		// List all available ontologies
