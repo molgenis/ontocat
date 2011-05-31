@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
@@ -16,9 +36,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 /**
@@ -96,7 +116,7 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	 *             the ontology service exception
 	 */
 	public static OntologyService getService(OntologyService... list)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
@@ -117,12 +137,15 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 		Object result = null;
 
 		// As the very least should return an empty collection
-		if (method.getReturnType() == List.class)
+		if (method.getReturnType() == List.class) {
 			result = new ArrayList();
-		if (method.getReturnType() == Map.class)
+		}
+		if (method.getReturnType() == Map.class) {
 			result = new HashMap();
-		if (method.getReturnType() == Set.class)
+		}
+		if (method.getReturnType() == Set.class) {
 			result = new HashSet();
+		}
 
 		// Run tasks sequentially
 		for (OntologyService os : ontoServices) {
@@ -130,16 +153,18 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 
 			// searchAll or getOntologies so combine results
 			if (method.getName().equalsIgnoreCase("searchAll")
-					|| method.getName().equalsIgnoreCase("getOntologies"))
+					|| method.getName().equalsIgnoreCase("getOntologies")) {
 				((ArrayList) result).addAll((Collection) singleResult);
-			else if (isValidResult(method, singleResult))
+			} else if (isValidResult(method, singleResult)) {
 				return singleResult;
+			}
 		}
 
 		// final sort for the levenshtein to kick in
 		// and break the internal sorting per ontology source
-		if (method.getName().equalsIgnoreCase("searchAll"))
+		if (method.getName().equalsIgnoreCase("searchAll")) {
 			Collections.sort((List<OntologyTerm>) result);
+		}
 		return result;
 	}
 
@@ -148,17 +173,21 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	 * processing results in trying the next ontologyservice in the queue
 	 */
 	private Boolean isValidResult(Method method, Object result) {
-		if (result == null)
+		if (result == null) {
 			return false;
-		if (result instanceof Map && ((Map) result).size() == 0)
+		}
+		if (result instanceof Map && ((Map) result).size() == 0) {
 			return false;
-		if (result instanceof Set && ((Set) result).size() == 0)
+		}
+		if (result instanceof Set && ((Set) result).size() == 0) {
 			return false;
+		}
 		if (result instanceof List) {
 			Integer listSize = ((List) result).size();
 			String methodName = method.getName();
-			if ((listSize == 0) || (methodName.equalsIgnoreCase("getTermPath") && listSize == 1))
+			if ((listSize == 0) || (methodName.equalsIgnoreCase("getTermPath") && listSize == 1)) {
 				return false;
+			}
 		}
 		return true;
 	}

@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat;
 
 import java.util.ArrayList;
@@ -24,83 +44,100 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
  */
 public abstract class AbstractOntologyService implements OntologyService {
 	private static final Logger log = Logger
-			.getLogger(AbstractOntologyService.class);
+	.getLogger(AbstractOntologyService.class);
 
+	@Override
 	public Map<String, List<String>> getAnnotations(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyMap();
+		}
 		return getAnnotations(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public List<OntologyTerm> getChildren(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyList();
+		}
 		return getChildren(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public List<String> getDefinitions(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyList();
+		}
 		return getDefinitions(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public List<OntologyTerm> getParents(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyList();
+		}
 		return getParents(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public Map<String, Set<OntologyTerm>> getRelations(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyMap();
+		}
 		return getRelations(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public List<OntologyTerm> getRootTerms(Ontology ontology)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return getRootTerms(ontology.getOntologyAccession());
 	}
 
+	@Override
 	public List<String> getSynonyms(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyList();
+		}
 		return getSynonyms(term.getOntologyAccession(), term.getAccession());
 	}
 
+	@Override
 	public List<OntologyTerm> getTermPath(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptyList();
+		}
 		return getTermPath(term.getOntologyAccession(), term.getAccession());
 	}
 
 	public Set<OntologyTerm> getAllChildren(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptySet();
+		}
 		return processStack(term, new MyFunctor() {
 			@Override
 			public List<OntologyTerm> call(OntologyTerm term)
-					throws OntologyServiceException {
+			throws OntologyServiceException {
 				return getChildren(term);
 			}
 		});
 	}
 
 	public Set<OntologyTerm> getAllParents(OntologyTerm term)
-			throws OntologyServiceException {
-		if (term == null)
+	throws OntologyServiceException {
+		if (term == null) {
 			return Collections.emptySet();
+		}
 		return processStack(term, new MyFunctor() {
 			@Override
 			public List<OntologyTerm> call(OntologyTerm term)
-					throws OntologyServiceException {
+			throws OntologyServiceException {
 				return getParents(term);
 			}
 		});
@@ -108,11 +145,11 @@ public abstract class AbstractOntologyService implements OntologyService {
 
 	private abstract class MyFunctor {
 		public abstract List<OntologyTerm> call(OntologyTerm term)
-				throws OntologyServiceException;
+		throws OntologyServiceException;
 	}
 
 	private Set<OntologyTerm> processStack(OntologyTerm seed, MyFunctor f)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		Set<OntologyTerm> result = new HashSet<OntologyTerm>();
 		Stack<OntologyTerm> stack = new Stack<OntologyTerm>();
 		// seed the stack
@@ -131,19 +168,22 @@ public abstract class AbstractOntologyService implements OntologyService {
 		return result;
 	}
 
+	@Override
 	public Set<OntologyTerm> getAllChildren(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		return getAllChildren(getTerm(ontologyAccession, termAccession));
 
 	}
 
+	@Override
 	public Set<OntologyTerm> getAllParents(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		return getAllParents(getTerm(ontologyAccession, termAccession));
 	}
 
+	@Override
 	public Set<OntologyTerm> getAllTerms(String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		List<OntologyTerm> rootTerms = getRootTerms(ontologyAccession);
 		Set<OntologyTerm> result = new HashSet<OntologyTerm>();
 		for (OntologyTerm term : rootTerms) {
@@ -201,12 +241,15 @@ public abstract class AbstractOntologyService implements OntologyService {
 	}
 
 	private OntologyServiceType getServiceType() {
-		if (this instanceof OlsOntologyService)
+		if (this instanceof OlsOntologyService) {
 			return OntologyServiceType.OLS;
-		if (this instanceof BioportalOntologyService)
+		}
+		if (this instanceof BioportalOntologyService) {
 			return OntologyServiceType.BIOPORTAL;
-		if (this instanceof FileOntologyService)
+		}
+		if (this instanceof FileOntologyService) {
 			return OntologyServiceType.FILE;
+		}
 		return OntologyServiceType.UNKNOWN;
 	}
 

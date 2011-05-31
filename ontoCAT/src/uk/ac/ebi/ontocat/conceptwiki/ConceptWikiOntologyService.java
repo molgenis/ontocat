@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.conceptwiki;
 
 import java.io.BufferedInputStream;
@@ -22,10 +42,9 @@ import uk.ac.ebi.ontocat.mediawiki.jaxb.MediaWikiResult;
 import uk.ac.ebi.ontocat.mediawiki.jaxb.Page;
 
 /**
-
+ * Preliminary work on the Wiki Service
  * 
  * @author Morris Swertz, Tomasz Adamusiak
- * 
  */
 
 public class ConceptWikiOntologyService extends AbstractOntologyService implements OntologyService
@@ -44,13 +63,13 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 		logger.info("created with baseURI " + this.urlBASE);
 	}
 
-	
 
-	
+
+
 
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
+	throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -60,7 +79,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
+	throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -95,7 +114,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
+	throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -105,7 +124,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 	@Override
 	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
+	throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -151,7 +170,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 	@Override
 	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
-			throws OntologyServiceException
+	throws OntologyServiceException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -189,7 +208,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 			// setup jaxb
 			JAXBContext jaxbContext = JAXBContext.newInstance("uk.ac.ebi.ontocat.mediawiki.jaxb");
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			
+
 			return (MediaWikiResult) unmarshaller.unmarshal(bin);
 
 		}
@@ -222,7 +241,7 @@ public class ConceptWikiOntologyService extends AbstractOntologyService implemen
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}

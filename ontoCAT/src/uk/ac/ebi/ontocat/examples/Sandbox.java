@@ -1,12 +1,30 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.examples;
 
 import jargs.gnu.CmdLineParser.IllegalOptionValueException;
 import jargs.gnu.CmdLineParser.UnknownOptionException;
 
-import java.net.URI;
+import java.io.File;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -14,7 +32,6 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
 
 public class Sandbox {
@@ -33,26 +50,21 @@ public class Sandbox {
 	UnknownOptionException {
 
 		OntologyService os = new ReasonedFileOntologyService(
-				URI.create("http://www.ebi.ac.uk/efo"), "efo");
+				new File(
+				"C:\\work\\EFO\\EFO on bar\\ExperimentalFactorOntology\\ExFactorInOWL\\releasecandidate\\efo_release_candidate.owl")
+				.toURI(), "efo");
 		Set<OntologyTerm> organisms = os.getAllChildren("efo", "OBI_0100026");
 		log.info("Organism has " + organisms.size()
 				+ " children");
 
-		OntologyService bpOS = new BioportalOntologyService();
 		for (OntologyTerm t : organisms) {
 			if (!t.getAccession().contains("NCBITaxon")) {
-				String termLabel = t.getLabel();
-				List<OntologyTerm> taxonhits = Collections.emptyList();
-				try {
-					taxonhits = bpOS.searchOntology("1132",
-							termLabel);
-				} catch (OntologyServiceException e) {
+				System.out.println(t.getLabel() + "\t"
+						+ t.getAccession());
+				for (String syn : os.getSynonyms(t)) {
+					System.out.println(syn + "\t"
+							+ t.getAccession());
 				}
-				if (taxonhits.size() != 0) {
-					System.out.println(t + " matched NCBITaxon "
-							+ taxonhits.get(0));
-				}
-
 			}
 		}
 

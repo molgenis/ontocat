@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat;
 
 
@@ -7,9 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.ebi.efo.bioportal.EFOIDTranslator;
-import uk.ac.ebi.ontocat.OntologyIdMapping;
-import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.bioportal.xmlbeans.OntologyBean;
 import uk.ac.ebi.ontocat.virtual.TranslatedOntologyService;
@@ -30,7 +47,7 @@ public class TranslatedOntologyServiceTest {
 	@Test
 	public void testMappings() throws OntologyServiceException {
 		for (OntologyIdMapping BPmap : new EFOIDTranslator().getMappings()) {
-				printResults(BPmap.getTestCode());
+			printResults(BPmap.getTestCode());
 		}
 	}
 
@@ -63,7 +80,7 @@ public class TranslatedOntologyServiceTest {
 	}
 
 	private void printResults(String testCode)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		OntologyTerm extTerm = os.getTerm(testCode);
 		System.out.println(testCode + " => " + extTerm);
 		/*

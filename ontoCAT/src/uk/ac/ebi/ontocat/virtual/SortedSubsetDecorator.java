@@ -1,17 +1,35 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.Ontology;
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
@@ -83,7 +101,7 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	}
 
 	public static OntologyService getService(OntologyService os, List<String> sortOrder)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return (OntologyService) SortedSubsetDecorator.createProxy(os, sortOrder);
 	}
 
@@ -102,14 +120,15 @@ public class SortedSubsetDecorator implements InvocationHandler {
 			// if it's accession is not in the imposed list
 			// return nothing
 			if (method.getName().equalsIgnoreCase("searchOntology")
-					&& !sortOrder.contains((String) args[0])) {
+					&& !sortOrder.contains(args[0])) {
 				log.debug((String) args[0] + " ontology explicitly set outside scope");
 				return null;
 			}
 			result = method.invoke(target, args);
 			// sort the results if the method was searchAll
-			if (method.getName().equalsIgnoreCase("searchAll"))
+			if (method.getName().equalsIgnoreCase("searchAll")) {
 				result = searchAllRanked((List<OntologyTerm>) result);
+			}
 
 		} catch (InvocationTargetException e) {
 			log.error(method.getName() + " throws " + e.getCause());
@@ -135,11 +154,12 @@ public class SortedSubsetDecorator implements InvocationHandler {
 	 *             the ontology service exception
 	 */
 	private List<OntologyTerm> searchAllRanked(List<OntologyTerm> result)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// trim list
 		for (int i = result.size() - 1; i >= 0; i--) {
-			if (!sortOrder.contains(result.get(i).getOntologyAccession()))
+			if (!sortOrder.contains(result.get(i).getOntologyAccession())) {
 				result.remove(i);
+			}
 		}
 		// sort according to sortOrder
 		Collections.sort(result, new OntologyRankComparator());
@@ -160,11 +180,13 @@ public class SortedSubsetDecorator implements InvocationHandler {
 		@Override
 		public int compare(OntologyTerm term0, OntologyTerm term1) {
 			if (sortOrder.indexOf(term0.getOntologyAccession()) > sortOrder.indexOf(term1
-					.getOntologyAccession()))
+					.getOntologyAccession())) {
 				return -1;
+			}
 			if (sortOrder.indexOf(term0.getOntologyAccession()) < sortOrder.indexOf(term1
-					.getOntologyAccession()))
+					.getOntologyAccession())) {
 				return 1;
+			}
 			return 0;
 		}
 	}

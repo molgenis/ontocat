@@ -1,5 +1,22 @@
 /**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
  * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
@@ -7,12 +24,11 @@ import java.util.ArrayList;
 
 import uk.ac.ebi.ontocat.Ontology;
 
-
 /**
- * Wraps for the Ontology representation of BioPortal and maps
- * it to the OntologyEntity interface.
+ * Wraps for the Ontology representation of BioPortal and maps it to the
+ * OntologyEntity interface.
  * 
- * @author $Id: ConceptBean.java 8301 2009-07-31 13:41:14Z tomasz $
+ * @author Tomasz Adamusiak
  * 
  */
 @SuppressWarnings("unused")

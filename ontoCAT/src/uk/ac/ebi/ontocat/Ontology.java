@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat;
 
 import java.io.Serializable;
@@ -16,13 +36,13 @@ public class Ontology implements Serializable {
 	private String ontologyAccession;
 	private String synonymSlot;
 	private String versionNumber;
-	
+
 	/**
 	 * No-arg constructor for JAXB
 	 */
 	public Ontology()
 	{
-		
+
 	}
 
 	public Ontology(String ontologyAccession) {
@@ -85,6 +105,7 @@ public class Ontology implements Serializable {
 		this.versionNumber = versionNumber;
 	}
 
+	@Override
 	public String toString() {
 		return String.format(
 				"Ontology(abbreviation=%s, label=%s, ontologyAccession=%s)",
@@ -101,12 +122,12 @@ public class Ontology implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((getLabel() == null) ? 0 : getLabel().hashCode());
+		+ ((getLabel() == null) ? 0 : getLabel().hashCode());
 		result = prime
-				* result
-				+ ((getOntologyAccession() == null) ? 0
-						: getOntologyAccession()
-						.hashCode());
+		* result
+		+ ((getOntologyAccession() == null) ? 0
+				: getOntologyAccession()
+				.hashCode());
 		return result;
 	}
 
@@ -117,23 +138,30 @@ public class Ontology implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Ontology other = (Ontology) obj;
 		if (getLabel() == null) {
-			if (other.getLabel() != null)
+			if (other.getLabel() != null) {
 				return false;
-		} else if (!getLabel().equals(other.getLabel()))
+			}
+		} else if (!getLabel().equals(other.getLabel())) {
 			return false;
+		}
 		if (getOntologyAccession() == null) {
-			if (other.getOntologyAccession() != null)
+			if (other.getOntologyAccession() != null) {
 				return false;
-		} else if (!getOntologyAccession().equals(other.getOntologyAccession()))
+			}
+		} else if (!getOntologyAccession().equals(other.getOntologyAccession())) {
 			return false;
+		}
 		return true;
 	}
 

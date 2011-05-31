@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.virtual;
 
 import java.util.List;
@@ -40,21 +60,21 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 
 	@Override
 	public Map<String, List<String>> getAnnotations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getAnnotations(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<OntologyTerm> getChildren(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getChildren(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<String> getDefinitions(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getDefinitions(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
@@ -71,48 +91,48 @@ public class TranslatedOntologyService extends AbstractOntologyService {
 
 	@Override
 	public List<OntologyTerm> getParents(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getParents(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getRelations(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getRootTerms(translator.getTranslatedOntologyAccession(ontologyAccession));
 	}
 
 	@Override
 	public List<String> getSynonyms(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getSynonyms(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getTerm(translator.getTranslatedOntologyAccession(ontologyAccession), translator
 				.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<OntologyTerm> getTermPath(String ontologyAccession, String termAccession)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.getTermPath(translator.getTranslatedOntologyAccession(ontologyAccession),
 				translator.getTranslatedTermAccession(termAccession));
 	}
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		return os.searchAll(query, options);
 	}
 

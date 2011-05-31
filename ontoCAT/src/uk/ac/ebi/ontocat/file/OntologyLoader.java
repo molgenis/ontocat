@@ -1,5 +1,22 @@
 /**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
  * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
 package uk.ac.ebi.ontocat.file;
 
@@ -14,11 +31,10 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import uk.ac.ebi.ontocat.OntologyServiceException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Contains loading related methods.
  * 
- * @author $Id: OntologyLoader.java 8454 2009-08-17 07:52:50Z Tomasz $
+ * @author Tomasz Adamusiak
  */
 public final class OntologyLoader {
 
@@ -64,13 +80,13 @@ public final class OntologyLoader {
 				System.setProperty("entityExpansionLimit", "100000000");
 				IRI iri = IRI.create(uriOntology);
 				try {
-				ontology = manager.loadOntologyFromOntologyDocument(iri);
+					ontology = manager.loadOntologyFromOntologyDocument(iri);
 				} catch (OWLOntologyCreationException e) {
 					log.warn("Ontology could not be created. Waiting 30s and retrying once. " + uriOntology.toString() + e.getMessage());
 					Thread.sleep(30000);
 					ontology = manager.loadOntologyFromOntologyDocument(iri);
 				}
-				
+
 			}
 		} catch (InterruptedException e) {
 			throw new OntologyServiceException(e);

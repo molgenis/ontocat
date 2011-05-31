@@ -1,15 +1,32 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.examples;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
@@ -34,9 +51,9 @@ public class Example14 {
 		// These point to two versions of EFO
 		// we're going to compare in this example
 		URI uriOld = new URI(
-				"http://rest.bioontology.org/bioportal/ontologies/download/45486");
+		"http://rest.bioontology.org/bioportal/ontologies/download/45486");
 		URI uriNew = new URI(
-				"http://rest.bioontology.org/bioportal/ontologies/download/45574");
+		"http://rest.bioontology.org/bioportal/ontologies/download/45574");
 
 		// Instantiate the ontologies and load terms
 		log.info("Loading ontologies");
@@ -74,7 +91,7 @@ public class Example14 {
 					log.info("REMOVED TERM " + id);
 				} else {
 					String idnew = termNew.getLabel() + " ("
-							+ termNew.getAccession() + ")";
+					+ termNew.getAccession() + ")";
 					log.info("RENAMED TERM " + id + " -> " + idnew);
 				}
 
@@ -100,7 +117,7 @@ public class Example14 {
 			for (OntologyTermFeature f : featuresNew) {
 				if (!featuresOld.contains(f)) {
 					String id = termNew.getLabel() + " ("
-							+ termNew.getAccession() + ")";
+					+ termNew.getAccession() + ")";
 					log.info(id + ": ADDED " + f);
 				}
 			}
@@ -108,7 +125,7 @@ public class Example14 {
 			for (OntologyTermFeature f : featuresOld) {
 				if (!featuresNew.contains(f)) {
 					String id = termNew.getLabel() + " ("
-							+ termNew.getAccession() + ")";
+					+ termNew.getAccession() + ")";
 					log.info(id + ": REMOVED " + f);
 				}
 			}

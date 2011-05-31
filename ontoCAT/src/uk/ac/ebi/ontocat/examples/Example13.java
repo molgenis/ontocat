@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.examples;
 
 import java.net.URI;
@@ -23,8 +43,8 @@ public class Example13 {
 		// Instantiate a FileOntologyService
 		FileOntologyService os = new FileOntologyService(
 				new URI(
-						"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"),
-				"EFO");
+				"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl"),
+		"EFO");
 
 		// Use a non-SKOS annotation for synonyms
 		os.setSynonymSlot("alternative_term");
@@ -53,11 +73,12 @@ public class Example13 {
 	}
 
 	private static Boolean isFunctionalRoot(OntologyService os, OntologyTerm t)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		List<String> propBranchClass = os.getAnnotations(t).get("branch_class");
 		if (propBranchClass != null && propBranchClass.size() > 0
-				&& propBranchClass.get(0).equalsIgnoreCase("true"))
+				&& propBranchClass.get(0).equalsIgnoreCase("true")) {
 			return true;
+		}
 		return false;
 	}
 
@@ -75,8 +96,9 @@ public class Example13 {
 		do {
 			// Pop some path from stack
 			Stack<OntologyTerm> path = tempStack.pop();
-			if (path.size() > 50)
+			if (path.size() > 50) {
 				throw new Exception("Circular path encountered in " + term);
+			}
 			// Go through all the parents on top of the stack
 			List<OntologyTerm> parents = os.getParents(path.peek());
 			if (parents.size() != 0) {

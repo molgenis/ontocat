@@ -2,7 +2,7 @@
 <project default="dist" name="ontocat" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.7.7" />
+	<property name="version" value="0.9.8" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -50,35 +50,22 @@
 		  </delete>
 	</target>
 	
-	<target name="dist" depends="clean-dist, compile, test-html, jar, jar-with-deps, jar-with-deps-small, javadoc">
-		<zip destfile="dist/${ant.project.name}-${version}.zip">
-			<zipfileset dir="doc" prefix="docs" />
-			<zipfileset dir="src" prefix="source/src" />
-			<zipfileset dir="test" prefix="source/test" />
-			<zipfileset dir="lib" prefix="source/lib" />
-			<zipfileset dir="." prefix="source" includes="build.xml" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps-small.jar" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps.jar" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}.jar" />
-			<zipfileset dir="dist" includes="release_notes.txt" />
-			<zipfileset dir="dist" includes="COPYING" />
-			<zipfileset dir="dist" includes="COPYING.LESSER" />
-		</zip>
+	<target name="dist" depends="clean-dist, compile, test-html, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
 	</target>
 
 	<target name="dist-no-test" depends="clean-dist, compile, jar, jar-with-deps, jar-with-deps-small, javadoc">
 		<zip destfile="dist/${ant.project.name}-${version}.zip">
-			<zipfileset dir="doc" prefix="docs" />
-			<zipfileset dir="src" prefix="source/src" />
-			<zipfileset dir="test" prefix="source/test" />
-			<zipfileset dir="lib" prefix="source/lib" />
-			<zipfileset dir="." prefix="source" includes="build.xml" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps-small.jar" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}-with-deps.jar" />
-			<zipfileset dir="dist" includes="${ant.project.name}-${version}.jar" />
-			<zipfileset dir="dist" includes="release_notes.txt" />
-			<zipfileset dir="dist" includes="COPYING" />
-			<zipfileset dir="dist" includes="COPYING.LESSER" />
+			<zipfileset dir="doc" prefix="${ant.project.name}-${version}/docs" />
+			<zipfileset dir="src" prefix="${ant.project.name}-${version}/source/src" />
+			<zipfileset dir="test" prefix="${ant.project.name}-${version}/source/test" />
+			<zipfileset dir="lib" prefix="${ant.project.name}-${version}/source/lib" />
+			<zipfileset dir="." prefix="${ant.project.name}-${version}/source" includes="build.xml" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="${ant.project.name}-${version}-with-deps-small.jar" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="${ant.project.name}-${version}-with-deps.jar" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="${ant.project.name}-${version}.jar" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="release_notes.txt" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="COPYING" />
+			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="COPYING.LESSER" />
 		</zip>
 	</target>
 	

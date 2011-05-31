@@ -1,3 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+ *
+ * Contact: ontocat-users@lists.sourceforge.net
+ * 
+ * This file is part of OntoCAT
+ * 
+ * OntoCAT is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
@@ -21,9 +41,9 @@ import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 /**
@@ -111,7 +131,7 @@ public class CompositeDecorator implements InvocationHandler {
 	 *             the ontology service exception
 	 */
 	public static OntologyService getService(OntologyService... list)
-			throws OntologyServiceException {
+	throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
@@ -133,12 +153,15 @@ public class CompositeDecorator implements InvocationHandler {
 		ExecutorService ec = Executors.newFixedThreadPool(nThreads);
 
 		// As the very least should return an empty collection
-		if (method.getReturnType() == List.class)
+		if (method.getReturnType() == List.class) {
 			result = new ArrayList();
-		if (method.getReturnType() == Map.class)
+		}
+		if (method.getReturnType() == Map.class) {
 			result = new HashMap();
-		if (method.getReturnType() == Set.class)
+		}
+		if (method.getReturnType() == Set.class) {
 			result = new HashSet();
+		}
 
 		// Create tasks
 		Collection<InvokeTask> tasks = new ArrayList<InvokeTask>();
@@ -177,8 +200,9 @@ public class CompositeDecorator implements InvocationHandler {
 
 		// final sort for the levenshtein to kick in
 		// and break the internal sorting per ontology source
-		if (method.getName().equalsIgnoreCase("searchAll"))
+		if (method.getName().equalsIgnoreCase("searchAll")) {
 			Collections.sort((List<OntologyTerm>) result);
+		}
 
 		ec.shutdown();
 		return result;
@@ -203,18 +227,22 @@ public class CompositeDecorator implements InvocationHandler {
 			NoResultsException e = new NoResultsException("No results from " + method.getName()
 					+ " in " + target.getClass().getSimpleName());
 
-			if (result == null)
+			if (result == null) {
 				throw e;
-			if (result instanceof Map && ((Map) result).size() == 0)
+			}
+			if (result instanceof Map && ((Map) result).size() == 0) {
 				throw e;
-			if (result instanceof Set && ((Set) result).size() == 0)
+			}
+			if (result instanceof Set && ((Set) result).size() == 0) {
 				throw e;
+			}
 			if (result instanceof List) {
 				Integer listSize = ((List) result).size();
 				String methodName = method.getName();
 				if ((listSize == 0)
-						|| (methodName.equalsIgnoreCase("getTermPath") && listSize == 1))
+						|| (methodName.equalsIgnoreCase("getTermPath") && listSize == 1)) {
 					throw e;
+				}
 			}
 
 			return result;
