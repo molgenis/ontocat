@@ -34,7 +34,7 @@
 	</target>
 
 	<target name="compile">
-		<javac srcdir="src:test" excludes="**/OntologyParser.java" destdir="bin" nowarn="on">
+		<javac srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
 			<classpath refid="test.classpath" />
 		</javac>
 		<!-- deliver config files -->
