@@ -34,22 +34,22 @@
 	</target>
 
 	<target name="compile">
-		<javac srcdir="src:test" destdir="bin" nowarn="on">
+		<javac srcdir="src:test" excludes="**/OntologyParser.java" destdir="bin" nowarn="on">
 			<classpath refid="test.classpath" />
 		</javac>
 		<!-- deliver config files -->
-	     <copy todir="bin">
-	        <fileset dir="src" excludes="**/*.java"/>
-	     </copy>
+		<copy todir="bin">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
 	</target>
 
 	<target name="clean-dist">
-		  <delete>
-		    <fileset dir="dist" includes="*.jar"/>
-		  	<fileset dir="dist" includes="*.zip"/>
-		  </delete>
+		<delete>
+			<fileset dir="dist" includes="*.jar" />
+			<fileset dir="dist" includes="*.zip" />
+		</delete>
 	</target>
-	
+
 	<target name="dist" depends="clean-dist, compile, test-html, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
 	</target>
 
@@ -68,7 +68,7 @@
 			<zipfileset dir="dist" prefix="${ant.project.name}-${version}" includes="COPYING.LESSER" />
 		</zip>
 	</target>
-	
+
 	<target name="jar-with-deps">
 		<jar destfile="dist/${ant.project.name}-${version}-with-deps.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
@@ -101,7 +101,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/HermiT/org.semanticweb.HermiT.jar" />
 		</jar>
 	</target>
-	
+
 	<!-- This uses the custom xstream-gae.jar that works on google app engine-->
 	<target name="jar-with-deps-gae">
 		<jar destfile="dist/${ant.project.name}-${version}-with-deps-gae.jar" filesetmanifest="mergewithoutmain">
@@ -134,36 +134,36 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
 		</jar>
 	</target>
-	
+
 	<target name="jar-with-deps-small">
-			<jar destfile="dist/${ant.project.name}-${version}-with-deps-small.jar" filesetmanifest="mergewithoutmain">
-				<manifest>
-					<attribute name="Main-Class" value="uk.ac.ebi.ontocat.examples.Example3" />
-					<attribute name="Class-Path" value="." />
-				</manifest>
-				<fileset dir="bin" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/jargs.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/log4j-1.2.15.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xpp3_min-1.1.4c.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/opencsv-1.8.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/owlapi-3.2.2/owlapi-bin.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ols-client.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/axis.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/jaxrpc.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-logging-1.1.1.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-discovery-0.2.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/wsdl4j-1.6.2.jar" />
-				<!-- 
+		<jar destfile="dist/${ant.project.name}-${version}-with-deps-small.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="uk.ac.ebi.ontocat.examples.Example3" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/jargs.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/log4j-1.2.15.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xpp3_min-1.1.4c.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/opencsv-1.8.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/owlapi-3.2.2/owlapi-bin.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ols-client.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/axis.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/jaxrpc.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-logging-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-discovery-0.2.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/wsdl4j-1.6.2.jar" />
+			<!-- 
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/ehcache-core-1.7.2.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/lib/slf4j-log4j12-1.5.11.jar" />
 				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.11.jar" />
 				-->
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-lang-2.4.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xstream-1.3.1.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/HermiT/org.semanticweb.HermiT.jar" />
-			</jar>
-		</target>
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-lang-2.4.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xstream-1.3.1.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
+			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/HermiT/org.semanticweb.HermiT.jar" />
+		</jar>
+	</target>
 
 	<target name="jar">
 		<jar destfile="dist/${ant.project.name}-${version}.jar">
@@ -171,7 +171,7 @@
 		</jar>
 	</target>
 
-	<target name="test" >
+	<target name="test">
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
@@ -195,68 +195,37 @@
 			<report todir="${test.reports}" />
 		</junitreport>
 	</target>
-	
+
 	<target name="update-sf">
-			<input message="Please enter your username in ontocat@SF"
-			       addproperty="tc.user"
-			       defaultvalue="tadamusiak" />
-			<input message="Please enter your password for ontocat@SF:"
-			       addproperty="tc.pass" />
-		
+		<input message="Please enter your username in ontocat@SF" addproperty="tc.user" defaultvalue="tadamusiak" />
+		<input message="Please enter your password for ontocat@SF:" addproperty="tc.pass" />
+
 		<!-- request interactive shell -->
-			<sshexec host="shell.sourceforge.net"
-				 trust="true"
-				 verbose="true"
-				 username="${tc.user},ontocat"
-				 password="${tc.pass}"
-				 command="create" />
+		<sshexec host="shell.sourceforge.net" trust="true" verbose="true" username="${tc.user},ontocat" password="${tc.pass}" command="create" />
 		<!-- archive the old files -->
-			<sshexec host="shell.sourceforge.net"
-				 trust="true"
-				 verbose="true"
-				 username="${tc.user},ontocat"
-				 password="${tc.pass}"
-				 command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
-		
+		<sshexec host="shell.sourceforge.net" trust="true" verbose="true" username="${tc.user},ontocat" password="${tc.pass}" command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
+
 		<!-- update the README -->
-			<scp file="dist/release_notes.txt"
-			     trust="true"
-			     verbose="true"
-			     todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/README"
-			     password="${tc.pass}">
-			</scp>
-		
+		<scp file="dist/release_notes.txt" trust="true" verbose="true" todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/README" password="${tc.pass}">
+		</scp>
+
 		<!-- copy new release  -->
-			<scp file="dist/${ant.project.name}-${version}.zip"
-				 trust="true"
-				 verbose="true"
-				 todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/."
-				 password="${tc.pass}">
-			</scp>
-		
-		
+		<scp file="dist/${ant.project.name}-${version}.zip" trust="true" verbose="true" todir="${tc.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/release/." password="${tc.pass}">
+		</scp>
+
+
 		<!-- shutdown interactive shell -->
-				<sshexec host="shell.sourceforge.net"
-					 trust="true"
-					 verbose="true"
-					 username="${tc.user},ontocat"
-					 password="${tc.pass}"
-					 command="shutdown" />
-		</target>
-	
-	
-	<property environment="env"/>
+		<sshexec host="shell.sourceforge.net" trust="true" verbose="true" username="${tc.user},ontocat" password="${tc.pass}" command="shutdown" />
+	</target>
+
+
+	<property environment="env" />
 	<property name="hudson.user" value="${env.SFUSER}" />
 	<property name="hudson.pass" value="${env.SFPASS}" />
 	<target name="hudson-to-sf">
-			<!-- request interactive shell -->
-				<sshexec host="shell.sourceforge.net"
-					 trust="true"
-					 verbose="true"
-					 username="${hudson.user},ontocat"
-					 password="${hudson.pass}"
-					 command="create" />
-			<!-- archive the old files 
+		<!-- request interactive shell -->
+		<sshexec host="shell.sourceforge.net" trust="true" verbose="true" username="${hudson.user},ontocat" password="${hudson.pass}" command="create" />
+		<!-- archive the old files 
 				<sshexec host="shell.sourceforge.net"
 					 trust="true"
 					 verbose="true"
@@ -264,30 +233,17 @@
 					 password="${hudson.pass}"
 					 command="mv /home/frs/project/o/on/ontocat/ontoCAT/release/*.zip /home/frs/project/o/on/ontocat/ontoCAT/archive/." />
 			-->
-			<!-- update the README -->
-				<scp file="dist/release_notes.txt"
-				     trust="true"
-				     verbose="true"
-				     todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/README"
-				     password="${hudson.pass}">
-				</scp>
-			
-			<!-- copy new release  -->
-				<scp file="dist/${ant.project.name}-${version}.zip"
-					 trust="true"
-					 verbose="true"
-					 todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/ontocat-snapshot.zip"
-					 password="${hudson.pass}">
-				</scp>
-			
-			
-			<!-- shutdown interactive shell -->
-					<sshexec host="shell.sourceforge.net"
-						 trust="true"
-						 verbose="true"
-						 username="${hudson.user},ontocat"
-						 password="${hudson.pass}"
-						 command="shutdown" />
-			</target>
+		<!-- update the README -->
+		<scp file="dist/release_notes.txt" trust="true" verbose="true" todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/README" password="${hudson.pass}">
+		</scp>
+
+		<!-- copy new release  -->
+		<scp file="dist/${ant.project.name}-${version}.zip" trust="true" verbose="true" todir="${hudson.user},ontocat@frs.sourceforge.net:/home/pfs/project/o/on/ontocat/ontoCAT/nightly_build/ontocat-snapshot.zip" password="${hudson.pass}">
+		</scp>
+
+
+		<!-- shutdown interactive shell -->
+		<sshexec host="shell.sourceforge.net" trust="true" verbose="true" username="${hudson.user},ontocat" password="${hudson.pass}" command="shutdown" />
+	</target>
 
 </project>
