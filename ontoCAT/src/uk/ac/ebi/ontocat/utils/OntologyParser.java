@@ -1824,7 +1824,6 @@ public class OntologyParser {
 			return same(p.depth, this.depth) && same(p.term, this.term);
 		}
 
-		@Override
 		public int compareTo(Object o1) {
 			if ((this.term.equals(((OntologyNode) o1).term)) &&
 					(this.depth == ((OntologyNode) o1).depth)) {
