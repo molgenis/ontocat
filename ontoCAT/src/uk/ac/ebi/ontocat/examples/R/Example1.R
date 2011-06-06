@@ -14,8 +14,19 @@
 
 ##########################################################
 # Gene enrichment test by using ontoCAT R package
-# Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.1.3.tar.gz
+# Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.1.5.tar.gz
 ##########################################################
+
+#Java Heap size needed to reason over GO ontology (more than 20 MB in size) is 512MB.
+#Here are the instructions how to increase Java Heap Size in R:
+
+library(rJava)
+options(java.parameters="-Xmx512")
+.jinit()
+
+#To check the result:
+.jcall(.jnew("java/lang/Runtime"), "J", "maxMemory")
+#Now it is possible to work with large ontologies like GO
 
 library(RCurl)
 library(rjson)
@@ -33,8 +44,8 @@ names(g$results[[10]]$gene)
 # Get GO ontology
 library(ontoCAT)
 
-# Obtain GO slim for biological processes:
-go <- getOntology("http://www.ontocat.org/browser/trunk/ontoCAT/src/uk/ac/ebi/ontocat/examples/R/resources/goslim_bp.obo")
+# Obtain GO ontology
+go <- getOntology("http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology_ext.obo")
 
 # Obtain the list of all GOIDs using biomaRt
 library(biomaRt)

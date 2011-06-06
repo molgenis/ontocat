@@ -55,7 +55,7 @@ public class LocalisedFileService implements InvocationHandler {
 
 	/**
 	 * Instantiates the decorator.
-	 * 
+	 *
 	 */
 	public LocalisedFileService(FileOntologyService fos) {
 		this.target = fos;
@@ -64,11 +64,11 @@ public class LocalisedFileService implements InvocationHandler {
 
 	/**
 	 * Creates the proxy.
-	 * 
+	 *
 	 * @param fos
 	 *            the obj
 	 *
-	 * 
+	 *
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */

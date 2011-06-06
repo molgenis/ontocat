@@ -12,10 +12,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-######################################################
-# Search and re-annotation of free-text to ontology
+##########################################################
+# Operations with relationships
 # Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.1.5.tar.gz
-######################################################
+##########################################################
 
 #Java Heap size needed to reason over GO ontology (more than 20 MB in size) is 512MB.
 #Here are the instructions how to increase Java Heap Size in R:
@@ -28,15 +28,33 @@ options(java.parameters="-Xmx512")
 .jcall(.jnew("java/lang/Runtime"), "J", "maxMemory")
 #Now it is possible to work with large ontologies like GO
 
-# Table of results of experiments concering morphogenesis, where terms are in free-text form
-results<-data.frame(term=c("sorocarp","endocardium","paraxial mesoderm","embryonic arm","post-embryonic medial fin","mesonephric glomerulus","mesonephric mesenchyme","membranous septum","post-embryonic hindlimb","bronchiole"),value=rnorm(10))
-
 library(ontoCAT)
 
-# Obtain GO ontology
+#Example with OBO ontology
+
+# Obtain GO ontology without reasoning over it
+go_wr <- getOntologyNoReasoning("http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology_ext.obo")
+
+getOntologyRelationNames(go_wr)
+
+# Obtain GO ontology with reasoning over it
 go <- getOntology("http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology_ext.obo")
 
-# Re-annotation example using GO ontology
-annotations<-c(lapply(results$term,function(x) searchTerm(go, paste(x, "morphogenesis", sep=" "))),recursive = TRUE)
+getOntologyRelationNames(go)
 
-results$GOID <- annotations
+
+#Example with OWL ontology
+
+# Obtain EFO ontology with reasoning over it
+
+efo_wr <- getOntologyNoReasoning("http://rest.bioontology.org/bioportal/ontologies/download/45781?applicationid=4ea81d74-8960-4525-810b-fa1baab576ff");
+
+getOntologyRelationNames(efo_wr)
+
+# Obtain EFO ontology with reasoning over it
+efo <- getOntology("http://rest.bioontology.org/bioportal/ontologies/download/45781?applicationid=4ea81d74-8960-4525-810b-fa1baab576ff")
+
+getOntologyRelationNames(efo)
+
+term <- getTermById(efo,"EFO_0000815")
+getTermRelations(efo,term,"has_part")
