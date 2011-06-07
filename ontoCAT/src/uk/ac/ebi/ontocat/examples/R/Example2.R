@@ -14,7 +14,7 @@
 
 ######################################################
 # Search and re-annotation of free-text to ontology
-# Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.1.5.tar.gz
+# Please use the full version of ontoCAT R package: https://sourceforge.net/projects/ontocat/files/ontoCAT/ontoCAT_R/ontoCAT_1.2.1.tar.gz
 ######################################################
 
 #Java Heap size needed to reason over GO ontology (more than 20 MB in size) is 512MB.
