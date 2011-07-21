@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry excluding="uk/ac/ebi/ontocat/special/OntologyParserTest.java" kind="src" path="test"/>
 	<classpathentry exported="true" kind="lib" path="lib/jargs.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="../"/>
