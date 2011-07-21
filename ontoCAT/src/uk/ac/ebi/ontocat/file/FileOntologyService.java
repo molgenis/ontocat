@@ -358,7 +358,8 @@ implements OntologyService {
 		String ontologyAccession = getOntologyAccession(ent);
 		String termAccession = getFragment(ent);
 		String label = getLabel(ent);
-		return new OntologyTerm(ontologyAccession, termAccession, label);
+		URI uri = ent.getIRI().toURI();
+		return new OntologyTerm(ontologyAccession, termAccession, label, uri);
 	}
 
 	private String getOntologyAccession(OWLEntity ent)

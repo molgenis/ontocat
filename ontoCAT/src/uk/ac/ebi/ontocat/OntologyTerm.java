@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -95,9 +94,15 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		@Override
 		public String toString() {
 			return "OntologyTermContext [SimilarityScore=" + SimilarityScore
-			+ ", valueMatched=" + valueMatched + ", searchOptions="
-			+ Arrays.toString(searchOptions) + ", serviceType="
-			+ getServiceType() + ", timestamp=" + timestamp + "]";
+			+ ", valueMatched="
+			+ valueMatched
+			+ ", searchOptions="
+			+ Arrays.toString(searchOptions)
+			+ ", serviceType="
+			+ getServiceType()
+			+ ", timestamp="
+			+ timestamp
+			+ "]";
 		}
 
 		/**
@@ -175,8 +180,8 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		}
 
 		/**
-		 * Normalises the string by lowercasing, splitting it into words on non-alphanumeric
-		 * characters and sorting them alphabetically
+		 * Normalises the string by lowercasing, splitting it into words on
+		 * non-alphanumeric characters and sorting them alphabetically
 		 * 
 		 * @param in
 		 *            string to be normalised
@@ -310,7 +315,6 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 */
 	public void setURI(URI uri) {
 		this.uri = uri;
-		OWLClass cls;
 	}
 
 	/*
@@ -321,8 +325,9 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	@Override
 	public String toString() {
 		return String
-		.format("OntologyTerm(ontologyAccession=%s, termAccession=%s, label=%s)",
-				getOntologyAccession(), getAccession(), getLabel());
+		.format("OntologyTerm(ontologyAccession=%s, termAccession=%s, termURI=%s, label=%s)",
+				getOntologyAccession(), getAccession(), getURI(),
+				getLabel());
 
 	}
 
@@ -336,13 +341,17 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-		+ ((getAccession() == null) ? 0 : getAccession().hashCode());
+		+ ((getAccession() == null) ? 0
+				: getAccession().hashCode());
 		result = prime * result
-		+ ((getLabel() == null) ? 0 : getLabel().hashCode());
-		result = prime
-		* result
+		+ ((getLabel() == null) ? 0
+				: getLabel().hashCode());
+		result = prime * result
 		+ ((getOntologyAccession() == null) ? 0
 				: getOntologyAccession().hashCode());
+		result = prime * result
+		+ ((getURI() == null) ? 0
+				: getURI().hashCode());
 		return result;
 	}
 
@@ -354,6 +363,7 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -390,6 +400,13 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 				return false;
 			}
 		} else if (!getOntologyAccession().equals(other.getOntologyAccession())) {
+			return false;
+		}
+		if (getURI() == null) {
+			if (other.getURI() != null) {
+				return false;
+			}
+		} else if (!getURI().equals(other.getURI())) {
 			return false;
 		}
 		return true;
