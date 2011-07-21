@@ -63,11 +63,9 @@ public class Sandbox {
 
 		for (OntologyTerm ot : terms) {
 			if (!ot.getAccession().startsWith("EFO_")) {
-				log.info(ot.getLabel() + " ("
-						+ ot.getAccession()
-						+ ")");
+				log.info(ot.getURI() + "\t"
+						+ ot.getLabel());
 			}
-
 
 		}
 
