@@ -21,6 +21,7 @@
 package uk.ac.ebi.ontocat;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
@@ -59,6 +61,9 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 
 	/** The ontology accession. */
 	private String ontologyAccession;
+
+	/** The term URI */
+	private URI uri = null;
 
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(OntologyTerm.class);
@@ -197,7 +202,7 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	}
 
 	/**
-	 * Instantiates a new ontology term.
+	 * Instantiates a new ontology term without URI
 	 * 
 	 * @param ontologyAccession
 	 *            the ontology accession
@@ -211,6 +216,24 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 		this.setAccession(termAccession);
 		this.setLabel(label);
 		this.setOntologyAccession(ontologyAccession);
+	}
+
+	/**
+	 * Instantiates a new ontology term without URI
+	 * 
+	 * @param ontologyAccession
+	 *            the ontology accession
+	 * @param termAccession
+	 *            the term accession
+	 * @param label
+	 *            the label
+	 */
+	public OntologyTerm(String ontologyAccession, String termAccession,
+			String label, URI uri) {
+		this.setAccession(termAccession);
+		this.setLabel(label);
+		this.setOntologyAccession(ontologyAccession);
+		this.setURI(uri);
 	}
 
 	/**
@@ -268,6 +291,26 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 */
 	public void setOntologyAccession(String ontologyAccession) {
 		this.ontologyAccession = ontologyAccession;
+	}
+
+	/**
+	 * Gets the term URI
+	 * 
+	 * @return the term URI
+	 */
+	public URI getURI() {
+		return uri;
+	}
+
+	/**
+	 * Sets the term URI
+	 * 
+	 * @param uri
+	 *            the term URI
+	 */
+	public void setURI(URI uri) {
+		this.uri = uri;
+		OWLClass cls;
 	}
 
 	/*

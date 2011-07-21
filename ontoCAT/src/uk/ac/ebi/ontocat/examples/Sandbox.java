@@ -23,14 +23,18 @@ package uk.ac.ebi.ontocat.examples;
 import jargs.gnu.CmdLineParser.IllegalOptionValueException;
 import jargs.gnu.CmdLineParser.UnknownOptionException;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
+import uk.ac.ebi.ontocat.OntologyTerm;
+import uk.ac.ebi.ontocat.file.FileOntologyService;
 
 public class Sandbox {
 
@@ -47,15 +51,34 @@ public class Sandbox {
 	OntologyServiceException, IllegalOptionValueException,
 	UnknownOptionException {
 
-		OntologyService os = new ReasonedFileOntologyService(
-				URI.create("http://www.geneontology.org/GO_slims/goslim_generic.obo"));
+		URI ont = new File(
+		"C:\\work\\EFO\\EFO on bar\\ExperimentalFactorOntology\\ExFactorInOWL\\releasecandidate\\efo_release_candidate.owl")
+		.toURI();
 
-		log.info(os.getTerm("GO_0000003"));
-		if (os.getTerm("GO:0000003") == null) {
-			log.warn("NULL");
+		OntologyService os = new FileOntologyService(ont);
+
+		Set<OntologyTerm> terms = os.getAllTerms(null);
+
+		log.info("SIZE IS " + terms.size());
+
+		for (OntologyTerm ot : terms) {
+			if (!ot.getAccession().startsWith("EFO_")) {
+				log.info(ot.getLabel() + " ("
+						+ ot.getAccession()
+						+ ")");
+			}
+
+
 		}
 
 	}
 
+	private static String printTermList(List<OntologyTerm> list) {
+		String output = "";
+		for (OntologyTerm term : list) {
+			output += " | " + term.getLabel();
+		}
+		return output;
+	}
 
 }

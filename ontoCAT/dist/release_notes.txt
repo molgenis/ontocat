@@ -1,8 +1,9 @@
 OntoCAT Java API Release Notes
 ==============================
 
-Deferred for future releases:
-	Add getUri method to OntologyTerm
+Version 0.9.9 //2011
+	Interface change, added getURI to OntologyTerm
+	Update to BP signature *TODO
 
 Version 0.9.8 31/05/2011
 	Added GNU and Apache license boilerplates to all source files
