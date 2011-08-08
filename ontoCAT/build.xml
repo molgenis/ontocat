@@ -13,6 +13,9 @@
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
+		<fileset dir="${ant.home}">
+			<include name="**/*.jar" />
+		</fileset>
 	</path>
 	<!-- set junit test set -->
 	<fileset dir="bin">
@@ -178,12 +181,7 @@
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
 		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
-			<classpath>
-				<pathelement path="bin" />
-				<fileset dir="lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
+			<classpath refid="build.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="bin">
