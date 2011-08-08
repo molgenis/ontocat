@@ -9,7 +9,7 @@
 	<!-- set class path -->
 	<path id="build.classpath">
 		<pathelement location="bin" />
-		<pathelement location="${ant.home}"/>
+		<pathelement location="${ant.home}" />
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
@@ -35,7 +35,7 @@
 	</target>
 
 	<target name="compile">
-		<echo message="${ant.home}"/>
+		<echo message="${ant.home}" />
 		<javac includeantruntime="no" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
 			<classpath refid="build.classpath" />
 		</javac>
@@ -177,8 +177,13 @@
 		<delete dir="${test.reports}" />
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
-		<junit includeantruntime="yes" fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
-			<classpath refid="build.classpath" />
+		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
+			<classpath>
+				<pathelement path="bin" />
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="bin">
