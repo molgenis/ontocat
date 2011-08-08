@@ -62,11 +62,11 @@ public class Sandbox {
 		log.info("SIZE IS " + terms.size());
 
 		for (OntologyTerm ot : terms) {
-			if (!ot.getAccession().startsWith("EFO_")) {
-				log.info(ot.getURI() + "\t"
-						+ ot.getLabel());
+			for (String syn : os.getSynonyms(ot)) {
+				if (syn.equalsIgnoreCase("")) {
+					log.warn(ot);
+				}
 			}
-
 		}
 
 	}
