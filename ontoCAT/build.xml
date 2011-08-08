@@ -7,7 +7,7 @@
 		Institute and University of Groningen. Released under LGPLv3." />
 
 	<!-- set class path -->
-	<path id="test.classpath">
+	<path id="build.classpath">
 		<pathelement location="bin" />
 		<fileset dir="lib">
 			<include name="**/*.jar" />
@@ -28,14 +28,14 @@
 		<javadoc excludepackagenames="uk.ac.ebi.ontocat.examples.*,
 									uk.ac.ebi.ontocat.mediawiki.*,
 									uk.ac.ebi.ontocat.conceptwiki.*" sourcepath="src" access="public" destdir="doc" author="true" version="true" use="true" windowtitle="OntoCAT" doctitle="OntoCAT ${version} API Documentation" bottom="${copyright}" header="OntoCAT ${version}" footer="${copyright}">
-			<classpath refid="test.classpath" />
+			<classpath refid="build.classpath" />
 		</javadoc>
 
 	</target>
 
 	<target name="compile">
-		<javac includeantruntime="true" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
-			<classpath refid="test.classpath" />
+		<javac includeantruntime="false" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
+			<classpath refid="build.classpath" />
 		</javac>
 		<!-- deliver config files -->
 		<copy todir="bin">
@@ -176,7 +176,7 @@
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
 		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
-			<classpath refid="test.classpath" />
+			<classpath refid="build.classpath" />
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="bin">
