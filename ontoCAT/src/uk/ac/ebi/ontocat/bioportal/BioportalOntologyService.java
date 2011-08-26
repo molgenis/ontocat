@@ -818,6 +818,11 @@ Serializable {
 			result.add(getTerm(ontologyAccession, termAccession));
 			return result;
 		}
+
+		// Empty path, looks like an error
+		if (this.getSearchResults().size() == 0) {
+			return Collections.emptyList();
+		}
 		// so it's not true ontology term per se, but the way
 		// bioportal process this query it will dump the path
 		// as a list of *slightly modified* classBeans
