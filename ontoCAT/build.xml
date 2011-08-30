@@ -2,7 +2,7 @@
 <project default="dist" name="ontocat" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="test.reports" value="reports" />
-	<property name="version" value="0.9.8" />
+	<property name="version" value="0.9.9" />
 	<property name="copyright" value="Copyright © 2010 European Bioinformatics 
 		Institute and University of Groningen. Released under LGPLv3." />
 
@@ -32,16 +32,22 @@
 		</javadoc>
 
 	</target>
+	
+	<target name="clean-bin">
+		 <delete includeemptydirs="true">
+		    <fileset dir="bin" includes="**/*" defaultexcludes="false"/>
+		  </delete>
+	</target>
 
-	<target name="compile">
+	<target name="compile" depends="clean-bin">
 		<javac includeantruntime="false" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
 			<classpath refid="build.classpath" />
 		</javac>
 		<!-- deliver config files -->
-		<copy todir="bin">
+		<copy todir="bin" >
 			<fileset dir="src" includes="ehcache.*" />
 		</copy>
-		<copy file="dist/log4j-release.properties" tofile="bin/log4j.properties"/>
+		<copy file="dist/log4j-release.properties" tofile="bin/log4j.properties" />
 	</target>
 
 	<target name="clean-dist">
@@ -51,7 +57,7 @@
 		</delete>
 	</target>
 
-	<target name="dist" depends="clean-dist, compile, test-html, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
+	<target name="dist" depends="clean-dist, compile, test, report-test, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
 	</target>
 
 	<target name="dist-no-test" depends="clean-dist, compile, jar, jar-with-deps, jar-with-deps-small, javadoc">
@@ -177,7 +183,7 @@
 		<mkdir dir="${test.reports}" />
 		<echo>Running junit tests...</echo>
 		<junit fork="yes" haltonfailure="yes" printSummary="true" showOutput="false" timeout="600000">
-			<classpath refid="build.classpath" />
+			<classpath refid="build.classpath" /> 
 			<formatter type="xml" usefile="true" />
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="bin">
@@ -187,7 +193,7 @@
 		</junit>
 	</target>
 
-	<target name="test-html" depends="test">
+	<target name="report-test">
 		<echo>Generating html report...</echo>
 		<junitreport todir="${test.reports}">
 			<fileset dir="${test.reports}">
