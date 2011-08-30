@@ -34,15 +34,14 @@
 	</target>
 
 	<target name="compile">
-		<echo message="Ant home is ${ant.home}" />
-		<echo message="${ant.version}" />
-		<javac includeantruntime="no" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
+		<javac includeantruntime="false" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
 			<classpath refid="build.classpath" />
 		</javac>
 		<!-- deliver config files -->
 		<copy todir="bin">
-			<fileset dir="src" excludes="**/*.java" />
+			<fileset dir="src" includes="ehcache.*" />
 		</copy>
+		<copy file="dist/log4j-release.properties" tofile="bin/log4j.properties"/>
 	</target>
 
 	<target name="clean-dist">
