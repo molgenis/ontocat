@@ -168,7 +168,7 @@ Serializable {
 						if (definedIn != Object.class){
 							return super.shouldSerializeMember(definedIn,fieldName);
 						} else {
-							log.warn("Ignoring unexpected field <" + fieldName
+							log.debug("Ignoring unexpected field <" + fieldName
 									+ "> in BioPortal xml output from "
 									+ queryURL);
 							return false;

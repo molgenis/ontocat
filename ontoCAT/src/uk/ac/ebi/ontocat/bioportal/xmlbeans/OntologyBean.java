@@ -77,6 +77,8 @@ public class OntologyBean extends Ontology {
 	private String authorSlot;
 	private String isMetadataOnly;
 	private String userAcl;
+	private String isFlat;
+	private String viewGenerationEngine;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);
