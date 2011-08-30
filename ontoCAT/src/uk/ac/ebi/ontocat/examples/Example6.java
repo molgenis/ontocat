@@ -1,3 +1,4 @@
+// Combine multiple ontologies under one interface
 /**
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *

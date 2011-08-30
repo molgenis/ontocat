@@ -1,3 +1,4 @@
+// Get all the terms from an ontology
 /**
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *
@@ -34,7 +35,7 @@ import uk.ac.ebi.ontocat.file.FileOntologyService;
 /**
  * Example 10
  * 
- * Shows how to load all the classes from an ontology
+ * Shows how to load all the terms from an ontology
  */
 public class Example10 {
 

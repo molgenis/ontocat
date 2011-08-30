@@ -1,3 +1,4 @@
+// Search only a subtree within an ontology
 /**
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *

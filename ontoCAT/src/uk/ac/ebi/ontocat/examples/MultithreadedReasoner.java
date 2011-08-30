@@ -1,3 +1,4 @@
+// Compute all relationships in a multithreaded fashion
 /**
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *
