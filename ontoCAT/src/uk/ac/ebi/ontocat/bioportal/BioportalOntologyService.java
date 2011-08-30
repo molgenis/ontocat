@@ -151,6 +151,7 @@ Serializable {
 	 */
 	public BioportalOntologyService() {
 		this("c6ae1b27-9f86-4e3c-9dcf-087e1156eabe");
+		log.debug("Instatiated BOS");
 	}
 
 	private void configureXstream() {

@@ -184,7 +184,7 @@ implements OntologyService {
 	 */
 	@Override
 	public List<Ontology> getOntologies() throws OntologyServiceException {
-		// FIXME: this list the main uri, but more namespaces are possible
+		// FIXME: this lists the main uri, but more namespaces are possible
 		// FIXME: should iterate over ontoAccessions maybe?
 		return new ArrayList<Ontology>() {
 			private static final long serialVersionUID = 1L;

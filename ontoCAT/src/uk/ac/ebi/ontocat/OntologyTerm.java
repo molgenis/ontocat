@@ -65,6 +65,7 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	private URI uri = null;
 
 	/** The Constant log. */
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(OntologyTerm.class);
 
 	private OntologyTermContext context = new OntologyTermContext();
@@ -201,7 +202,8 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	}
 
 	/**
-	 * Instantiates a new ontology term. Empty constructor.
+	 * Instantiates a new ontology term. Empty constructor. Now deprecated use
+	 * the 4-argument one with URI.
 	 */
 	public OntologyTerm() {
 	}
@@ -216,6 +218,7 @@ public class OntologyTerm implements Serializable, Comparable<OntologyTerm> {
 	 * @param label
 	 *            the label
 	 */
+	@Deprecated
 	public OntologyTerm(String ontologyAccession, String termAccession,
 			String label) {
 		this.setAccession(termAccession);

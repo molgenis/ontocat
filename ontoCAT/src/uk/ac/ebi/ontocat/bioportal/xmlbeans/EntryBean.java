@@ -30,16 +30,20 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * @author Tomasz Adamusiak
  * 
  */
-
+@SuppressWarnings("unused")
 public class EntryBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/** The string. */
 	private ArrayList<String> strings;
 
 	/** The list. */
+	@SuppressWarnings("rawtypes")
 	private ArrayList list;
 
 	/** The Unmodifiable collection. */
+	@SuppressWarnings({ "rawtypes" })
 	private ArrayList UnmodifiableCollection;
 
 	/** The counter. */

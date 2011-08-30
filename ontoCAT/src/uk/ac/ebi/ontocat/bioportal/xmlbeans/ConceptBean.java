@@ -20,6 +20,7 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +36,10 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * 
  * @author Tomasz Adamusiak
  */
+@SuppressWarnings("unused")
 public class ConceptBean extends OntologyTerm {
 
-	public ConceptBean(String ontologyAccession, String termAccession, String label) {
-		super(ontologyAccession, termAccession, label);
-	}
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = Logger.getLogger(ConceptBean.class.getName());
 
@@ -131,7 +131,7 @@ public class ConceptBean extends OntologyTerm {
 				}
 			}
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	/*
@@ -153,7 +153,7 @@ public class ConceptBean extends OntologyTerm {
 				}
 			}
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	public String getPathString() {
@@ -220,5 +220,15 @@ public class ConceptBean extends OntologyTerm {
 	@Override
 	public void setOntologyAccession(String ontologyAccession) {
 		ontAccession = ontologyAccession;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getURI()
+	 */
+	@Override
+	public URI getURI() {
+		return URI.create(this.fullId);
 	}
 }

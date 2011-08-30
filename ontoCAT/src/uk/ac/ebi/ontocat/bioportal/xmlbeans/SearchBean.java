@@ -20,12 +20,15 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
+import java.net.URI;
+
 import uk.ac.ebi.ontocat.OntologyTerm;
 
 /**
  * @author Tomasz Adamusiak
  * 
  */
+@SuppressWarnings("unused")
 public class SearchBean extends OntologyTerm {
 	private static final long serialVersionUID = -6977336688985745354L;
 
@@ -33,18 +36,11 @@ public class SearchBean extends OntologyTerm {
 	private String ontologyId;
 	private String ontologyDisplayLabel;
 	private String recordType;
-	@SuppressWarnings("unused")
 	private String conceptId;
 	private String conceptIdShort;
 	private String preferredName;
 	private String contents;
-	@SuppressWarnings("unused")
 	private String objectType;
-
-	public SearchBean(String ontologyAccession, String termAccession,
-			String label) {
-		super(ontologyAccession, termAccession, label);
-	}
 
 	/**
 	 * @return the ontologyVersionId
@@ -135,5 +131,14 @@ public class SearchBean extends OntologyTerm {
 		ontologyId = ontologyAccession;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getURI()
+	 */
+	@Override
+	public URI getURI() {
+		return URI.create(this.conceptId);
+	}
 
 }

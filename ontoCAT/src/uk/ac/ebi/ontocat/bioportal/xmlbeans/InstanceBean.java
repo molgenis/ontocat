@@ -20,6 +20,8 @@
  */
 package uk.ac.ebi.ontocat.bioportal.xmlbeans;
 
+import java.net.URI;
+
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyTerm;
@@ -30,10 +32,12 @@ import uk.ac.ebi.ontocat.OntologyTerm;
  * 
  * @author Tomasz Adamusiak
  */
+@SuppressWarnings("unused")
 public class InstanceBean extends OntologyTerm {
 
-	private static final Logger log = Logger.getLogger(InstanceBean.class.getName());
+	private static final long serialVersionUID = 1L;
 
+	private static final Logger log = Logger.getLogger(InstanceBean.class.getName());
 
 	/** The label. */
 	private String label;
@@ -62,9 +66,6 @@ public class InstanceBean extends OntologyTerm {
 	/** The relations. */
 	private EntryBean[] relations;
 
-
-
-
 	/**
 	 * Gets the full id.
 	 * 
@@ -92,6 +93,16 @@ public class InstanceBean extends OntologyTerm {
 	@Override
 	public String getLabel() {
 		return this.label;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see uk.ac.ebi.ontocat.OntologyTerm#getURI()
+	 */
+	@Override
+	public URI getURI() {
+		return URI.create(this.fullId);
 	}
 
 }
