@@ -3,7 +3,8 @@ OntoCAT Java API Release Notes
 
 Version 0.9.9 //2011
 	Interface change, added getURI to OntologyTerm
-	Update to BP signature *TODO
+	Updated BP OntologyBean's signature and changed warning on new fields to DEBUG level
+	Minor fix for empty term paths causing an exception
 
 Version 0.9.8 31/05/2011
 	Added GNU and Apache license boilerplates to all source files
