@@ -51,7 +51,7 @@ package uk.ac.ebi.ontocat;
 		 final OntologyService osOLS = new OlsOntologyService();
 		 final FileOntologyService osFile = new FileOntologyService(
 				 new URI(
-				 "http://www.ebi.ac.uk/efo/efo.owl"));
+				 "http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/efo.owl?revision=175"));
 		 final FileOntologyService osFile2 = new FileOntologyService(
 				 new URI(
 				 "http://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));

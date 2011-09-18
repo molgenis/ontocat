@@ -37,7 +37,7 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 	public static void setUpBeforeClass() throws Exception {
 		os = new FileOntologyService(
 				new URI(
-				"http://www.ebi.ac.uk/efo/efo.owl"),
+				"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/efo.owl?revision=175"),
 		"EFO");
 
 		ONTOLOGY_ACCESSION = "EFO";
