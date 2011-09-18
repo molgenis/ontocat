@@ -37,7 +37,7 @@ public class LocalisedFileServiceTest extends AbstractOntologyServiceTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		URI uri = new URI(
-		"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/InferredEFOOWLview/EFO_inferred.owl");
+		"http://efo.svn.sourceforge.net/viewvc/efo/trunk/src/efoinowl/efo.owl?revision=175");
 
 		os = LocalisedFileService.getService(new FileOntologyService(uri));
 
