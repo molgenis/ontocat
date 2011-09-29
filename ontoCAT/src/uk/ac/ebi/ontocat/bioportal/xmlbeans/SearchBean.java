@@ -41,6 +41,7 @@ public class SearchBean extends OntologyTerm {
 	private String preferredName;
 	private String contents;
 	private String objectType;
+	private String isObsolete;
 
 	/**
 	 * @return the ontologyVersionId

@@ -66,6 +66,8 @@ public class ConceptBean extends OntologyTerm {
 	private String[] instances;
 
 	private String type;
+	
+	private String isObsolete;
 
 	/**
 	 * Gets the full id.
