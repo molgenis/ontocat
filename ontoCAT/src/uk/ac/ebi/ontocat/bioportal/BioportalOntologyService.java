@@ -834,11 +834,15 @@ Serializable {
 
 		// GET TERMS FROM ACCESSIONS
 		List<OntologyTerm> path = new ArrayList<OntologyTerm>();
+		
+		for (String tAcc : Accessions) {
+			OntologyTerm ot = this.getTerm(ontologyAccession, tAcc);
+			if (ot==null) throw new OntologyServiceException("Unrecognisable term in path - " + tAcc );
+			path.add(ot);
+		}
 		// include searched acc in path
 		path.add(this.getTerm(ontologyAccession, termAccession));
-		for (String tAcc : Accessions) {
-			path.add(this.getTerm(ontologyAccession, tAcc));
-		}
+		
 		Collections.reverse(path);
 		return path;
 	}
