@@ -1,4 +1,4 @@
-// Obtain hierarchy information for a term in an ontology
+// Work with namespaces in local ontologies
 /**
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *
@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
@@ -38,8 +37,6 @@ import uk.ac.ebi.ontocat.file.FileOntologyService;
  * The tricky namespaces
  */
 public class Example18 {
-	private static final Logger log = Logger.getLogger(Example12.class);
-
 	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
 		// OWL API arbitrary assigns one to OBO ontologies as they are not supported 
 		// natively by OBO format 
@@ -62,15 +59,18 @@ public class Example18 {
 	    // http://www.co-ode.org/ontologies/pizza/pizza.owl
 
 	    // Those work
+	   	System.out.println("\nThose work:");
 	    System.out.println(os.getAllTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl#").size());
+	    System.out.println(os.getAllTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl").size());
 	    System.out.println(os.getAllTerms("http://pizza/namespace/").size());
+	    
 	    System.out.println(os.getRootTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl#").size());
+	    System.out.println(os.getRootTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl").size());
 	    System.out.println(os.getRootTerms("http://pizza/namespace/").size());
 	    
 	    // Those don't
-	    System.out.println(os.getAllTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl").size());
-	    System.out.println(os.getAllTerms(null).size());
-	    System.out.println(os.getRootTerms("http://www.co-ode.org/ontologies/pizza/pizza.owl").size());
-	    System.out.println(os.getRootTerms((String)null).size());
+	    System.out.println("\nThose don't:");
+	    System.out.println(os.getAllTerms("some/random/namespace").size());
+	    System.out.println(os.getRootTerms("some/random/namespace").size());
 	}
 }

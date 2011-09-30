@@ -1,6 +1,15 @@
 OntoCAT Java API Release Notes
 ==============================
 
+Version 0.9.9.1 30/9/2011
+	FIX: starting term now added on the appropriate side of a path in BioPortal
+	Updated BP signatures to include isObsolete fields
+	Now termpath will throw an exception if an unresolvable term is found rather 
+	than adding null to the path
+	Modified namespaces behaviour to be more consistent throughout and fixed
+	os.getOntologies().get(0).getOntologyAccession() so that it can be used
+	as ontologyAccesion (see example 18)
+
 Version 0.9.9 30/08/2011
 	Interface change, added getURI to OntologyTerm
 	Updated BP OntologyBean's signature and changed warning on new fields to DEBUG level
