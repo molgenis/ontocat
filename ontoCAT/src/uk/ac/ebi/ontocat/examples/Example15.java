@@ -66,7 +66,7 @@ public class Example15 {
 		// to compute a larger tree try organism part (EFO_0000635)
 		OntologyTerm startNode = os.getTerm("EFO_0000806");
 
-		// But first lets see all the possible relations for the starting term
+		// But first let's see all the possible relations for the starting term
 		System.out.println("\nDirect relations for term: "
 				+ startNode.getLabel() + "...");
 		Map<String, Set<OntologyTerm>> result = os.getRelations(startNode);
