@@ -25,8 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
@@ -42,7 +40,7 @@ public class Example18 {
 		// natively by OBO format 
 		// OWL ontologies can have multiple namespaces if they import terms directly (e.g. EFO). 
 		// In practice anything that comes up in the file minus URI fragment can be used as 
-		// ontology accession, but it is good practice to specify one yoursefl in alternative
+		// ontology accession, but it is good practice to specify one yourself in alternative
 		// constructor, see below:
 
 		// Instantiate a FileOntologyService(URI, ontologyAccession)
