@@ -297,15 +297,15 @@ Serializable {
 	 * @throws OntologyServiceException
 	 *             the ontology service exception
 	 */
-	private void processSearchUrl(String ontologyAccession, String keyword,
+	private void processSearchUrl(String ontologyAccession, String query,
 			SearchOptions... options) throws OntologyServiceException {
 		try {
 			// colon in the begining will crash the service
-			keyword = keyword.replaceFirst("$:", "");
-			keyword = URLEncoder.encode(keyword, "UTF-8");
-			this.queryURL = new URL(urlBASE + "search/" + keyword + "/?maxnumhits=10000000"
+			query = query.replaceFirst("$:", "");
+			query = URLEncoder.encode(query, "UTF-8");
+			this.queryURL = new URL(urlBASE + "search/?maxnumhits=10000000"
 					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
-					+ ontologyAccession);
+					+ ontologyAccession + "&query=" + query);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			throw new OntologyServiceException(e);
@@ -327,9 +327,9 @@ Serializable {
 			query = URLEncoder.encode(query, "UTF-8");
 			String subtreeSetting = "&subtreerootconceptid="
 				+ URLEncoder.encode(termAccession, "UTF-8");
-			this.queryURL = new URL(urlBASE + "search/" + query + "/?maxnumhits=10000000"
+			this.queryURL = new URL(urlBASE + "search/?maxnumhits=10000000"
 					+ urlAddOn + processSearchOptions(options) + "&ontologyids="
-					+ ontologyAccession + subtreeSetting);
+					+ ontologyAccession + subtreeSetting + "&query=" + query);
 			transformRESTXML();
 		} catch (MalformedURLException e) {
 			throw new OntologyServiceException(e);

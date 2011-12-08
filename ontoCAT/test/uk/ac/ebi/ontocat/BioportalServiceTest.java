@@ -43,11 +43,11 @@ package uk.ac.ebi.ontocat;
 	 }
 
 	 @Test
-	 @Ignore("Reported ot BP, but this is still failing")
+	// Marco's use case, searching in EFO's subtree
 	 public void testSearchSubtree() throws Exception {
 		 BioportalOntologyService bos = new BioportalOntologyService();
 		 List<OntologyTerm> list1 = bos
-		 .searchSubtree(ONTOLOGY_ACCESSION, TERM_ACCESSION, "membrane");
+		 .searchSubtree("1136", "efo:EFO_0003740", "EST");
 		 Assert.assertNotSame("Subtree search list empty!", Collections.EMPTY_LIST, list1);
 
 		 for (OntologyTerm ot : list1) {
@@ -55,9 +55,10 @@ package uk.ac.ebi.ontocat;
 		 }
 
 		 // Test the number of returned terms
-		 List<OntologyTerm> list2 = bos.searchOntology(ONTOLOGY_ACCESSION, "membrane");
-		 Assert.assertTrue("Incorrect list size returned!", list1.size() < list2.size());
+		 List<OntologyTerm> list2 = bos.searchOntology("1136", "EST");
 		 log.info(list1.size() + " < " + list2.size());
+		 Assert.assertTrue("Incorrect list size returned!", list1.size() <= list2.size());
+		 
 	 }
 
 	 @Test

@@ -70,6 +70,7 @@ public class OntologyBean extends Ontology {
 	private ArrayList<String> categoryIds;
 	private ArrayList<String> filenames;
 	private ArrayList<Integer> groupIds;
+	private ArrayList<Integer> userIds;
 	private String filePath;
 	private String viewDefinition;
 	private String viewDefinitionLanguage;
@@ -79,6 +80,7 @@ public class OntologyBean extends Ontology {
 	private String userAcl;
 	private String isFlat;
 	private String viewGenerationEngine;
+	private String obsoleteParent;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);

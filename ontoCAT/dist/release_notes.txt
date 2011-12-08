@@ -1,6 +1,11 @@
 OntoCAT Java API Release Notes
 ==============================
 
+Version 0.9.9.2 / / /
+	Added <userIds> <obsoleteParent> fields to Bioportal's OntologyBean
+	FIX for the inability of using encoded slashes in the URL proper when querying Bioportal. 
+	Now passing them as string parameters, q=? pattern
+
 Version 0.9.9.1 30/9/2011
 	FIX: starting term now added on the appropriate side of a path in BioPortal
 	Updated BP signatures to include isObsolete fields
