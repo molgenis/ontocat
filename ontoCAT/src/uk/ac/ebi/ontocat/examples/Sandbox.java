@@ -20,21 +20,14 @@
  */
 package uk.ac.ebi.ontocat.examples;
 
-import jargs.gnu.CmdLineParser.IllegalOptionValueException;
-import jargs.gnu.CmdLineParser.UnknownOptionException;
-
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.OntologyServiceException;
-import uk.ac.ebi.ontocat.OntologyTerm;
-import uk.ac.ebi.ontocat.file.FileOntologyService;
+import uk.ac.ebi.ontocat.ols.OlsOntologyService;
 
 public class Sandbox {
 
@@ -42,41 +35,14 @@ public class Sandbox {
 
 	/**
 	 * @param args
-	 * @throws URISyntaxException
 	 * @throws OntologyServiceException
-	 * @throws UnknownOptionException
-	 * @throws IllegalOptionValueException
 	 */
-	public static void main(String[] args) throws URISyntaxException,
-	OntologyServiceException, IllegalOptionValueException,
-	UnknownOptionException {
+	public static void main(String[] args) throws OntologyServiceException {
 
-		URI ont = new File(
-		"C:\\work\\EFO\\EFO on bar\\ExperimentalFactorOntology\\ExFactorInOWL\\releasecandidate\\efo_release_candidate.owl")
-		.toURI();
-
-		OntologyService os = new FileOntologyService(ont);
-
-		Set<OntologyTerm> terms = os.getAllTerms(null);
-
-		log.info("SIZE IS " + terms.size());
-
-		for (OntologyTerm ot : terms) {
-			for (String syn : os.getSynonyms(ot)) {
-				if (syn.equalsIgnoreCase("")) {
-					log.warn(ot);
-				}
-			}
-		}
+		OntologyService os = new OlsOntologyService();
+		Map<String, List<String>> annotations = os.getAnnotations("DOID",
+				"DOID:0050120");
+		System.out.println(annotations.get("xref_analog"));
 
 	}
-
-	private static String printTermList(List<OntologyTerm> list) {
-		String output = "";
-		for (OntologyTerm term : list) {
-			output += " | " + term.getLabel();
-		}
-		return output;
-	}
-
 }
