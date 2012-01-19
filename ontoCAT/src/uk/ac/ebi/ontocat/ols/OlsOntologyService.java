@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.rpc.ServiceException;
 
@@ -69,7 +71,7 @@ import uk.ac.ebi.ook.web.services.QueryServiceLocator;
 
 @SuppressWarnings("unchecked")
 public class OlsOntologyService extends AbstractOntologyService implements
-OntologyService {
+		OntologyService {
 	Logger logger = Logger.getLogger(OlsOntologyService.class);
 	// Webservice API
 	QueryService locator;
@@ -87,8 +89,8 @@ OntologyService {
 	public OlsOntologyService() throws OntologyServiceException {
 		// Try to make connections to the database and the webservice
 		try {
-			this.locator = new QueryServiceLocator();
-			this.qs = locator.getOntologyQuery();
+			locator = new QueryServiceLocator();
+			qs = locator.getOntologyQuery();
 		} catch (ServiceException e) {
 			throw new OntologyServiceException(e);
 		}
@@ -141,7 +143,7 @@ OntologyService {
 						// filter out non-exact terms if necessary
 						if (ops.contains(SearchOptions.EXACT)
 								&& dh.getAnnotationStringValue()
-								.equalsIgnoreCase(query)) {
+										.equalsIgnoreCase(query)) {
 							continue;
 						}
 						terms.put(dh.getTermId(), dh.getTermName());
@@ -154,7 +156,8 @@ OntologyService {
 				String ontAccession = key.split(":|_")[0];
 				String label = terms.get(key);
 				URI uri = URI
-				.create("http://www.ebi.ac.uk/ontology-lookup/?termId=" + key);
+						.create("http://www.ebi.ac.uk/ontology-lookup/?termId="
+								+ key);
 				result.add(new OntologyTerm(ontAccession, key, label, uri));
 			}
 			return injectTermContext(result, query, options);
@@ -165,7 +168,7 @@ OntologyService {
 
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		List<SearchOptions> ops = new ArrayList<SearchOptions>(
 				Arrays.asList(options));
 		if (ops.contains(SearchOptions.INCLUDE_PROPERTIES)) {
@@ -184,7 +187,8 @@ OntologyService {
 				String ontologyAccession = entry.getValue().split(":")[0];
 				String label = entry.getValue().split(":")[1];
 				URI uri = URI
-				.create("http://www.ebi.ac.uk/ontology-lookup/?termId=" + termAccession);
+						.create("http://www.ebi.ac.uk/ontology-lookup/?termId="
+								+ termAccession);
 				// filter out non-exact terms if necessary
 				if (ops.contains(SearchOptions.EXACT)
 						&& !label.equalsIgnoreCase(query)) {
@@ -204,11 +208,11 @@ OntologyService {
 
 	@Override
 	public Ontology getOntology(String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		Ontology o = new Ontology(ontologyAccession);
 		try {
 			String label = (String) qs.getOntologyNames()
-			.get(ontologyAccession);
+					.get(ontologyAccession);
 			if (label == null) {
 				return null;
 			}
@@ -224,7 +228,7 @@ OntologyService {
 
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		String label = null;
 		try {
 			label = qs.getTermById(termAccession, ontologyAccession);
@@ -234,14 +238,14 @@ OntologyService {
 		} catch (RemoteException e) {
 			throw new OntologyServiceException(e);
 		}
-		URI uri = URI
-				.create("http://www.ebi.ac.uk/ontology-lookup/?termId=" + termAccession);
+		URI uri = URI.create("http://www.ebi.ac.uk/ontology-lookup/?termId="
+				+ termAccession);
 		return new OntologyTerm(ontologyAccession, termAccession, label, uri);
 	}
 
 	@Override
 	public OntologyTerm getTerm(String termAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 
 		return getTerm(getOntologyAccFromTerm(termAccession), termAccession);
 	}
@@ -259,7 +263,7 @@ OntologyService {
 
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		// Make sure the ontology exists
 		getOntology(ontologyAccession);
 		try {
@@ -275,39 +279,62 @@ OntologyService {
 			String termAccession) throws OntologyServiceException {
 		// Make sure the term exists
 		getTerm(ontologyAccession, termAccession);
-		String key = ontologyAccession + ":" + termAccession;
-		if (!annotationCache.containsKey(key)) {
+		String termKey = ontologyAccession + ":" + termAccession;
+		if (!annotationCache.containsKey(termKey)) {
 			try {
-				Map result = qs.getTermMetadata(termAccession,
+				Map<String, List<String>> result = new HashMap<String, List<String>>();
+				Map<String, Object> annots = qs.getTermMetadata(termAccession,
 						ontologyAccession);
-				// clean out the String from String[]
-				for (Object metadataKey : result.keySet()) {
-					// logger.debug("getting annotation "+metadataKey);
-					if (result.get(metadataKey) instanceof String) {
-						result.put(metadataKey, Arrays
-								.asList(new String[] { (String) result
-										.get(metadataKey) }));
-					} else if (result.get(metadataKey) instanceof String[]) {
-						result.put(metadataKey, Arrays.asList((String[]) result
-								.get(metadataKey)));
+				// dump xrefs into the annotation list
+				annots.putAll(qs.getTermXrefs(termAccession, ontologyAccession));
+
+				for (String annotsKey : annots.keySet()) {
+					Object values = annots.get(annotsKey);
+					String cleanedKey = cleanupAnnotsKey(annotsKey);
+
+					List<String> temp = result.get(cleanedKey);
+					if (temp == null) {
+						temp = new ArrayList<String>();
+					}
+
+					// convert String[] to List<String> if necessary
+					if (values instanceof String) {
+						temp.add((String) values);
+					} else if (values instanceof String[]) {
+						temp.addAll(Arrays.asList((String[]) values));
 					} else {
 						throw new OntologyServiceException("annotation error: "
-								+ metadataKey);
+								+ annotsKey);
 					}
+					result.put(cleanedKey, temp);
 				}
-				annotationCache.put(key, result);
+				annotationCache.put(termKey, result);
 			} catch (RemoteException e) {
 				throw new OntologyServiceException(e);
 			}
 		}
-		return annotationCache.get(key);
+		return annotationCache.get(termKey);
+	}
+
+	/**
+	 * Removes the unnecessary index from OLS annotation key, e.g.,
+	 * exact_synonym_4 becomes exact_synonym
+	 */
+	private String cleanupAnnotsKey(String indexedKey) {
+		Pattern p = Pattern.compile("(.*)_\\d+");
+		Matcher m = p.matcher(indexedKey);
+		if (m.find()) {
+			return m.group(1);
+		} else {
+			return indexedKey;
+		}
 	}
 
 	@Override
 	public List<String> getSynonyms(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		List<String> result = getAnnotations(ontologyAccession, termAccession)
-		.get("exact_synonym");
+				.get("exact_synonym");
 		if (result == null) {
 			return Collections.EMPTY_LIST;
 		}
@@ -327,7 +354,7 @@ OntologyService {
 
 	// helper methods
 	protected List<OntologyTerm> fetchFullTerms(Map<String, String> terms)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 		for (String termAccession : terms.keySet()) {
 			OntologyTerm o = getTerm(termAccession);
@@ -340,7 +367,7 @@ OntologyService {
 	public List<String> getDefinitions(String ontologyAccession,
 			String termAccession) throws OntologyServiceException {
 		List<String> result = getAnnotations(ontologyAccession, termAccession)
-		.get("definition");
+				.get("definition");
 		if (result == null) {
 			return Collections.EMPTY_LIST;
 		}
@@ -396,7 +423,7 @@ OntologyService {
 			if (iteration++ > 100) {
 				throw new OntologyServiceException(
 						"findSearchTermPath(): TOO MANY ITERATIONS ("
-						+ iteration + "x)");
+								+ iteration + "x)");
 			}
 		}
 
