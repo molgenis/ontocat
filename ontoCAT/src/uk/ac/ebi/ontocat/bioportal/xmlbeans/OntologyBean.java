@@ -81,6 +81,8 @@ public class OntologyBean extends Ontology {
 	private String isFlat;
 	private String viewGenerationEngine;
 	private String obsoleteParent;
+	private String viewingRestriction;
+	private String obsoleteProperty;
 
 	public OntologyBean(String ontologyAccession) {
 		super(ontologyAccession);
@@ -156,7 +158,8 @@ public class OntologyBean extends Ontology {
 	 * @see uk.ac.ebi.efo.bioportal.xmlbeans.OntologyEntity#getMetaAnnotation()
 	 */
 	public String getMetaAnnotation() {
-		return "Bioportal mappings to " + displayLabel + " (" + abbreviation + ") ver" + versionNumber;
+		return "Bioportal mappings to " + displayLabel + " (" + abbreviation
+				+ ") ver" + versionNumber;
 	}
 
 	/*
@@ -170,8 +173,7 @@ public class OntologyBean extends Ontology {
 	}
 
 	@Override
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 }
