@@ -1,3 +1,11 @@
+<!-- 
+	WARNING!!! This is a modified version that allows deployement at the EBI. Deployment is done this way:
+	
+	mvn deploy:deploy-file -Dfile=dist/ontocat-0.9.9.2.jar -DpomFile=pom.xml -DrepositoryId=ebi-repo-snapshots -Durl=scp://parrot.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots
+  
+  BUT, you'll probably need the Wagon-SSH extension first (http://johnsjavapda.blogspot.com/2010/11/maven-wagon.html)
+  
+ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -5,7 +13,7 @@
     <groupId>uk.ac.ebi</groupId>
     <artifactId>ontoCAT</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.8</version>
+    <version>0.9.9.3-SNAPSHOT</version>
     <name>ontoCAT</name>
     <url>http://www.ontocat.org</url>
 
@@ -15,6 +23,13 @@
     </properties>
     <build>
 
+				<extensions>
+			    <extension>
+			      <groupId>org.apache.maven.wagon</groupId>
+			      <artifactId>wagon-ssh</artifactId>
+			      <version>1.0-beta-6</version>
+			    </extension>
+				</extensions>
 
         <plugins>
             <plugin>
@@ -142,7 +157,7 @@
 
     <!-- Maven repository deploy -->
     <distributionManagement>
-        <downloadUrl>http://ontocat.sourceforge.net/maven/repo</downloadUrl>
+        <!-- downloadUrl>http://ontocat.sourceforge.net/maven/repo</downloadUrl>
         <repository>
             <id>ontocat.sf.net</id>
             <name>OntoCAT SF Repository</name>
@@ -157,10 +172,25 @@
                 scp://shell.sourceforge.net/home/project-web/ontocat/htdocs/maven/repo
             </url>
         </snapshotRepository>
+        
         <site>
             <id>ontocat.sf.net</id>
             <url>scp://shell.sourceforge.net/home/project-web/ontocat/htdocs</url>
-        </site>
+        </site -->
+        
+		  <repository>
+			  <id>ebi-repo</id>
+			  <name>EBI Repository</name>
+			  <url>scp://parrot.ebi.ac.uk/homes/maven/public_html/m2repo</url>
+		  </repository>
+			
+		  <snapshotRepository>
+			  <uniqueVersion>false</uniqueVersion>
+			  <id>ebi-repo-snapshots</id>
+			  <name>EBI Snapshots Repository</name>
+			  <url>scp://parrot.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
+		  </snapshotRepository>
+        
     </distributionManagement>
 
     <!-- Maven repository download -->
@@ -388,6 +418,5 @@
             <version>3.2.2</version>
         </dependency>
     </dependencies>
-
 
 </project>
