@@ -180,6 +180,12 @@ public class OlsOntologyService extends AbstractOntologyService implements
 		try {
 			Set<Map.Entry<String, String>> sTerms = qs.getPrefixedTermsByName(
 					query, false).entrySet();
+			// TEMPORARY FIX
+			// reported intermittent failure of this query to OLS
+			if (sTerms.isEmpty()){
+				sTerms = qs.getPrefixedTermsByName(
+					query, false).entrySet();
+			}
 			List<OntologyTerm> result = new ArrayList<OntologyTerm>();
 			for (Map.Entry<String, String> entry : sTerms) {
 				// splitting e.g. 228975=NEWT:Thymus magnus
