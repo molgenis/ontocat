@@ -24,6 +24,7 @@ package uk.ac.ebi.ontocat.examples;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import uk.ac.ebi.ontocat.OntologyService.SearchOptions;
 import uk.ac.ebi.ontocat.OntologyServiceException;
 import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
@@ -35,14 +36,15 @@ import uk.ac.ebi.ontocat.file.FileOntologyService;
  * 
  */
 public class Example3 {
-	public static void main(String[] args) throws OntologyServiceException, URISyntaxException {
+	public static void main(String[] args) throws OntologyServiceException,
+			URISyntaxException {
 		// Instantiate a FileOntologyService
-		FileOntologyService os = new FileOntologyService(new URI("http://www.ebi.ac.uk/efo"), "EFO");
-		// Use a non-SKOS annotation for synonyms
-		os.setSynonymSlot("alternative_term");
+		FileOntologyService os = new FileOntologyService(new URI(
+				"http://www.ebi.ac.uk/efo"), "EFO");
 
-		// Find all terms containing string thymus
-		for (OntologyTerm ot : os.searchAll("thymus")) {
+		// Find all terms containing string adipocyte
+		for (OntologyTerm ot : os.searchAll("adipocyte",
+				SearchOptions.INCLUDE_PROPERTIES)) {
 			System.out.println(ot);
 		}
 	}

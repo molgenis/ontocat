@@ -44,8 +44,10 @@ public class Example1 {
 			System.out.println(o);
 		}
 
-		// Find all terms containing string thymus
-		for (OntologyTerm ot : os.searchAll("thymus", SearchOptions.EXACT,
+		// Find all terms containing string adipocyte
+		// NB: OLS does not support searching properties in searchAll(), use
+		// searchOntology() instead
+		for (OntologyTerm ot : os.searchAll("adipocyte",
 				SearchOptions.INCLUDE_PROPERTIES)) {
 			System.out.println(ot);
 		}

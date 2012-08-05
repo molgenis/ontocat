@@ -48,8 +48,8 @@ public class Example2 {
 			System.out.println(o);
 		}
 
-		// Find all terms containing string thymus
-		for (OntologyTerm ot : os.searchAll("thymus", SearchOptions.EXACT,
+		// Find all terms containing string adipocyte
+		for (OntologyTerm ot : os.searchAll("adipocyte",
 				SearchOptions.INCLUDE_PROPERTIES)) {
 			System.out.println(ot);
 		}
