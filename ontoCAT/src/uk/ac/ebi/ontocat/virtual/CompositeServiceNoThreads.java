@@ -2,25 +2,26 @@
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *
  * Contact: ontocat-users@lists.sourceforge.net
- * 
+ *
  * This file is part of OntoCAT
- * 
+ *
  * OntoCAT is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along
  * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
 package uk.ac.ebi.ontocat.virtual;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ import uk.ac.ebi.ontocat.ols.OlsOntologyService;
  * capabilities to an OntologyService. Implemented using Java reflection dynamic
  * proxy pattern See the following link for more details
  * http://www.webreference.com/internet/reflection/3.html
- * 
+ *
  * @author Tomasz Adamusiak
  */
 @SuppressWarnings("unchecked")
@@ -55,11 +56,12 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	private List<OntologyService> ontoServices;
 
 	/** The Constant log. */
-	private static final Logger log = Logger.getLogger(CompositeServiceNoThreads.class);
+	private static final Logger log = Logger
+			.getLogger(CompositeServiceNoThreads.class);
 
 	/**
 	 * Instantiates a new sorted subset decorator.
-	 * 
+	 *
 	 * @param obj
 	 *            the obj
 	 * @param list
@@ -71,21 +73,23 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 
 	/**
 	 * Creates the proxy.
-	 * 
+	 *
 	 * @param obj
 	 *            the obj
 	 * @param list
 	 *            the list
-	 * 
+	 *
 	 * @return the object
 	 * @throws OntologyServiceException
 	 */
-	private static Object createProxy(Object obj, List list) throws OntologyServiceException {
+	private static Object createProxy(Object obj, List list)
+			throws OntologyServiceException {
 		// If an exception if thrown here, the OntologyService
 		// interface must have changed and you have to modify
 		// the <searchAll> strings below and in the invoke method
 		try {
-			obj.getClass().getMethod("searchAll", String.class, SearchOptions[].class);
+			obj.getClass().getMethod("searchAll", String.class,
+					SearchOptions[].class);
 			obj.getClass().getMethod("getOntologies");
 			obj.getClass().getMethod("getTermPath", String.class, String.class);
 			obj.getClass().getMethod("getTermPath", OntologyTerm.class);
@@ -93,22 +97,24 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 			log.fatal("Signature has changed in proxy pattern!");
 			throw new OntologyServiceException(e);
 		}
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass()
-				.getInterfaces(), new CompositeServiceNoThreads(list));
+		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
+				.getClass().getInterfaces(),
+				new CompositeServiceNoThreads(list));
 	}
 
-	public static OntologyService getService(List list) throws OntologyServiceException {
+	public static OntologyService getService(List list)
+			throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
-		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(),
-				list);
+		return (OntologyService) CompositeServiceNoThreads.createProxy(
+				new OlsOntologyService(), list);
 	}
 
 	/**
 	 * Alternative constructor to simplify access in examples
-	 * 
+	 *
 	 * @param list
 	 *            list of ontologies to combine
 	 * @return the composite service service
@@ -116,24 +122,25 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 	 *             the ontology service exception
 	 */
 	public static OntologyService getService(OntologyService... list)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		// instantiate OLSService,
 		// it's never used but need an instance of OntologyService interface
 		// to properly reflect, could use anything else, or instantiate
 		// a private type
-		return (OntologyService) CompositeServiceNoThreads.createProxy(new OlsOntologyService(),
-				Arrays.asList(list));
+		return (OntologyService) CompositeServiceNoThreads.createProxy(
+				new OlsOntologyService(), Arrays.asList(list));
 	}
 
 	// here the magic happens
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 	 * java.lang.reflect.Method, java.lang.Object[])
 	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args)
+			throws Throwable {
 		Object result = null;
 
 		// As the very least should return an empty collection
@@ -149,7 +156,16 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 
 		// Run tasks sequentially
 		for (OntologyService os : ontoServices) {
-			Object singleResult = method.invoke(os, args);
+			Object singleResult = null;
+			try {
+				singleResult = method.invoke(os, args);
+			}
+			// not sure what's the best way to handle global errors here
+			// individual services should be allowed to fail as part of the
+			// aggregate
+			// TODO: without this CompositeService.searchOntology fails
+			catch (InvocationTargetException e) {
+			}
 
 			// searchAll or getOntologies so combine results
 			if (method.getName().equalsIgnoreCase("searchAll")
@@ -185,7 +201,8 @@ public class CompositeServiceNoThreads implements InvocationHandler {
 		if (result instanceof List) {
 			Integer listSize = ((List) result).size();
 			String methodName = method.getName();
-			if ((listSize == 0) || (methodName.equalsIgnoreCase("getTermPath") && listSize == 1)) {
+			if ((listSize == 0)
+					|| (methodName.equalsIgnoreCase("getTermPath") && listSize == 1)) {
 				return false;
 			}
 		}
