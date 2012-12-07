@@ -43,10 +43,6 @@
 		<javac includeantruntime="false" srcdir="src:test" excludes="**/OntologyParserTest.java" destdir="bin" nowarn="on">
 			<classpath refid="build.classpath" />
 		</javac>
-		<!-- deliver config files -->
-		<copy todir="bin" >
-			<fileset dir="src" includes="ehcache.*" />
-		</copy>
 		<copy file="dist/log4j-release.properties" tofile="bin/log4j.properties" />
 	</target>
 
@@ -96,12 +92,6 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-logging-1.1.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-discovery-0.2.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/wsdl4j-1.6.2.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/ehcache-core-1.7.2-javadoc.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/ehcache-core-1.7.2-sources.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/ehcache-core-1.7.2.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/lib/slf4j-log4j12-1.5.11.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.11-sources.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.11.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-lang-2.4.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/xstream-1.3.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
@@ -154,11 +144,6 @@
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-logging-1.1.1.jar" />
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-discovery-0.2.jar" />
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/wsdl4j-1.6.2.jar" />
-			<!-- 
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/ehcache-core-1.7.2.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/lib/slf4j-log4j12-1.5.11.jar" />
-				<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/ehcache-core-1.7.2/lib/slf4j-api-1.5.11.jar" />
-				-->
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-lang-2.4.jar" />
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/xstream-1.3.1.jar" />
 			<zipfileset excludes="META-INF/*.SF,**/*.java" src="lib/commons-validator-1.3.1/commons-validator-1.3.1.jar" />
