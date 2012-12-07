@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ebi.ontocat;
+package uk.ac.ebi.ontocat.special;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
@@ -31,8 +31,9 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.ac.ebi.ontocat.OntologyServiceException;
+import uk.ac.ebi.ontocat.OntologyTerm;
 import uk.ac.ebi.ontocat.file.ReasonedFileOntologyService;
-import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 
 public class ReasonedOWLTest extends
 AbstractOntologyServiceTest {
