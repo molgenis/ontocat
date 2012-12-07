@@ -35,12 +35,12 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		final FileOntologyService osFile = new FileOntologyService(
+		final FileOntologyService os = new FileOntologyService(
 				new URI(
-						"http://diseaseontology.svn.sourceforge.net/svnroot/diseaseontology/trunk/HumanDO.obo"));
+				"http://www.geneontology.org/GO_slims/goslim_generic.obo"));
 
-		ONTOLOGY_ACCESSION = "DO";
-		TERM_ACCESSION = "DOID_0001816";
+		ONTOLOGY_ACCESSION = "GOslim";
+		TERM_ACCESSION = "GO_0005622";
 	}
 
 	@Test
