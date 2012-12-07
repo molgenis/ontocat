@@ -1,0 +1,238 @@
+OntoCAT Java API Release Notes
+==============================
+
+Version 0.9.9.2 / / /
+	Added <userIds> <obsoleteParent> fields to Bioportal's OntologyBean
+	FIX for the inability of using encoded slashes in the URL proper when querying Bioportal
+	Now passing them as string parameters, q=? pattern
+	Added xrefs to annotations returned from OLS
+
+Version 0.9.9.1 30/9/2011
+	FIX: starting term now added on the appropriate side of a path in BioPortal
+	Updated BP signatures to include isObsolete fields
+	Now termpath will throw an exception if an unresolvable term is found rather 
+	than adding null to the path
+	Modified namespaces behaviour to be more consistent throughout and fixed
+	os.getOntologies().get(0).getOntologyAccession() so that it can be used
+	as ontologyAccesion (see example 18)
+
+Version 0.9.9 30/08/2011
+	Interface change, added getURI to OntologyTerm
+	Updated BP OntologyBean's signature and changed warning on new fields to DEBUG level
+	Minor fix for empty term paths causing an exception
+
+Version 0.9.8 31/05/2011
+	Added GNU and Apache license boilerplates to all source files
+	
+	Modified distribution package by adding a top-level directory to avoid polluting 
+	the directory that it is unzipped into
+	
+	OntoCAT's default apikey is now added to all BioPortal REST queries
+	(note that you can also use your private apikey by supplying it in the 
+	alternative BioportalOntologyService constructor)
+	
+	As per OBO Foundry policy (http://www.obofoundry.org/id-policy.shtml)
+	OBO accessions are now translated by OWL API into URIs. This results in
+	colons (:) being replaced with underscores (_) in the accessions. In line with
+	this policy OntoCAT leaves the accessions as is, however it it still possible
+	to getTerm() by its OBO accession, e.g. GO:0000003, but the accession 
+	on the retrieved corresponding OntologyTerm will be GO_0000003. 
+
+Version 0.9.7.7 17/05/2011
+	FIX: ReasonedFileOntologyService basic constructor was not being instantiated properly
+	
+	FIX: Another work-around for OWL API 3.2.2 introducing invalid object properties
+	URIs and messing up with the reasoner. The new approach relies on removing unused 
+	object properties rather than merging as it is difficult to predict which properties
+	to merge with OBO namespace introducing another unknown into the object propery URI
+	
+	UPDATE: Updated BioPortal's OntologyBean signature with userAcl field
+
+Version 0.9.7.6 26/04/2011
+	FIX: Manual fix for EFO synonyms and definitions to be parsable through BioPortal
+	
+	Added an internal cache to BioportalOntologyService that stores the results of
+	recent queries (LRU type, 100 queries capacity)
+	
+	Modified the way BioportalOntologyService accesses hierarchy to reuse ConceptBean
+	rather than calling parents/children signatures (considerable speed improvement due
+	to caching)
+
+Version 0.9.7.5 05/03/2011
+	UPDATE: Updated the OWL API dependency to 3.2.2, which removed the need to fix
+	the "owlapi" prefixes in OBO ontologies, but the OBO parser now incorrectly
+	loads the object property IRIs, which required a different fix.
+	
+	FIX: Added an override for the arbitrary limit in the SAXParser of 64k entity expansions
+	when using RDFXMLParser (error message: The parser has encountered more than "64,000" 
+	entity expansions)
+	
+Version 0.9.7.4 31/03/2011
+	The owlapi prefix is now removed from OBO term accessions when using the 
+	ReasonedFileOntologyService
+
+Version 0.9.7.3 23/03/2011
+	FIX: ReasonedFileOntologyService was incorrectly calculating root terms
+	
+	FIX: ReasonedFileOntologyService now also computes relationships for OBO ontologies
+	
+Version 0.9.7.2 15/03/2011
+	FIX: ReasonedFileOntologyService was missing the OntologyService interface implementation
+	preventing it from being decorated
+	 
+Version 0.9.7.1 11/03/2011/
+	Some internal refactoring of ReasonedFileOntologyService
+	
+	Renamed ReasonedFileOntologyService.getRelationsShortcut() to getSpecificRelation()
+	 
+Version 0.9.7 9/03/2011/
+	Change in OntologyService.getRelations signature from return Map<String, List<String>> 
+	to Map<String,Set<OntologyTerm>>  
+	
+	Added ReasonedFileOntologyService, which uses the HermiT reasoner to infer hierarchy and relations
+	
+	Added support for individuals/instances/particulars to FileOntologyService
+	
+	FIX: OLS.getRelations() now returns a proper result set
+
+Version 0.9.6.3 9/02/2011
+	Removed system.exit() statements that were causing problems in external applications
+
+Version 0.9.6.2 8/02/2011
+	Added LocalisedFileService that harmonises and overwrites ontology accessions for FileOntologyService
+	
+	Updated to latest BioPortal REST signature
+	
+	FIX: property search was case sensitive in FileOntologyService
+	
+	FIX: sorting by similarity now includes properties in BioportalOntologyService and FileOntologyService
+
+Version 0.9.6.1 24/11/2010
+	Rolled out similarity enabled search (Levenshtein distance across normalised strings)
+	
+	Updated to the newest BioPortal ontology bean xml signature
+	
+	Customised XStream parser so that future BioPortal xml updates will no longer block the parser
+	
+	Fix for some of the issues with term context and service type 
+	
+	Fix for "The ontology could not be created:" error in FileOntologyService
+
+Version 0.9.6 15/11/2010
+	Updated OWL API dependency to 3.1
+	
+	On creation of FileOntologyService you can specify a user-defined ontology accession
+	
+	New utils package containing some convenience methods for the R ontocat package
+	
+	BioportalOntologyService.getOntologies() also lists the views
+	
+	FIX: Unnecessary warnings when searching OLS
+	
+	FIX: Occasional incorrect parsing of ontology accessions when searching OLS 
+	
+	FIX: FileOntologyService will throw exception if there are classes with no properties
+
+Version 0.9.5.3 1/10/2010
+	FIX: Colon in query would crash BioPortal
+	
+	FIX: CachedOntologyService -> OntologyTermContext was not serializable
+	
+	FIX: BioportalOntologyService would not populate ontologyAccession in getAllTerms()
+	
+	FIX: include sources inside the distribution so that javadoc shows up properly
+
+Version 0.9.5.2, 24/9/2010
+	FIX: Fixed inconsistency when getOntologyAccession() was not in the list of 
+	possible accessions of an OWL file thus preventing some of the methods from completing
+	
+Version 0.9.5.1, 24/9/2010
+	FIX: getAnnotations() would result in IndexOutOfBoundsException in some cases
+	
+	FIX: Updated to recent BioPortal web services signature for OntologyBean - authorSlot
+	
+	FIX: Various fixes to javadoc
+
+Version 0.9.5, 22/9/2010
+	Added support for labels being part of the class URI
+	
+	FIX: removed unnecessary eager fetching on some of the methods in BioportalOntologyService
+	(e.g. getParents, getChildren where the return list was post-processed on 
+	individual term	basis)
+	
+	FIX: updated to the latest BioPortal service signature, i.e. instances XML
+	
+	Less warnings on using unoptimised getAllParents and getAllChildren
+
+Version 0.9.4, 10/08/2010
+	Made FileOntologyService more OBO friendly
+		-automatically recognises OBO definition and synonyms
+		-drops metadata EXACT, RELATED [] etc from synonyms
+	
+	Removed a bottleneck in OLS.searchOntology to speed up queries
+	
+	Extended OntologyService interface with getAllTerms(), getAllChildren(), getAllParents()
+		-FileOntologyService has optimised versions for all three
+		-BioportalOntologySerice only implements getAllTerms() through paging
+		-all other cases are emulated in a slow unopotimized fashion (a warning
+		is issued)
+	
+	Added downloadLocation to OntologyBean (fix for a new field in BioPortal response)
+
+Version 0.9.3, 9/07/2010	
+	Extended BioportalOntologyService with the searchSubtree method
+	
+	Added OntologyContext to OntologyTerm
+	
+	Harmonised all services to return null values or empty lists on empty results
+	
+	Added full internal caching to FileOntologyService to improve performance
+
+Version 0.9.2, 28/05/2010
+	Added SearchOptions for searchAll() and searchOntology(): EXACT, INCLUDE_PROPERTIES
+	
+	Fixed maxnumhits setting in BioPortal query to arbitrary large number
+	
+	Updated BioPortal rest signatures to support URLs as concept IDs
+	
+	URL encoding parameters in BioPortal queries
+	
+	Some fixes to make BioportalOntologyService and CachedServiceDecorator thread safe
+
+Version 0.9.1, 8/04/2010
+	Re-implemented searchAll() in OLSOntologyService as it suddenly stopped working
+	
+	Consistent exceptions throwing for incorrect accessions
+
+Version 0.9, 25/03/2010
+	Updates to recent BioPortal web services signature
+	
+	Includes a number of improvements:
+		-caching
+		-ranking
+		-namespace translation
+		-multithreaded composite service
+
+Version 0.8, 10/02/2010
+	First public release.
+	
+COPYRIGHT & LICENSE
+===================
+Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
+
+Contact: ontocat-users@lists.sourceforge.net
+ 
+This file is part of OntoCAT
+
+OntoCAT is free software: you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 3 of the License, or (at your option) any
+later version.
+ 
+OntoCAT is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.
+
+You should have received a copy of the GNU Lesser General Public License along
+with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
