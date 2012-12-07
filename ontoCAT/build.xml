@@ -53,7 +53,7 @@
 		</delete>
 	</target>
 
-	<target name="dist" depends="clean-dist, compile, test, report-test, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
+	<target name="dist" depends="clean-dist, compile, test, jar, jar-with-deps, jar-with-deps-small, javadoc, dist-no-test">
 	</target>
 
 	<target name="dist-no-test" depends="clean-dist, compile, jar, jar-with-deps, jar-with-deps-small, javadoc">
@@ -170,16 +170,6 @@
 				</fileset>
 			</batchtest>
 		</junit>
-	</target>
-
-	<target name="report-test">
-		<echo>Generating html report...</echo>
-		<junitreport todir="${test.reports}">
-			<fileset dir="${test.reports}">
-				<include name="TEST-*.xml" />
-			</fileset>
-			<report todir="${test.reports}" />
-		</junitreport>
 	</target>
 
 	<target name="update-sf">
