@@ -18,16 +18,16 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ebi.ontocat;
+package uk.ac.ebi.ontocat.special;
 
 import java.net.URI;
 
 import org.junit.BeforeClass;
 
+import uk.ac.ebi.ontocat.OntologyService;
 import uk.ac.ebi.ontocat.bioportal.BioportalOntologyService;
 import uk.ac.ebi.ontocat.file.FileOntologyService;
 import uk.ac.ebi.ontocat.ols.OlsOntologyService;
-import uk.ac.ebi.ontocat.special.AbstractOntologyServiceTest;
 import uk.ac.ebi.ontocat.virtual.CompositeServiceNoThreads;
 
 public class CompositeServiceNoThreadsTest extends AbstractOntologyServiceTest {

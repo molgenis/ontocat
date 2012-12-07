@@ -35,12 +35,15 @@ public class FileOntologyServiceTest extends AbstractOntologyServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		final FileOntologyService os = new FileOntologyService(
-				new URI(
-				"http://www.geneontology.org/GO_slims/goslim_generic.obo"));
-
 		ONTOLOGY_ACCESSION = "GOslim";
-		TERM_ACCESSION = "GO_0005622";
+		TERM_ACCESSION = "GO_0005694";
+
+		os = new FileOntologyService(
+				new URI(
+				"http://www.geneontology.org/GO_slims/goslim_generic.obo"),
+				ONTOLOGY_ACCESSION);
+
+
 	}
 
 	@Test
