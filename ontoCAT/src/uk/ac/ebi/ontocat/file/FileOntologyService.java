@@ -2,19 +2,19 @@
  * Copyright (c) 2010 - 2011 European Molecular Biology Laboratory and University of Groningen
  *
  * Contact: ontocat-users@lists.sourceforge.net
- * 
+ *
  * This file is part of OntoCAT
- * 
+ *
  * OntoCAT is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 3 of the License, or (at your option) any
  * later version.
- * 
+ *
  * OntoCAT is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along
  * with OntoCAT. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -50,11 +50,11 @@ import uk.ac.ebi.ontocat.OntologyTerm;
 /**
  * The Class FileOntologyService. This works on both OBO and OWL files.
  */
-public class FileOntologyService extends AbstractOntologyService
-implements OntologyService {
+public class FileOntologyService extends AbstractOntologyService implements
+		OntologyService {
 	/** The Constant log. */
 	private static final Logger log = Logger
-	.getLogger(FileOntologyService.class.getName());
+			.getLogger(FileOntologyService.class.getName());
 
 	/** The ontology. */
 	protected final OWLOntology ontology;
@@ -88,7 +88,7 @@ implements OntologyService {
 	 * Sets the synonym slot in a particular ontology. Note that synonym,
 	 * altLabel(default synonymSlot) and alternative_term are recognised
 	 * automatically.
-	 * 
+	 *
 	 * @param synonymSlot
 	 *            the new synonym slot
 	 */
@@ -100,7 +100,7 @@ implements OntologyService {
 	/**
 	 * Sets the definition slot. Note that definition is recognised
 	 * automatically.
-	 * 
+	 *
 	 * @param definitionSlot
 	 *            the new definition slot
 	 */
@@ -111,7 +111,7 @@ implements OntologyService {
 
 	/**
 	 * Sets the label slot.
-	 * 
+	 *
 	 * @param labelSlot
 	 *            the new label slot
 	 */
@@ -128,7 +128,7 @@ implements OntologyService {
 	/**
 	 * Instantiates a new file ontology service. Allows to set a user-defined
 	 * accession that can be later used for queries.
-	 * 
+	 *
 	 * @param uriOntology
 	 *            where to load the ontology from, can be local file or URL
 	 * @param ontologyAccession
@@ -136,7 +136,7 @@ implements OntologyService {
 	 * @throws OntologyServiceException
 	 */
 	public FileOntologyService(URI uriOntology, String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		this(uriOntology);
 
 		// add the user defined one
@@ -145,7 +145,7 @@ implements OntologyService {
 
 	/**
 	 * Instantiates a new file ontology service.
-	 * 
+	 *
 	 * @param uriOntology
 	 *            where to load the ontology from, can be local file or URL
 	 * @throws OntologyServiceException
@@ -157,7 +157,7 @@ implements OntologyService {
 		// get all possible URIs in onotlogy
 		// and load classes and individuals into the cache
 		for (OWLEntity ent : ontology.getSignature()) {
-			if (ent.isOWLClass() || ent.isOWLNamedIndividual()){
+			if (ent.isOWLClass() || ent.isOWLNamedIndividual()) {
 				cache.put(getFragment(ent), ent);
 			}
 			try {
@@ -179,7 +179,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getOntologies()
 	 */
 	@Override
@@ -192,7 +192,7 @@ implements OntologyService {
 			{
 				String ontologyAccession = ontology.getOntologyID().toString();
 				ontologyAccession = ontologyAccession.replaceFirst("^<", "")
-				.replaceFirst(">$", "");
+						.replaceFirst(">$", "");
 				add(new Ontology(ontologyAccession));
 			}
 		};
@@ -200,12 +200,12 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getOntology(java.lang.String)
 	 */
 	@Override
 	public Ontology getOntology(String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession)) {
 			return null;
 		}
@@ -214,24 +214,26 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getRelations(java.lang.String,
 	 * java.lang.String)
 	 */
 	@Override
-	public Map<String, Set<OntologyTerm>> getRelations(String ontologyAccession,
-			String termAccession) throws OntologyServiceException {
-		throw new UnsupportedOperationException("Not implemented. Use ReasonedFileOntologyService");
+	public Map<String, Set<OntologyTerm>> getRelations(
+			String ontologyAccession, String termAccession)
+			throws OntologyServiceException {
+		throw new UnsupportedOperationException(
+				"Not implemented. Use ReasonedFileOntologyService");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getRootTerms(java.lang.String)
 	 */
 	@Override
 	public List<OntologyTerm> getRootTerms(String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptyList();
 		}
@@ -252,7 +254,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getSynonyms(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -272,7 +274,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyTerm#getDefinitions()
 	 */
 	@Override
@@ -310,7 +312,7 @@ implements OntologyService {
 
 	/**
 	 * Drop flanking quotes in all the list values.
-	 * 
+	 *
 	 * @param list
 	 *            the list
 	 * @return the list
@@ -326,13 +328,13 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getTerm(java.lang.String,
 	 * java.lang.String)
 	 */
 	@Override
 	public OntologyTerm getTerm(String ontologyAccession, String termAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		if (ontologyAccession != null
 				&& !ontoAccessions.contains(ontologyAccession)) {
 			return null;
@@ -342,16 +344,17 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getTerm(java.lang.String)
 	 */
 	@Override
 	public OntologyTerm getTerm(String termAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		return getTerm(getOwlEntity(termAccession));
 	}
 
-	protected OntologyTerm getTerm(OWLEntity ent) throws OntologyServiceException {
+	protected OntologyTerm getTerm(OWLEntity ent)
+			throws OntologyServiceException {
 		if (ent == null) {
 			return null;
 		}
@@ -363,7 +366,7 @@ implements OntologyService {
 	}
 
 	private String getOntologyAccession(OWLEntity ent)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		Pattern pattern = Pattern.compile("^.*[//#]{1}");
 		Matcher matcher = pattern.matcher(ent.toStringID());
 		if (matcher.find()) {
@@ -376,7 +379,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getTermPath(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -435,7 +438,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#getParents(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -472,13 +475,13 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * uk.ac.ebi.ontocat.AbstractOntologyService#getAllTerms(java.lang.String)
 	 */
 	@Override
 	public Set<OntologyTerm> getAllTerms(String ontologyAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		if (!ontoAccessions.contains(ontologyAccession)) {
 			return Collections.emptySet();
 		}
@@ -491,7 +494,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * uk.ac.ebi.ontocat.OntologyService#makeLookupHyperlink(java.lang.String)
 	 */
@@ -507,7 +510,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * uk.ac.ebi.ontocat.OntologyService#makeLookupHyperlink(java.lang.String)
 	 */
@@ -527,12 +530,12 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#searchAll(java.lang.String)
 	 */
 	@Override
 	public List<OntologyTerm> searchAll(String query, SearchOptions... options)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		List<SearchOptions> ops = new ArrayList<SearchOptions>(
 				Arrays.asList(options));
 		Map<OntologyTerm, String> terms = new HashMap<OntologyTerm, String>();
@@ -561,7 +564,7 @@ implements OntologyService {
 	/**
 	 * Resolves the search options and if match is appropriate adds the
 	 * OntologyTerm to the map for later similarity processing
-	 * 
+	 *
 	 * @param terms
 	 *            map with all the terms and values they were matched on
 	 * @param query
@@ -596,7 +599,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyService#searchOntology(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -614,9 +617,9 @@ implements OntologyService {
 	// FIXME: this is potentially unsafe, and should
 	// FIXME: take into account ontology uri + accession, i.e. full URI
 	protected OWLEntity getOwlEntity(String termAccession)
-	throws OntologyServiceException {
+			throws OntologyServiceException {
 		OWLEntity result = cache.get(termAccession);
-		if (result == null){
+		if (result == null) {
 			// try replacing : with _ as per the OBO Foundry
 			// id policy http://www.obofoundry.org/id-policy.shtml
 			result = cache.get(termAccession.replace(":", "_"));
@@ -626,7 +629,7 @@ implements OntologyService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see uk.ac.ebi.ontocat.OntologyTerm#getAnnotations()
 	 */
 	@Override
@@ -663,10 +666,10 @@ implements OntologyService {
 	/**
 	 * Helper method. Extracts the fragment uri from non-standard OWL uris.
 	 * Cannot use URI.getFragment() as it's not always delimited with # (see EFO
-	 * 
+	 *
 	 * @param cls
 	 *            the OWLClass
-	 * 
+	 *
 	 * @return the fragment
 	 */
 	protected String getFragment(OWLEntity ent) {
@@ -686,12 +689,12 @@ implements OntologyService {
 
 	/**
 	 * Helper method. Extracts the label
-	 * 
+	 *
 	 * @param termAccession2
-	 * 
+	 *
 	 * @param uri
 	 *            the uri
-	 * 
+	 *
 	 * @return the fragment
 	 * @throws OntologyServiceException
 	 */
